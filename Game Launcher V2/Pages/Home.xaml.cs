@@ -108,17 +108,15 @@ namespace Game_Launcher_V2.Pages
 
             Time_and_Bat.getBattery();
             Time_and_Bat.getTime();
-            Time_and_Bat.getWifi(imgWiFi, path);
-            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat, path);
+            Time_and_Bat.getWifi(imgWiFi);
+            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
         }
 
         //Get battery and time info evry 2 seconds
-        async void Update_Tick(object sender, EventArgs e)
+        void Update_Tick(object sender, EventArgs e)
         {
-            await Task.Run(() => Time_and_Bat.getBattery());
-            await Task.Run(() => Time_and_Bat.getTime());
-            Time_and_Bat.getWifi(imgWiFi, path);
-            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat, path);
+            Time_and_Bat.getWifi(imgWiFi);
+            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
         }
 
         void gameName_Tick(object sender, EventArgs e)

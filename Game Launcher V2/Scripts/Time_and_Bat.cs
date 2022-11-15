@@ -19,6 +19,9 @@ namespace Game_Launcher_V2.Scripts
         public static string time = "";
         public static UInt16 statuscode = 0;
 
+        //Get current working directory
+        public static string path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+
 
         //Pull battery sensor info from Windows
         public async static Task getBattery()
@@ -88,7 +91,7 @@ namespace Game_Launcher_V2.Scripts
         }
 
         static string lastWifi;
-        public static async void getWifi(Image imgWiFi, string path)
+        public static async void getWifi(Image imgWiFi)
         {
             var bi = new BitmapImage();
 
@@ -127,48 +130,57 @@ namespace Game_Launcher_V2.Scripts
         }
 
         static string lastBattery;
-        public static void updateBatTime(TextBlock lblBat, TextBlock lblTime, Image imgBat, string path)
+        public async static void updateBatTime(TextBlock lblBat, TextBlock lblTime, Image imgBat)
         {
-            //Update battery and time text blocks
-            lblBat.Text = Time_and_Bat.batPercent;
-            lblTime.Text = Time_and_Bat.time;
-
-            var bi = new BitmapImage();
-            var bi2 = new BitmapImage();
-
-            string batURL = "";
-
-
-            //Update battery icon based on battery level
-            if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
+            try
             {
-                batURL = path + "//Assets//Icons//battery-fill.png";
-            }
-            if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
-            {
-                batURL = path + "//Assets//Icons//battery-low-line.png";
-            }
 
-            if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
-            {
-                batURL = path + "//Assets//Icons//battery-charge-line.png";
-            }
 
-            if (batURL != lastBattery)
-            {
-                using (var stream = new FileStream(batURL, FileMode.Open, FileAccess.Read))
+                await Task.Run(() => getBattery());
+                await Task.Run(() => getTime());
+
+                //Update battery and time text blocks
+                lblBat.Text = Time_and_Bat.batPercent;
+                lblTime.Text = Time_and_Bat.time;
+
+                var bi = new BitmapImage();
+                var bi2 = new BitmapImage();
+
+                string batURL = "";
+
+
+                //Update battery icon based on battery level
+                if (Convert.ToInt32(batPercentInt) > 50)
                 {
-                    bi.BeginInit();
-                    bi.DecodePixelWidth = 48;
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.StreamSource = stream;
-                    bi.EndInit();
+                    batURL = path + "//Assets//Icons//battery-fill.png";
                 }
-                bi.Freeze();
+                if (Convert.ToInt32(batPercentInt) < 45)
+                {
+                    batURL = path + "//Assets//Icons//battery-low-line.png";
+                }
 
-                imgBat.Source = bi;
-                lastBattery = batURL;
+                if (statuscode == 2 || statuscode == 6 || statuscode == 7 || statuscode == 8)
+                {
+                    batURL = path + "//Assets//Icons//battery-charge-line.png";
+                }
+
+                if (batURL != lastBattery)
+                {
+                    using (var stream = new FileStream(batURL, FileMode.Open, FileAccess.Read))
+                    {
+                        bi.BeginInit();
+                        bi.DecodePixelWidth = 48;
+                        bi.CacheOption = BitmapCacheOption.OnLoad;
+                        bi.StreamSource = stream;
+                        bi.EndInit();
+                    }
+                    bi.Freeze();
+
+                    imgBat.Source = bi;
+                    lastBattery = batURL;
+                }
             }
+            catch(Exception ex) { MessageBox.Show(ex.Message); }
         }
     }
 }
