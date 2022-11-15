@@ -53,6 +53,7 @@ namespace Game_Launcher_V2.Pages
         public Home()
         {
             InitializeComponent();
+            _ = Tablet.TabletDevices;
 
             setUpTimers();
 
