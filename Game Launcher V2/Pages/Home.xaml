@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Game_Launcher_V2.Pages"
       mc:Ignorable="d" 
-       d:DesignHeight="720" d:DesignWidth="1280"
+      d:DesignHeight="720" d:DesignWidth="1280"
       Title="Home">
     <Page.Resources>
         <Style x:Key="FocusVisual">

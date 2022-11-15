@@ -1,0 +1,57 @@
+﻿<Page x:Class="Game_Launcher_V2.Pages.OptionsWindow.PowerControl"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Game_Launcher_V2.Pages.OptionsWindow"
+      mc:Ignorable="d" 
+      d:DesignHeight="670" d:DesignWidth="395.5"
+      Title="PowerControl"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      >
+
+    <Grid>
+        <ScrollViewer CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Border Name="Section1"  BorderBrush="DarkGray" BorderThickness="0,0.5,0,0.5" Height="82" Padding="5">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Name="imgBat" Width="75" Margin="0,5,10,5"></Image>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Name="lblBat" Foreground="White" FontSize="26">100%</TextBlock>
+                            <TextBlock Name="lblBatTime" Foreground="Gainsboro" FontSize="16">X Time Remaining</TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Name="Section2"  BorderBrush="DarkGray" BorderThickness="0,0.5,0,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="Stretch">
+                        <mah:ToggleSwitch Name="tsTemp" Margin="0,5,29,5" ContentDirection="RightToLeft" OffContent="Temperature limit (°C)" OnContent="Temperature limit (°C)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" />
+                        <TextBlock Foreground="White" FontSize="15">Controls the APU's soft temperature throttle limit</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Name="Section4"  BorderBrush="DarkGray" BorderThickness="0,0.5,0,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsPower" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Thermal Power limit (W)" OnContent="Thermal Power limit (W)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" />
+                        <TextBlock Foreground="White" FontSize="15">Controls the APU's thermal design power limit</TextBlock>
+                    </StackPanel>
+                </Border>
+
+
+                <Border Name="Section6"  BorderBrush="DarkGray" BorderThickness="0,0.5,0,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsGPU" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="iGPU Clock Speed (MHz)" OnContent="iGPU Clock Speed (MHz)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" />
+                        <TextBlock Foreground="White" FontSize="15">Allows you to set a custom static iGPU clock speed</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Name="Section8"  BorderBrush="DarkGray" BorderThickness="0,0.5,0,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsCPUCO" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Curve Optimiser Offset" OnContent="iGPU Clock Speed (MHz)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" />
+                        <TextBlock Foreground="White" FontSize="15">Allows you to set a curve optimiser offset</TextBlock>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

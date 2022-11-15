@@ -9,6 +9,16 @@
                 <ResourceDictionary Source="Style/scrollbar.xaml"/>
 
                 <ResourceDictionary Source="Style/Slider.xaml"/>
+
+                <ResourceDictionary Source="Style/DarkTheme.xaml"/>
+
+                <ResourceDictionary Source="Style/MainStyle.xaml"/>
+
+                <ResourceDictionary Source="Assets/Icons/Icons.xaml"/>
+
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

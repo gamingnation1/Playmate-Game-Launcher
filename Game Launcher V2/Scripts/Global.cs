@@ -16,7 +16,7 @@ namespace Game_Launcher_V2.Scripts
         //EA = 2
         //Battle.net = 3
         public static int GameStore = 0;
-
+        public static bool isMainActive = true;
 
         public static Visual GetDescendantByType(Visual element, Type type)
         {

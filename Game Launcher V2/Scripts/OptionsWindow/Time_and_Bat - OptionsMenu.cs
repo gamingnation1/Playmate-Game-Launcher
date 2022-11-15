@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 
 namespace Game_Launcher_V2.Scripts
 {
-    internal class Time_and_Bat_Options
+    internal class Time_and_Bat
     {
         public static string batPercent = "";
         public static int batPercentInt = 0;

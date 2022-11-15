@@ -8,7 +8,10 @@
         Title="Game Launcher" Height="720" Width="1280"
         WindowState="Maximized"
         WindowStyle="None"
-        Background="Black">
+        Background="Black"
+        Activated="Window_Activated"
+        Deactivated="Window_Deactivated"
+        Closing="Window_Closing">
     <Grid>
         <Frame x:Name="PagesNavigation" NavigationUIVisibility="Hidden">
             <!-- Page Content -->

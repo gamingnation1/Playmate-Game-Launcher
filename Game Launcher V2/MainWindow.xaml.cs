@@ -1,4 +1,5 @@
 ﻿using Game_Launcher_V2.Scripts;
+using Game_Launcher_V2.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,30 +33,26 @@ namespace Game_Launcher_V2
                 InitializeComponent();
                 FindSteamData.getData();
                 PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));
+
+                OptionsWindow win2 = new OptionsWindow();
+                win2.Show();
             }
             catch(Exception ex) { MessageBox.Show(ex.ToString()); }
         }
 
-        public static bool ApplicationIsActivated()
+        private void Window_Activated(object sender, EventArgs e)
         {
-            var activatedHandle = GetForegroundWindow();
-            if (activatedHandle == IntPtr.Zero)
-            {
-                return false;       // No window is currently activated
-            }
-
-            var procId = Process.GetCurrentProcess().Id;
-            int activeProcId;
-            GetWindowThreadProcessId(activatedHandle, out activeProcId);
-
-            return activeProcId == procId;
+            Global.isMainActive = true;
         }
 
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            Global.isMainActive = false;
+        }
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

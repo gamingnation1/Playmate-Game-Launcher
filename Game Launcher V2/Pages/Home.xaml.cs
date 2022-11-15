@@ -244,14 +244,16 @@ namespace Game_Launcher_V2.Pages
 
         private void ControllerInput()
         {
+            bool isActive = Global.isMainActive;
+
             //If window is not focused stop music
-            if (MainWindow.ApplicationIsActivated() != true)
+            if (isActive != true)
             {
                 mediaPlayer.Pause();
                 wasNotFocused = true;
             }
             //If window is now focused resume music
-            else if (MainWindow.ApplicationIsActivated() == true && wasNotFocused == true)
+            else if (isActive == true && wasNotFocused == true)
             {
                 if(lastAudio != "N/A") mediaPlayer.Play();
                 wasNotFocused = false;
@@ -266,7 +268,9 @@ namespace Game_Launcher_V2.Pages
 
             btnControl.Visibility = Visibility.Visible;
 
-            if (connected && MainWindow.ApplicationIsActivated() == true)
+            
+
+            if (connected && isActive == true)
             {
                 //get controller state
                 var state = controller.GetState();
