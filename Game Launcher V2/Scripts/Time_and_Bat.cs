@@ -18,10 +18,7 @@ namespace Game_Launcher_V2.Scripts
         public static int batPercentInt = 0;
         public static string time = "";
         public static UInt16 statuscode = 0;
-
-        //Get current working directory
-        public static string path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
-
+        private static string path = Global.path;
 
         //Pull battery sensor info from Windows
         public async static Task getBattery()

@@ -120,6 +120,24 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             if (lblBatTime.Text == "0 Hours 0 Minutes Remaining" && isCharging == true) lblBatTime.Text = "Battery Charging";
             if (lblBatTime.Text == "0 Hours 0 Minutes Remaining" && isCharging == false) lblBatTime.Text = "Calculating";
-        }   
+        }
+
+        private void Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
+
+        private void Toggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if(tsTemp.IsOn == true) Section3.Visibility = Visibility.Visible; else Section3.Visibility = Visibility.Collapsed;
+            if (tsPower.IsOn == true) Section5.Visibility = Visibility.Visible; else Section5.Visibility = Visibility.Collapsed;
+            if (tsGPU.IsOn == true) Section7.Visibility = Visibility.Visible; else Section7.Visibility = Visibility.Collapsed;
+            if (tsCPUCO.IsOn == true) Section9.Visibility = Visibility.Visible; else Section9.Visibility = Visibility.Collapsed;
+        }
     }
 }

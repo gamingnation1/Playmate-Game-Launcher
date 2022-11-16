@@ -36,6 +36,8 @@ namespace Game_Launcher_V2
 
                 OptionsWindow win2 = new OptionsWindow();
                 win2.Show();
+
+                Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
             }
             catch(Exception ex) { MessageBox.Show(ex.ToString()); }
         }

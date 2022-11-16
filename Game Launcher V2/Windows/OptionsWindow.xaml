@@ -13,7 +13,7 @@
         WindowState="Maximized">
     <Grid>
         <DockPanel LastChildFill="False" >
-            <DockPanel DockPanel.Dock="Right" Width="462" Background="#F2181818">
+            <DockPanel DockPanel.Dock="Right" Width="462" Background="#F2181818" Margin="0,0,6,6">
                 <Border DockPanel.Dock="Top"  Height="50" Background="#101010">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
 
