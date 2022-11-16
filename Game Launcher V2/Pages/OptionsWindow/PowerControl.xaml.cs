@@ -19,6 +19,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Game_Launcher_V2.Scripts.OptionsWindow.PowerControl;
+using SharpDX.XInput;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -93,14 +94,13 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             int iGFX = (int)sdGFXClock.Value;
 
             if (tsTemp.IsOn == true) commandArguments = $"--tctl-temp={Temp} --skin-temp-limit={Temp} ";
-            if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={TDP} --stapm-limit={TDP} --fast-limit={TDP} --vrm-current={TDP * 1.33} --vrmmax-current={TDP * 1.33} ";
+            if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={TDP} --slow-limit={TDP} --fast-limit={TDP} --vrm-current={TDP * 1.33} --vrmmax-current={TDP * 1.33} ";
             if (tsGPU.IsOn == true) commandArguments = commandArguments + $"--gfx-clk={iGFX} ";
 
             try
             {
-                processRyzenAdj = path + "\\bin\\AMD\\ryzenadj.exe";
-
-                result = RunCLI.RunCommand(commandArguments, false, processRyzenAdj);
+                processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
             }
             catch (Exception ex) { }
         }

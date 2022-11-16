@@ -10,7 +10,7 @@
         Background="Transparent"
         WindowStyle="None"
         Topmost="True"
-        WindowState="Maximized">
+        WindowState="Maximized" Visibility="Hidden">
     <Grid>
         <DockPanel LastChildFill="False" >
             <DockPanel DockPanel.Dock="Right" Width="462" Background="#F2181818" Margin="0,0,6,6">

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -26,31 +27,46 @@ namespace Game_Launcher_V2
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static bool IsAdministrator()
+        /// <summary>
+        /// Function that check's if current user is in Aministrator role
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsRunningAsAdministrator()
         {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-            WindowsPrincipal principal = new WindowsPrincipal(identity);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+            // Get current Windows user
+            WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
+
+            // Get current Windows user principal
+            WindowsPrincipal windowsPrincipal = new WindowsPrincipal(windowsIdentity);
+
+            // Return TRUE if user is in role "Administrator"
+            return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         public MainWindow()
         {
-            if (!MainWindow.IsAdministrator())
+            if (!IsRunningAsAdministrator())
             {
-                // Restart and run as admin
-                var exeName = Process.GetCurrentProcess().MainModule.FileName;
-                ProcessStartInfo startInfo = new ProcessStartInfo(exeName);
-                startInfo.Verb = "runas";
-                startInfo.Arguments = "restart";
-                Process.Start(startInfo);
-                this.Close();
+                // Setting up start info of the new process of the same application
+                ProcessStartInfo processStartInfo = new ProcessStartInfo(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase) + "\\Game Launcher V2.exe");
+
+                // Using operating shell and setting the ProcessStartInfo.Verb to “runas” will let it run as admin
+                processStartInfo.UseShellExecute = true;
+                processStartInfo.Verb = "runas";
+
+                // Start the application as new process
+                Process.Start(processStartInfo);
+
+                // Shut down the current (old) process
+                Application.Current.Shutdown();
             }
             else
             {
+                InitializeComponent();
+
                 try
                 {
                     if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");
-                    InitializeComponent();
                     FindSteamData.getData();
                     PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));
 

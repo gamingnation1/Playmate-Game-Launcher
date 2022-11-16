@@ -30,7 +30,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border Name="Section3"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                <Border Name="Section3"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="82" Padding="5" Visibility="Collapsed">
                     <StackPanel>
                         <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
                             <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">Temperature</TextBlock>
@@ -47,7 +47,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border Name="Section5"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                <Border Name="Section5"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="82" Padding="5" Visibility="Collapsed">
                     <StackPanel>
                         <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
                             <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">Power Limit</TextBlock>
@@ -71,7 +71,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border Name="Section8"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                <Border Name="Section8"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="82" Padding="5" Visibility="Collapsed">
                     <StackPanel>
                         <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
                             <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">iGPU Clock</TextBlock>
@@ -88,7 +88,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border Name="Section10"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                <Border Name="Section10"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="82" Padding="5" Visibility="Collapsed">
                     <StackPanel>
                         <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
                             <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">Offset</TextBlock>

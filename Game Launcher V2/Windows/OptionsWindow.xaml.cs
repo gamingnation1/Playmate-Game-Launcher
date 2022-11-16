@@ -1,4 +1,5 @@
 ﻿using Game_Launcher_V2.Scripts;
+using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,16 +30,64 @@ namespace Game_Launcher_V2.Windows
         {
             InitializeComponent();
 
+            this.WindowState = System.Windows.WindowState.Maximized;
+            this.Hide();
+
             //set up timer for sensor update
             DispatcherTimer sensor = new DispatcherTimer();
             sensor.Interval = TimeSpan.FromSeconds(2);
             sensor.Tick += Update_Tick;
             sensor.Start();
 
+            //set up timer for key combo system
+            DispatcherTimer checkKeyInput = new DispatcherTimer();
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.115);
+            checkKeyInput.Tick += KeyShortCuts_Tick;
+            checkKeyInput.Start();
+
             _ = Tablet.TabletDevices;
             setUpGUI();
 
             PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
+        }
+
+        private static Controller controller;
+
+        public static bool hidden = true;
+        void KeyShortCuts_Tick(object sender, EventArgs e)
+        {
+            //Get controller
+            controller = new Controller(UserIndex.One);
+
+            bool connected = controller.IsConnected;
+
+            if (connected)
+            {
+                //get controller state
+                var state = controller.GetState();
+
+                //detect if keyboard or controller combo is being activated
+                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                {
+                    //if hidden show window
+                    if (hidden == false)
+                    {
+                        hidden = true;
+                        this.Hide();
+                    }
+                    //else hide window
+                    else
+                    {
+                        hidden = false;
+                        this.Show();
+                    }
+                }
+
+                //if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                //{
+                //    SendKeys.SendWait("%F");
+                //}
+            }
         }
 
         private void setUpGUI()
