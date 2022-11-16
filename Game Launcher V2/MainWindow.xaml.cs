@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,21 +26,41 @@ namespace Game_Launcher_V2
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static bool IsAdministrator()
+        {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
         public MainWindow()
         {
-            try
+            if (!MainWindow.IsAdministrator())
             {
-                if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");
-                InitializeComponent();
-                FindSteamData.getData();
-                PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));
-
-                OptionsWindow win2 = new OptionsWindow();
-                win2.Show();
-
-                Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+                // Restart and run as admin
+                var exeName = Process.GetCurrentProcess().MainModule.FileName;
+                ProcessStartInfo startInfo = new ProcessStartInfo(exeName);
+                startInfo.Verb = "runas";
+                startInfo.Arguments = "restart";
+                Process.Start(startInfo);
+                this.Close();
             }
-            catch(Exception ex) { MessageBox.Show(ex.ToString()); }
+            else
+            {
+                try
+                {
+                    if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");
+                    InitializeComponent();
+                    FindSteamData.getData();
+                    PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));
+
+                    OptionsWindow win2 = new OptionsWindow();
+                    win2.Show();
+
+                    Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+                }
+                catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            }
         }
 
         private void Window_Activated(object sender, EventArgs e)

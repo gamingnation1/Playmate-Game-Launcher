@@ -56,15 +56,22 @@
                         <Slider Name="sdPower" Style="{StaticResource Horizontal_Slider}" Maximum="45" Minimum="5" Value="8" Width="350" Margin="0,10,0,0" TickFrequency="1" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
                     </StackPanel>
                 </Border>
-                
+
                 <Border Name="Section6"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsCPUClk" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="CPU Boost (Enabled)" OnContent="CPU Boost (Disabled)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="tsCPUClk_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">Controls whether the CPU can boost above base clock</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Name="Section7"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
                         <mah:ToggleSwitch Name="tsGPU" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="iGPU Clock Speed (MHz)" OnContent="iGPU Clock Speed (MHz)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
                         <TextBlock Foreground="White" FontSize="15">Allows you to set a custom static iGPU clock speed</TextBlock>
                     </StackPanel>
                 </Border>
 
-                <Border Name="Section7"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                <Border Name="Section8"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
                     <StackPanel>
                         <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
                             <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">iGPU Clock</TextBlock>
@@ -74,14 +81,14 @@
                     </StackPanel>
                 </Border>
                 
-                <Border Name="Section8"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
+                <Border Name="Section9"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
                         <mah:ToggleSwitch Name="tsCPUCO" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Curve Optimiser Offset" OnContent="Curve Optimiser Offset" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
                         <TextBlock Foreground="White" FontSize="15">Allows you to set a curve optimiser offset</TextBlock>
                     </StackPanel>
                 </Border>
 
-                <Border Name="Section9"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                <Border Name="Section10"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
                     <StackPanel>
                         <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
                             <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">Offset</TextBlock>

@@ -2,6 +2,7 @@
 using Game_Launcher_V2.Scripts;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Game_Launcher_V2.Scripts.OptionsWindow.PowerControl;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -42,89 +44,23 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             lblBat.Text = Time_and_Bat.batPercent;
 
-            getBatteryTime();
-            updateBatIcon();
+           BatStats.getBatteryTime(lblBatTime);
+           BatStats.updateBatIcon(imgBat);
 
             ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
         }
 
-        static string lastBat = "";
         void Update_Tick(object sender, EventArgs e)
         {
             lblBat.Text = Time_and_Bat.batPercent;
 
-            getBatteryTime();
-            updateBatIcon();
-        }
-
-        public void updateBatIcon()
-        {
-            var bi = new BitmapImage();
-
-            string batURL = "";
-
-            //Update battery icon based on battery level
-
-            //Update battery icon based on battery level
-            if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
-            {
-                batURL = path + "//Assets//Icons//battery-fill-vert.png";
-            }
-            if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
-            {
-                batURL = path + "//Assets//Icons//battery-low-line-vert.png";
-            }
-
-            if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
-            {
-                batURL = path + "//Assets//Icons//battery-charge-line-vert.png";
-            }
-
-            if (batURL != lastBat)
-            {
-                using (var stream = new FileStream(batURL, FileMode.Open, FileAccess.Read))
-                {
-                    bi.BeginInit();
-                    bi.DecodePixelWidth = 256;
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.StreamSource = stream;
-                    bi.EndInit();
-                }
-                bi.Freeze();
-
-                imgBat.Source = bi;
-                lastBat = batURL;
-            }
-        }
-
-        public static TimeSpan time;
-        public static float batTime;
-        private void getBatteryTime()
-        {
-            PowerStatus pwr = System.Windows.Forms.SystemInformation.PowerStatus;
-            //Get battery life
-  
-            batTime = (float)pwr.BatteryLifeRemaining;
-
-            bool isCharging = false;
-
-            if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
-            {
-                batTime = 0;
-                isCharging = true;
-            }
-
-            time = TimeSpan.FromSeconds(batTime);
-
-            lblBatTime.Text = $"{time:%h} Hours {time:%m} Minutes Remaining";
-
-            if (lblBatTime.Text == "0 Hours 0 Minutes Remaining" && isCharging == true) lblBatTime.Text = "Battery Charging";
-            if (lblBatTime.Text == "0 Hours 0 Minutes Remaining" && isCharging == false) lblBatTime.Text = "Calculating";
+            BatStats.getBatteryTime(lblBatTime);
+            BatStats.updateBatIcon(imgBat);
         }
 
         private void Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-
+            applySettings();
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -136,8 +72,37 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         {
             if(tsTemp.IsOn == true) Section3.Visibility = Visibility.Visible; else Section3.Visibility = Visibility.Collapsed;
             if (tsPower.IsOn == true) Section5.Visibility = Visibility.Visible; else Section5.Visibility = Visibility.Collapsed;
-            if (tsGPU.IsOn == true) Section7.Visibility = Visibility.Visible; else Section7.Visibility = Visibility.Collapsed;
-            if (tsCPUCO.IsOn == true) Section9.Visibility = Visibility.Visible; else Section9.Visibility = Visibility.Collapsed;
+            if (tsGPU.IsOn == true) Section8.Visibility = Visibility.Visible; else Section8.Visibility = Visibility.Collapsed;
+            if (tsCPUCO.IsOn == true) Section10.Visibility = Visibility.Visible; else Section10.Visibility = Visibility.Collapsed;
+        }
+
+        private void tsCPUClk_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (tsCPUClk.IsOn == true) CPUboost.cpuBoost(false); else CPUboost.cpuBoost(true);
+        }
+
+        private void applySettings()
+        {
+            string processRyzenAdj = "";
+            string result = "";
+            string commandArguments = "";
+
+            int TDP = (int)sdPower.Value;
+            int Temp = (int)sdTemp.Value;
+            TDP = TDP * 1000;
+            int iGFX = (int)sdGFXClock.Value;
+
+            if (tsTemp.IsOn == true) commandArguments = $"--tctl-temp={Temp} --skin-temp-limit={Temp} ";
+            if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={TDP} --stapm-limit={TDP} --fast-limit={TDP} --vrm-current={TDP * 1.33} --vrmmax-current={TDP * 1.33} ";
+            if (tsGPU.IsOn == true) commandArguments = commandArguments + $"--gfx-clk={iGFX} ";
+
+            try
+            {
+                processRyzenAdj = path + "\\bin\\AMD\\ryzenadj.exe";
+
+                result = RunCLI.RunCommand(commandArguments, false, processRyzenAdj);
+            }
+            catch (Exception ex) { }
         }
     }
 }
