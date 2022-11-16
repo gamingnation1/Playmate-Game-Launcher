@@ -61,6 +61,7 @@ namespace Game_Launcher_V2.Scripts
                     if (isHidden == true)
                     {
                         startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                        startInfo.CreateNoWindow |= true;
                     }
                     //Pass on path and arguments
                     startInfo.FileName = path;

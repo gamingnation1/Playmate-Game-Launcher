@@ -2,8 +2,10 @@
 using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -54,40 +56,75 @@ namespace Game_Launcher_V2.Windows
         private static Controller controller;
 
         public static bool hidden = true;
-        void KeyShortCuts_Tick(object sender, EventArgs e)
+        async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
-            //Get controller
-            controller = new Controller(UserIndex.One);
-
-            bool connected = controller.IsConnected;
-
-            if (connected)
+            try
             {
-                //get controller state
-                var state = controller.GetState();
+                //Get controller
+                controller = new Controller(UserIndex.One);
 
-                //detect if keyboard or controller combo is being activated
-                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                bool connected = controller.IsConnected;
+                if(MainDock.Visibility == Visibility.Hidden) MainDock.Visibility = Visibility.Visible;
+
+                if (connected)
                 {
-                    //if hidden show window
-                    if (hidden == false)
+                    //get controller state
+                    var state = controller.GetState();
+
+                    //detect if keyboard or controller combo is being activated
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
                     {
-                        hidden = true;
-                        this.Hide();
+                        //if hidden show window
+                        if (hidden == false)
+                        {
+                            hidden = true;
+                            this.Hide();
+                        }
+                        //else hide window
+                        else
+                        {
+                            hidden = false;
+                            this.Show();
+                            this.Activate();
+                        }
                     }
-                    //else hide window
-                    else
-                    {
-                        hidden = false;
-                        this.Show();
-                    }
+
+                    //if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                    //{
+                    //    SendKeys.SendWait("%F");
+                    //}
                 }
 
-                //if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
-                //{
-                //    SendKeys.SendWait("%F");
-                //}
+                int i = 0;
+                await Task.Run(() =>
+                {
+                    foreach (var process in Process.GetProcessesByName("ayaspace")) i++;
+                    foreach (var process in Process.GetProcessesByName("AYASpace")) i++;
+                });
+
+                if (i < 1)
+                {
+                    //detect if keyboard or controller combo is being activated
+                    if ((Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.F12) & KeyStates.Down) > 0 || (Keyboard.GetKeyStates(Key.RightCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.F12) & KeyStates.Down) > 0)
+                    {
+                        //if hidden show window
+                        if (hidden == false)
+                        {
+                            hidden = true;
+                            this.Hide();
+                        }
+                        //else hide window
+                        else
+                        {
+                            hidden = false;
+                            this.Show();
+                            this.Activate();
+                        }
+
+                    }
+                }
             }
+            catch { }
         }
 
         private void setUpGUI()
@@ -119,8 +156,12 @@ namespace Game_Launcher_V2.Windows
         //Get battery and time info evry 2 seconds
         void Update_Tick(object sender, EventArgs e)
         {
-            Time_and_Bat_Options.getWifi(imgWiFi);
-            Time_and_Bat_Options.updateBatTime(lblBat, lblTime, imgBat);
+            try
+            {
+                Time_and_Bat_Options.getWifi(imgWiFi);
+                Time_and_Bat_Options.updateBatTime(lblBat, lblTime, imgBat);
+            }
+            catch { }
         }
     }
 }

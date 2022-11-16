@@ -10,10 +10,10 @@
         Background="Transparent"
         WindowStyle="None"
         Topmost="True"
-        WindowState="Maximized" Visibility="Hidden">
+        WindowState="Maximized" Visibility="Hidden" ShowInTaskbar="False">
     <Grid>
-        <DockPanel LastChildFill="False" >
-            <DockPanel DockPanel.Dock="Right" Width="462" Background="#F2181818" Margin="0,0,6,6">
+        <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False" >
+            <DockPanel DockPanel.Dock="Right" Width="462" Background="#E6181818" Margin="0,0,6,6">
                 <Border DockPanel.Dock="Top"  Height="50" Background="#101010">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
 
