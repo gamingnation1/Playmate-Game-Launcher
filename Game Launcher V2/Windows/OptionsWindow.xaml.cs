@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,7 +28,7 @@ namespace Game_Launcher_V2.Windows
     {
         //Get current working directory
         public static string path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
-
+        public static string mbo = "";
         public OptionsWindow()
         {
             InitializeComponent();
@@ -51,6 +52,14 @@ namespace Game_Launcher_V2.Windows
             setUpGUI();
 
             PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
+
+            //Detect if an AYA Neo is being used
+            ManagementObjectSearcher baseboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
+            foreach (ManagementObject queryObj in baseboardSearcher.Get())
+            {
+                mbo = queryObj["Manufacturer"].ToString();
+                mbo = mbo.ToLower();
+            }
         }
 
         private static Controller controller;
@@ -101,8 +110,7 @@ namespace Game_Launcher_V2.Windows
                     foreach (var process in Process.GetProcessesByName("ayaspace")) i++;
                     foreach (var process in Process.GetProcessesByName("AYASpace")) i++;
                 });
-
-                if (i < 1)
+                if (i < 1 && mbo.Contains("aya"))
                 {
                     //detect if keyboard or controller combo is being activated
                     if ((Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.F12) & KeyStates.Down) > 0 || (Keyboard.GetKeyStates(Key.RightCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.F12) & KeyStates.Down) > 0)
@@ -160,8 +168,19 @@ namespace Game_Launcher_V2.Windows
             {
                 Time_and_Bat_Options.getWifi(imgWiFi);
                 Time_and_Bat_Options.updateBatTime(lblBat, lblTime, imgBat);
+
+                string processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                if (Global.RyzenAdj != "" || Global.RyzenAdj != null) RunCLI.ApplySettings(processRyzenAdj, Global.RyzenAdj, true);
             }
             catch { }
+        }
+
+        private void rd_Click(object sender, RoutedEventArgs e)
+        {
+            if(rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+            if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
+            if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+            if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
         }
     }
 }

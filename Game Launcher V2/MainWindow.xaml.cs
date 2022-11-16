@@ -63,7 +63,7 @@ namespace Game_Launcher_V2
             else
             {
                 InitializeComponent();
-
+                _ = Tablet.TabletDevices;
                 try
                 {
                     if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");
