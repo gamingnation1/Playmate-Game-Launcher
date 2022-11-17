@@ -60,6 +60,8 @@ namespace Game_Launcher_V2.Pages
             LoadSteamGames.loadSteamGames(lbGames);
            
             setUpGUI();
+
+            Global.isOpen = true;
         }
 
         private void setUpTimers()

@@ -17,6 +17,7 @@ namespace Game_Launcher_V2.Scripts
         //Battle.net = 3
         public static int GameStore = 0;
         public static bool isMainActive = true;
+        public static bool isOpen = false; 
 
         public static string RyzenAdj = "";
 

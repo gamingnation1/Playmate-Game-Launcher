@@ -51,7 +51,7 @@ namespace Game_Launcher_V2.Windows
             _ = Tablet.TabletDevices;
             setUpGUI();
 
-            PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
+            PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
 
             //Detect if an AYA Neo is being used
             ManagementObjectSearcher baseboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
@@ -95,6 +95,7 @@ namespace Game_Launcher_V2.Windows
                             hidden = false;
                             this.Show();
                             this.Activate();
+                            PagesNavigation.NavigationService.Refresh();
                         }
                     }
 
@@ -127,6 +128,7 @@ namespace Game_Launcher_V2.Windows
                             hidden = false;
                             this.Show();
                             this.Activate();
+                            PagesNavigation.NavigationService.Refresh();
                         }
 
                     }
@@ -177,7 +179,7 @@ namespace Game_Launcher_V2.Windows
 
         private void rd_Click(object sender, RoutedEventArgs e)
         {
-            if(rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+            if(rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
             if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
             if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
             if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));

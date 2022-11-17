@@ -1,6 +1,7 @@
 ﻿using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
 using Game_Launcher_V2.Windows;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,11 +16,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.Forms.MessageBox;
+using SplashScreen = Game_Launcher_V2.Windows.SplashScreen;
 
 namespace Game_Launcher_V2
 {
@@ -65,12 +70,19 @@ namespace Game_Launcher_V2
             {
                 InitializeComponent();
 
-                if(Settings.Default.isFirstBoot == true || Settings.Default.Path == "" || Settings.Default.Path == null)
+                Settings.Default.CPUName = System.Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER");
+
+                SplashScreen splash = new SplashScreen();
+                splash.Show();
+
+                if (Settings.Default.isFirstBoot == true || Settings.Default.Path == "" || Settings.Default.Path == null)
                 {
                     Settings.Default.Path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
                     Settings.Default.isFirstBoot = false;
                     Settings.Default.Save();
                 }
+
+                if (Settings.Default.startMinimised == true) this.WindowState = WindowState.Minimized;
 
                 Global.path = Settings.Default.Path;
 
@@ -78,6 +90,13 @@ namespace Game_Launcher_V2
 
                 try
                 {
+                    RegistryKey myKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\CI\\Config", true);
+                    if (myKey != null)
+                    {
+                        myKey.SetValue("VulnerableDriverBlocklistEnable", "0", RegistryValueKind.String);
+                        myKey.Close();
+                    }
+
                     if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");
                     FindSteamData.getData();
                     PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));

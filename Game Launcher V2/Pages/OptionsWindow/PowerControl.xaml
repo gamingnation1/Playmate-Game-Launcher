@@ -11,7 +11,7 @@
       >
 
     <Grid>
-        <ScrollViewer CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" PanningMode="VerticalFirst">
+        <ScrollViewer CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst">
             <StackPanel>
                 <Border Name="Section1"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="82" Padding="5">
                     <StackPanel Orientation="Horizontal">
@@ -43,7 +43,7 @@
                 <Border Name="Section4"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
                         <mah:ToggleSwitch Name="tsPower" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Thermal Power limit (W)" OnContent="Thermal Power limit (W)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
-                        <TextBlock Foreground="White" FontSize="15">Controls the APU's thermal design power limit</TextBlock>
+                        <TextBlock Foreground="White" FontSize="15">Controls the CPU's/APU's thermal design power limit</TextBlock>
                     </StackPanel>
                 </Border>
 

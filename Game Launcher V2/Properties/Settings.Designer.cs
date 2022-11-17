@@ -142,5 +142,53 @@ namespace Game_Launcher_V2.Properties {
                 this["Path"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bootOnStart {
+            get {
+                return ((bool)(this["bootOnStart"]));
+            }
+            set {
+                this["bootOnStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool startMinimised {
+            get {
+                return ((bool)(this["startMinimised"]));
+            }
+            set {
+                this["startMinimised"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool openGameList {
+            get {
+                return ((bool)(this["openGameList"]));
+            }
+            set {
+                this["openGameList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CPUName {
+            get {
+                return ((string)(this["CPUName"]));
+            }
+            set {
+                this["CPUName"] = value;
+            }
+        }
     }
 }

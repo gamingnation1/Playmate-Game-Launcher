@@ -1,0 +1,58 @@
+﻿<Page x:Class="Game_Launcher_V2.Pages.OptionsWindow.BasicSettings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Game_Launcher_V2.Pages.OptionsWindow"
+      mc:Ignorable="d" 
+      d:DesignHeight="670" d:DesignWidth="395"
+      Title="PowerControl"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      >
+
+    <Grid>
+        <ScrollViewer CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst">
+            <StackPanel>
+                <Border Name="Section1"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="86" Padding="5">
+                    <StackPanel>
+                        <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
+                            <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">Brightness</TextBlock>
+                            <TextBlock Name="lblBright"  Foreground="White" FontSize="22" DockPanel.Dock="Right" Margin="0,0,10,0" Text="{Binding ElementName=sdBright, Path=Value}"/>
+                        </DockPanel>
+                        <Slider Name="sdBright" Style="{StaticResource Horizontal_Slider}" Maximum="100" Minimum="0" Value="95" Width="350" Margin="0,10,0,0" TickFrequency="1" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
+                    </StackPanel>
+                </Border>
+
+                <Border Name="Section2"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="86" Padding="5">
+                    <StackPanel>
+                        <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
+                            <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">Volume</TextBlock>
+                            <TextBlock Name="lblVol"  Foreground="White" FontSize="22" DockPanel.Dock="Right" Margin="0,0,10,0" Text="{Binding ElementName=sdVol, Path=Value}"/>
+                        </DockPanel>
+                        <Slider Name="sdVol" Style="{StaticResource Horizontal_Slider}" Maximum="100" Minimum="0" Value="8" Width="350" Margin="0,10,0,0" TickFrequency="1" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
+                    </StackPanel>
+                </Border>
+
+                <Border Name="Section3"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsBootOnStart" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Boot on Start Up" OnContent="Boot on Start Up" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">Controls whether this application boots on start up</TextBlock>
+                    </StackPanel>
+                </Border>
+                <Border Name="Section4"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsMini" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Minimise on Start" OnContent="Minimise on Start" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">Controls whether this application minimises when opened</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Name="Section5"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsGameList" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Quick Access Menu Only" OnContent="Quick Access Menu Only" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">When application opens only open the quick access menu</TextBlock>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,21 @@
+﻿<Window x:Class="Game_Launcher_V2.Windows.SplashScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Game_Launcher_V2.Windows"
+        mc:Ignorable="d"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Title="SplashScreen" Height="250" Width="500">
+    <Grid>
+        <Border Background="#E6181818" CornerRadius="60" Padding="20">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock TextAlignment="Center" Foreground="White" FontSize="40">Setting Up Launcher</TextBlock>
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="18" Margin="0,20,0,0">Please wait a little while we detect your installed games. This should only take a few moments.</TextBlock>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

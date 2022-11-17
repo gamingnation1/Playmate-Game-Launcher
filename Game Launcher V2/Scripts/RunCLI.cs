@@ -70,7 +70,7 @@ namespace Game_Launcher_V2.Scripts
                     //Start program
                     process.Start();
 
-                    Thread.Sleep(10000);
+                    Thread.Sleep(20000);
                     process.Close();
                     return;
                 });

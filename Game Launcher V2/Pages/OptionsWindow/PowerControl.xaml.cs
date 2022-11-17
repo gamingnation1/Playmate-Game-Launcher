@@ -22,6 +22,8 @@ using Game_Launcher_V2.Scripts.OptionsWindow.PowerControl;
 using SharpDX.XInput;
 using Game_Launcher_V2.Properties;
 using System.Drawing;
+using UXTU.Scripts.Intel;
+using Microsoft.VisualBasic;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -37,6 +39,13 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         {
             InitializeComponent();
             _ = Tablet.TabletDevices;
+
+
+            if (Settings.Default.CPUName.ToLower().Contains("intel"))
+            {
+                Section2.Visibility= Visibility.Collapsed;
+                Section7.Visibility = Visibility.Collapsed;
+            }
 
             sdPower.Value = Settings.Default.PowerLimit;
             sdTemp.Value = Settings.Default.TempLimit;
@@ -121,29 +130,39 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         {
             try
             {
-                string processRyzenAdj = "";
-                string result = "";
-                string commandArguments = "";
+                if (!Settings.Default.CPUName.ToLower().Contains("intel"))
+                {
+                    string processRyzenAdj = "";
+                    string result = "";
+                    string commandArguments = "";
 
-                int TDP = (int)sdPower.Value;
-                int Temp = (int)sdTemp.Value;
-                TDP = TDP * 1000;
-                int iGFX = (int)sdGFXClock.Value;
+                    int TDP = (int)sdPower.Value;
+                    int Temp = (int)sdTemp.Value;
+                    TDP = TDP * 1000;
+                    int iGFX = (int)sdGFXClock.Value;
 
-                if (tsTemp.IsOn == true) commandArguments = $"--tctl-temp={Temp} --skin-temp-limit={Temp} ";
-                if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={TDP} --slow-limit={TDP} --fast-limit={TDP} --vrm-current={TDP * 1.33} --vrmmax-current={TDP * 1.33} ";
-                if (tsGPU.IsOn == true) commandArguments = commandArguments + $"--gfx-clk={iGFX} ";
+                    if (tsTemp.IsOn == true) commandArguments = $"--tctl-temp={Temp} --skin-temp-limit={Temp} ";
+                    if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={TDP} --slow-limit={TDP} --fast-limit={TDP} --vrm-current={TDP * 1.33} --vrmmax-current={TDP * 1.33} ";
+                    if (tsGPU.IsOn == true) commandArguments = commandArguments + $"--gfx-clk={iGFX} ";
 
-                Global.RyzenAdj = commandArguments;
+                    Global.RyzenAdj = commandArguments;
 
-                Settings.Default.TempLimit = Temp;
-                Settings.Default.PowerLimit = (int)sdPower.Value;
-                Settings.Default.iGFXClk = iGFX;
-                Settings.Default.COCPU = 0;
-                Settings.Default.Save();
+                    Settings.Default.TempLimit = Temp;
+                    Settings.Default.PowerLimit = (int)sdPower.Value;
+                    Settings.Default.iGFXClk = iGFX;
+                    Settings.Default.COCPU = 0;
+                    Settings.Default.Save();
 
-                processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
-                RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+                    processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                    RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+                }
+                else
+                {
+                    Settings.Default.PowerLimit = (int)sdPower.Value;
+                    Settings.Default.Save();
+                    int TDP = (int)sdPower.Value;
+                    ChangeTDP.changeTDP(TDP, TDP);
+                }          
             }
             catch (Exception ex) { }
         }
