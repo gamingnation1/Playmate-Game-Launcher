@@ -157,17 +157,5 @@ namespace Game_Launcher_V2.Scripts
             if (model.gameName.Contains("Open Steam") || model.gameName.Contains("All Software")) btnControl.Content = model.gameName;
             else btnControl.Content = "Play Game";
         }
-
-        public static string imagePath (ListBox lbGames)
-        {
-            SteamGame model = lbGames.SelectedItem as SteamGame;
-            return model.bgImagePath;
-        } 
-
-        public static string audioPath (ListBox lbGames)
-        {
-            SteamGame model = lbGames.SelectedItem as SteamGame;
-            return model.musicPath;
-        }
     }
 }

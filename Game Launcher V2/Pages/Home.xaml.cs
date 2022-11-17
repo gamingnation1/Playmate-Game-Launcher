@@ -134,10 +134,12 @@ namespace Game_Launcher_V2.Pages
         {
             if (Global.GameStore == 0)
             {
+                SteamGame model = lbGames.SelectedItem as SteamGame;
                 LoadSteamGames.changeSteamGame(lbGames, lblGameName, btnControl);
-                updateBGImage(LoadSteamGames.imagePath(lbGames));
-                playAudio(LoadSteamGames.audioPath(lbGames));
-                lastAudio = LoadSteamGames.audioPath(lbGames);
+                updateBGImage(model.bgImagePath);
+                playAudio(model.musicPath);
+                lastAudio = model.musicPath;
+                lastBG = model.bgImagePath;
             }
         }
 
@@ -166,9 +168,7 @@ namespace Game_Launcher_V2.Pages
                 await Task.Delay(145);
                 //Start fade in animation
                 await StartAnimationBGFadeIn();
-            }
-
-            lastBG = url;
+            }           
         }
 
         DoubleAnimation fadeOut = new DoubleAnimation
