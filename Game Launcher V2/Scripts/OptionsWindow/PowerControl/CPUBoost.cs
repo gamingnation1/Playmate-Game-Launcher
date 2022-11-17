@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game_Launcher_V2.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,12 +19,16 @@ namespace Game_Launcher_V2.Scripts.OptionsWindow.PowerControl
                 //CPUPerf
                 MaxCPUPerf = 99;
                 boostMode = 0;
+                Settings.Default.isBoost = true;
             }
             else
             {
                 MaxCPUPerf = 100;
                 boostMode = 1;
+                Settings.Default.isBoost = false;
             }
+
+            Settings.Default.Save();
 
             int i = 0;
 

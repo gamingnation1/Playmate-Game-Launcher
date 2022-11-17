@@ -59,7 +59,7 @@
 
                 <Border Name="Section6"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
-                        <mah:ToggleSwitch Name="tsCPUClk" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="CPU Boost (Enabled)" OnContent="CPU Boost (Disabled)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="tsCPUClk_Toggled"/>
+                        <mah:ToggleSwitch Name="tsCPUClk" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Disable CPU Boost" OnContent="Disable CPU Boost" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="tsCPUClk_Toggled"/>
                         <TextBlock Foreground="White" FontSize="15">Controls whether the CPU can boost above base clock</TextBlock>
                     </StackPanel>
                 </Border>

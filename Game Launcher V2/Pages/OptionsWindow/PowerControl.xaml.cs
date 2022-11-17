@@ -126,7 +126,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             if (tsCPUClk.IsOn == true) CPUboost.cpuBoost(false); else CPUboost.cpuBoost(true);
         }
 
-        private void applySettings()
+        private async void applySettings()
         {
             try
             {
@@ -161,7 +161,10 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     Settings.Default.PowerLimit = (int)sdPower.Value;
                     Settings.Default.Save();
                     int TDP = (int)sdPower.Value;
-                    ChangeTDP.changeTDP(TDP, TDP);
+                    await Task.Run(() =>
+                    {
+                        ChangeTDP.changeTDP(TDP, TDP);
+                    });
                 }          
             }
             catch (Exception ex) { }
