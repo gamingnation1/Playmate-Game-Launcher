@@ -118,5 +118,29 @@ namespace Game_Launcher_V2.Properties {
                 this["isiGFX"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool isFirstBoot {
+            get {
+                return ((bool)(this["isFirstBoot"]));
+            }
+            set {
+                this["isFirstBoot"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Path {
+            get {
+                return ((string)(this["Path"]));
+            }
+            set {
+                this["Path"] = value;
+            }
+        }
     }
 }

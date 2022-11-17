@@ -21,7 +21,7 @@ namespace Game_Launcher_V2.Scripts
         public static string RyzenAdj = "";
 
         //Get current working directory
-        public static string path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+        public static string path;
         public static Visual GetDescendantByType(Visual element, Type type)
         {
             if (element == null)

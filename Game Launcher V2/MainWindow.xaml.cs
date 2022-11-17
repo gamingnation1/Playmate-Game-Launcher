@@ -1,4 +1,5 @@
-﻿using Game_Launcher_V2.Scripts;
+﻿using Game_Launcher_V2.Properties;
+using Game_Launcher_V2.Scripts;
 using Game_Launcher_V2.Windows;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,18 @@ namespace Game_Launcher_V2
             else
             {
                 InitializeComponent();
+
+                if(Settings.Default.isFirstBoot == true || Settings.Default.Path == "" || Settings.Default.Path == null)
+                {
+                    Settings.Default.Path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+                    Settings.Default.isFirstBoot = false;
+                    Settings.Default.Save();
+                }
+
+                Global.path = Settings.Default.Path;
+
                 _ = Tablet.TabletDevices;
+
                 try
                 {
                     if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");

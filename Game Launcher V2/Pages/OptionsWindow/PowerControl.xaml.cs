@@ -31,8 +31,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
     public partial class PowerControl : Page
     {
         //Get current working directory
-        public static string path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
-
+        public static string path = Global.path;
 
         public PowerControl()
         {
