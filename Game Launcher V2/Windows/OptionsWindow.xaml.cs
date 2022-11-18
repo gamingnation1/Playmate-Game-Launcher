@@ -113,6 +113,7 @@ namespace Game_Launcher_V2.Windows
                             this.Activate();
                             PagesNavigation.NavigationService.Refresh();
                             Global.isAccessMenuOpen = true;
+                            this.Activate();
                         }
                     }
 
@@ -166,8 +167,13 @@ namespace Game_Launcher_V2.Windows
                             hidden = false;
                             this.Show();
                             this.Activate();
-                            PagesNavigation.NavigationService.Refresh();
+                            int openMenu = Global.AccessMenuSelected;
+                            Global.AccessMenuSelected = 9999;
                             Global.isAccessMenuOpen = true;
+                            this.Activate();
+                            this.Focus();
+                            Global.AccessMenuSelected = openMenu;
+                            PagesNavigation.NavigationService.Refresh();
                         }
 
                     }

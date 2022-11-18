@@ -310,6 +310,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (value > maxValue) value = maxValue;
                                 if (value < minValue) value = minValue;
                                 selectedSlider.Value = value;
+
+                                applySettings();
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.shortCut == false && isActive == true)
@@ -338,6 +340,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (value > maxValue) value = maxValue;
                                 if (value < minValue) value = minValue;
                                 selectedSlider.Value = value;
+                                applySettings();
                             }
 
 
@@ -406,7 +409,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
                 }
-                
+
+                if (borders[optionSelected] == Section8 && tsGPU.IsOn == false) { optionSelected = 5;}
+                if (borders[optionSelected] == Section8 && tsGPU.IsOn == false && lastBorder == Section8) { isActive = false; }
 
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
                 lastBorder= borders[optionSelected];
