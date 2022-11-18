@@ -24,6 +24,7 @@ using Game_Launcher_V2.Properties;
 using System.Drawing;
 using UXTU.Scripts.Intel;
 using Microsoft.VisualBasic;
+using Brush = System.Windows.Media.Brush;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -34,18 +35,12 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
     {
         //Get current working directory
         public static string path = Global.path;
-
+        public DispatcherTimer checkKeyInput = new DispatcherTimer();
+        public DispatcherTimer sensor = new DispatcherTimer();
         public PowerControl()
         {
             InitializeComponent();
             _ = Tablet.TabletDevices;
-
-
-            if (Settings.Default.CPUName.ToLower().Contains("intel"))
-            {
-                Section2.Visibility= Visibility.Collapsed;
-                Section7.Visibility = Visibility.Collapsed;
-            }
 
             sdPower.Value = Settings.Default.PowerLimit;
             sdTemp.Value = Settings.Default.TempLimit;
@@ -58,13 +53,18 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             if (Settings.Default.isBoost == true) tsCPUClk.IsOn = true;
             if (Settings.Default.isiGFX == true) tsGPU.IsOn = true;
 
+            if (Settings.Default.CPUName.ToLower().Contains("intel"))
+            {
+                Section2.Visibility = Visibility.Collapsed;
+                Section7.Visibility = Visibility.Collapsed;
+                tsTemp.IsOn = false;
+                tsGPU.IsOn = false;
+            }
+
             //set up timer for sensor update
-            DispatcherTimer sensor = new DispatcherTimer();
             sensor.Interval = TimeSpan.FromSeconds(2);
             sensor.Tick += Update_Tick;
             sensor.Start();
-
-            
 
             lblBat.Text = Time_and_Bat.batPercent;
 
@@ -72,6 +72,13 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             updateBatIcon();
 
             ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
+
+            //set up timer for key combo system
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.117);
+            checkKeyInput.Tick += KeyShortCuts_Tick;
+            checkKeyInput.Start();
+
+            lastBorder = Section2;
 
             isFirstBoot = false;
         }
@@ -147,9 +154,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                     Global.RyzenAdj = commandArguments;
 
-                    Settings.Default.TempLimit = Temp;
+                    Settings.Default.TempLimit = (int)sdTemp.Value;
                     Settings.Default.PowerLimit = (int)sdPower.Value;
-                    Settings.Default.iGFXClk = iGFX;
+                    Settings.Default.iGFXClk = (int)sdGFXClock.Value;
                     Settings.Default.COCPU = 0;
                     Settings.Default.Save();
 
@@ -219,6 +226,202 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             if (lblBatTime.Text == "0 Hours 0 Minutes Remaining" && isCharging == true) lblBatTime.Text = "Battery Charging";
             if (lblBatTime.Text == "0 Hours 0 Minutes Remaining" && isCharging == false) lblBatTime.Text = "Calculating";
+        }
+
+        private static Controller controller;
+
+        int optionSelected = 0;
+        bool isActive = false;
+        bool connected;
+        public static Border[] borders;
+        public static Border lastBorder;
+        bool goingDown = true;
+
+        async void KeyShortCuts_Tick(object sender, EventArgs e)
+        {
+
+            if (Settings.Default.CPUName.ToLower().Contains("intel"))
+            {
+                borders = new Border[] { Section4, Section5, Section6};
+            }
+            else
+            {
+                borders = new Border[] { Section2, Section3, Section4, Section5, Section6, Section7, Section8 };
+            }
+
+            if(Global.AccessMenuSelected == 1)
+            {
+                try
+                {
+                    //Get controller
+                    controller = new Controller(UserIndex.One);
+
+                    connected = controller.IsConnected;
+
+                    if (connected)
+                    {
+                        //get controller state
+                        var state = controller.GetState();
+
+                        //detect if keyboard or controller combo is being activated
+                        if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                        {
+                            Global.shortCut = true;
+                        }
+
+                        if (Global.isAccessMenuOpen == true && Global.shortCut == false)
+                        {
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && Global.shortCut == false && isActive == false)
+                            {
+                                if (optionSelected > 0) optionSelected--;
+                                else optionSelected = 0;
+                                goingDown = false;
+                            }
+
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false)
+                            {
+                                if (optionSelected < 6) optionSelected++;
+                                else optionSelected = 6;
+                                goingDown = true;
+                            }
+
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true)
+                            {
+                                int value = 0;
+                                int maxValue = 0;
+                                int minValue = 0;
+                                Slider selectedSlider = null;
+
+                                if (borders[optionSelected] == Section3) selectedSlider = sdTemp;
+                                if (borders[optionSelected] == Section5) selectedSlider = sdPower;
+                                if (borders[optionSelected] == Section8) selectedSlider = sdGFXClock;
+
+                                value = (int)selectedSlider.Value;
+                                maxValue = (int)selectedSlider.Maximum;
+                                minValue = (int)selectedSlider.Minimum;
+
+                                if (borders[optionSelected] == Section8) value = value - 50;
+                                else
+                                {
+                                    value--;
+                                    value--;
+                                }
+
+                                if (value > maxValue) value = maxValue;
+                                if (value < minValue) value = minValue;
+                                selectedSlider.Value = value;
+                            }
+
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.shortCut == false && isActive == true)
+                            {
+                                int value = 0;
+                                int maxValue = 0;
+                                int minValue = 0;
+                                Slider selectedSlider = null;
+
+                                if (borders[optionSelected] == Section3) selectedSlider = sdTemp;
+                                if (borders[optionSelected] == Section5) selectedSlider = sdPower;
+                                if (borders[optionSelected] == Section8) selectedSlider = sdGFXClock;
+
+                                value = (int)selectedSlider.Value;
+                                maxValue = (int)selectedSlider.Maximum;
+                                minValue = (int)selectedSlider.Minimum;
+
+                                if (borders[optionSelected] == Section8) value = value + 50;
+                                else
+                                {
+                                    value++;
+                                    value++;
+                                }
+
+
+                                if (value > maxValue) value = maxValue;
+                                if (value < minValue) value = minValue;
+                                selectedSlider.Value = value;
+                            }
+
+
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && Global.shortCut == false)
+                            {
+                                if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section2 && tsTemp.IsOn == false) tsTemp.IsOn= true;
+                                else if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section2 && tsTemp.IsOn == true) tsTemp.IsOn = false;
+
+                                if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section4 && tsPower.IsOn == false) tsPower.IsOn = true;
+                                else if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section4 && tsPower.IsOn == true) tsPower.IsOn = false;
+
+                                if (borders[optionSelected] == Section6 && tsCPUClk.IsOn == false) tsCPUClk.IsOn = true;
+                                else if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section6 && tsCPUClk.IsOn == true) tsCPUClk.IsOn = false;
+
+                                if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section7 && tsGPU.IsOn == false) tsGPU.IsOn = true;
+                                else if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section7 && tsGPU.IsOn == true) tsGPU.IsOn = false;
+
+
+                                if (borders[optionSelected] == Section3 && isActive == false) isActive = true;
+                                else if (borders[optionSelected] == Section3 && isActive == true) isActive = false;
+
+                                if (borders[optionSelected] == Section5 && isActive == false) isActive = true;
+                                else if (borders[optionSelected] == Section5 && isActive == true) isActive = false;
+
+                                if (borders[optionSelected] == Section8 && isActive == false) isActive = true;
+                                else if (borders[optionSelected] == Section8 && isActive == true) isActive = false;
+                            }
+                        }
+                    }
+                    updateMenuSelected();
+                }
+                catch { }
+            }
+            else
+            {
+                checkKeyInput.Stop();
+                sensor.Stop();
+            }
+        }
+
+        public void updateMenuSelected()
+        {
+            var bc = new BrushConverter();
+            Section2.Background = new SolidColorBrush(Colors.Transparent);
+            Section3.Background = new SolidColorBrush(Colors.Transparent);
+            Section3.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
+            Section4.Background = new SolidColorBrush(Colors.Transparent);
+            Section5.Background = new SolidColorBrush(Colors.Transparent);
+            Section5.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
+            Section6.Background = new SolidColorBrush(Colors.Transparent);
+            Section7.Background = new SolidColorBrush(Colors.Transparent);
+            Section8.Background = new SolidColorBrush(Colors.Transparent);
+            Section8.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
+
+            if (connected)
+            {
+                if (lastBorder.Visibility == Visibility.Collapsed && isActive == true) { isActive = false; optionSelected--; }
+
+                if (goingDown)
+                {
+                    if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected++;
+                    if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected++;
+                }
+                else
+                {
+                    if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
+                    if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
+                }
+                
+
+                borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
+                lastBorder= borders[optionSelected];
+
+                if (isActive == true)
+                {
+                    borders[optionSelected].BorderThickness = new Thickness(2.5);
+                }
+
+                Settings.Default.TempLimit = (int)sdTemp.Value;
+                Settings.Default.PowerLimit = (int)sdPower.Value;
+                Settings.Default.iGFXClk = (int)sdGFXClock.Value;
+                Settings.Default.COCPU = 0;
+                Settings.Default.Save();
+            }
         }
     }
 }

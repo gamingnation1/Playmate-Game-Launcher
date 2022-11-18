@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -29,6 +30,8 @@ namespace Game_Launcher_V2.Windows
         //Get current working directory
         public static string path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
         public static string mbo = "";
+        
+
         public OptionsWindow()
         {
             InitializeComponent();
@@ -44,7 +47,7 @@ namespace Game_Launcher_V2.Windows
 
             //set up timer for key combo system
             DispatcherTimer checkKeyInput = new DispatcherTimer();
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.115);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.117);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
 
@@ -60,11 +63,15 @@ namespace Game_Launcher_V2.Windows
                 mbo = queryObj["Manufacturer"].ToString();
                 mbo = mbo.ToLower();
             }
+
+            Global.shortCut = true;
         }
 
         private static Controller controller;
 
         public static bool hidden = true;
+
+        int menuSelected = 0;
         async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
             try
@@ -73,7 +80,7 @@ namespace Game_Launcher_V2.Windows
                 controller = new Controller(UserIndex.One);
 
                 bool connected = controller.IsConnected;
-                if(MainDock.Visibility == Visibility.Hidden) MainDock.Visibility = Visibility.Visible;
+                if (MainDock.Visibility == Visibility.Hidden) MainDock.Visibility = Visibility.Visible;
 
                 if (connected)
                 {
@@ -81,12 +88,21 @@ namespace Game_Launcher_V2.Windows
                     var state = controller.GetState();
 
                     //detect if keyboard or controller combo is being activated
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                    {
+                        Global.shortCut = true;
+                    }
+
+
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
                     {
+                        Global.shortCut = true;
+
                         //if hidden show window
                         if (hidden == false)
                         {
                             hidden = true;
+                            Global.isAccessMenuOpen = false;
                             this.Hide();
                         }
                         //else hide window
@@ -96,13 +112,34 @@ namespace Game_Launcher_V2.Windows
                             this.Show();
                             this.Activate();
                             PagesNavigation.NavigationService.Refresh();
+                            Global.isAccessMenuOpen = true;
                         }
                     }
+
+                    if(this.Visibility == Visibility.Visible && Global.shortCut == false)
+                    {
+                        if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && Global.shortCut == false)
+                        {
+                            if (menuSelected > 0) menuSelected--;
+                            else menuSelected = 0;
+                            changeMenu();
+                        }
+
+                        if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder) && Global.shortCut == false)
+                        {
+                            if (menuSelected < 3) menuSelected++;
+                            else menuSelected = 3;
+                            changeMenu();
+                        }
+                    }
+                    
 
                     //if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
                     //{
                     //    SendKeys.SendWait("%F");
                     //}
+
+                    Global.shortCut = false;
                 }
 
                 int i = 0;
@@ -120,6 +157,7 @@ namespace Game_Launcher_V2.Windows
                         if (hidden == false)
                         {
                             hidden = true;
+                            Global.isAccessMenuOpen = false;
                             this.Hide();
                         }
                         //else hide window
@@ -129,12 +167,31 @@ namespace Game_Launcher_V2.Windows
                             this.Show();
                             this.Activate();
                             PagesNavigation.NavigationService.Refresh();
+                            Global.isAccessMenuOpen = true;
                         }
 
                     }
                 }
             }
             catch { }
+        }
+
+        private void changeMenu()
+        {
+            PagesNavigation.Content = null;
+            PagesNavigation.NavigationService.RemoveBackEntry();
+
+            if (menuSelected == 0) rdBasic.IsChecked = true;
+            if (menuSelected == 1) rdPower.IsChecked = true;
+            if (menuSelected == 2) rdDisplay.IsChecked = true;
+            if (menuSelected == 3) rdMagpie.IsChecked = true;
+
+            if (rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
+            if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
+            if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+            if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+
+            Global.AccessMenuSelected = menuSelected;
         }
 
         private void setUpGUI()
@@ -179,10 +236,29 @@ namespace Game_Launcher_V2.Windows
 
         private void rd_Click(object sender, RoutedEventArgs e)
         {
-            if(rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
+            PagesNavigation.Content = null;
+            PagesNavigation.NavigationService.RemoveBackEntry();
+
+            if (rdBasic.IsChecked == true) menuSelected = 0;
+            if (rdPower.IsChecked == true) menuSelected = 1;
+            if (rdDisplay.IsChecked == true) menuSelected = 2;
+            if (rdMagpie.IsChecked == true) menuSelected = 3;
+            Global.AccessMenuSelected = menuSelected;
+
+            if (rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
             if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
             if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
             if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            Global.isAccessMenuActive = true;
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            Global.isAccessMenuActive = false;
         }
     }
 }

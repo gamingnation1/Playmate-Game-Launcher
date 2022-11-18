@@ -10,6 +10,8 @@
         Background="Transparent"
         WindowStyle="None"
         Topmost="True"
+        Activated="Window_Activated"
+        Deactivated="Window_Deactivated"
         WindowState="Maximized" Visibility="Hidden" ShowInTaskbar="False">
     <Grid>
         <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False" >

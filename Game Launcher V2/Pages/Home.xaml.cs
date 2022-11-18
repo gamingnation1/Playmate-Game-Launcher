@@ -278,7 +278,7 @@ namespace Game_Launcher_V2.Pages
                 var state = controller.GetState();
 
                 //detect if keyboard or controller combo is being activated
-                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight))
+                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.isAccessMenuOpen == false)
                 {
                     //Increase selected item by 1
                     int current = lbGames.SelectedIndex;
@@ -289,7 +289,7 @@ namespace Game_Launcher_V2.Pages
                     lbGames.ScrollIntoView(lbGames.SelectedItem);
                 }
 
-                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft))
+                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.isAccessMenuOpen == false)
                 {
                     //Decrease selected item by 1
                     int current = lbGames.SelectedIndex;
@@ -302,7 +302,7 @@ namespace Game_Launcher_V2.Pages
                     lbGames.ScrollIntoView(lbGames.SelectedItem);
                 }
 
-                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A))
+                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && Global.isAccessMenuOpen == false)
                 {
                     loadApp();
                 }

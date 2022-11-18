@@ -22,6 +22,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.Forms.MessageBox;
 using SplashScreen = Game_Launcher_V2.Windows.SplashScreen;
@@ -88,6 +89,12 @@ namespace Game_Launcher_V2
 
                 _ = Tablet.TabletDevices;
 
+                //set up timer for sensor update
+                DispatcherTimer sensor = new DispatcherTimer();
+                sensor.Interval = TimeSpan.FromSeconds(0.115);
+                sensor.Tick += Update_Tick;
+                sensor.Start();
+
                 try
                 {
                     RegistryKey myKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\CI\\Config", true);
@@ -123,6 +130,17 @@ namespace Game_Launcher_V2
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        void Update_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if(this.WindowState == WindowState.Minimized) Global.isMainActive = false;
+
+                if (this.Visibility == Visibility && this.WindowState != WindowState.Minimized && this.WindowState != WindowState.Maximized && Global.isMainActive == true) this.WindowState= WindowState.Maximized;
+            }
+            catch { }
         }
     }
 }
