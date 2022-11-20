@@ -21,6 +21,7 @@ using System.IO;
 using LibreHardwareMonitor.Hardware;
 using System.Windows.Forms;
 using Game_Launcher_V2.Properties;
+using Microsoft.Diagnostics.Tracing.StackSources;
 
 namespace Game_Launcher_V2.Windows
 {
@@ -63,6 +64,25 @@ namespace Game_Launcher_V2.Windows
                 }
                 return c;
             }
+
+            public static double GetFrameTime(int count)
+            {
+                double returnValue = 0;
+
+                int listCount = timestamps.Count;
+
+                if (listCount > count)
+                {
+                    for (int i = 1; i <= count; i++)
+                    {
+                        returnValue += timestamps[listCount - i] - timestamps[listCount - (i + 1)];
+                    }
+
+                    returnValue /= count;
+                }
+
+                return returnValue;
+            }
         }
 
         public const int EventID_D3D9PresentStart = 1;
@@ -87,7 +107,6 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                //console output loop
                 while (true)
                 {
                     long t1, t2;
@@ -100,12 +119,14 @@ namespace Game_Launcher_V2.Windows
 
                         foreach (var x in frames.Values)
                         {
+                            //Console.Write(x.Name + ": ");
+                            proName = x.Name;
                             //get the number of frames
                             int count = x.QueryCount(t1, t2);
 
                             //calculate FPS
-                            FPS = (double)count / dt * 1000.0;
-                            //Frametime = GetFrameTime(count);
+                            //Console.WriteLine("{0} FPS", (double)count / dt * 1000.0);
+                            Frametime = TimestampCollection.GetFrameTime(count);
                         }
                     }
                     Thread.Sleep(1000);
@@ -128,42 +149,43 @@ namespace Game_Launcher_V2.Windows
             m_EtwSession.EnableProvider("Microsoft-Windows-D3D9");
             m_EtwSession.EnableProvider("Microsoft-Windows-DXGI");
 
+
             //handle event
             m_EtwSession.Source.AllEvents += data =>
             {
                 //filter out frame presentation events
-                if (((int)data.ID == EventID_D3D9PresentStart && data.ProviderGuid == D3D9_provider) ||
-                ((int)data.ID == EventID_DxgiPresentStart && data.ProviderGuid == DXGI_provider))
+                if ((int)data.ID == EventID_DxgiPresentStart && data.ProviderGuid == DXGI_provider)
                 {
                     int pid = data.ProcessID;
                     long t;
 
-                    lock (sync)
+                    t = watch.ElapsedMilliseconds;
+                    try
                     {
-                        t = watch.ElapsedMilliseconds;
-
-                        //if process is not yet in Dictionary, add it
-                        if (!frames.ContainsKey(pid))
+                        var check = Process.GetProcessById(pid);
+                        if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wasclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware"))
                         {
-                            frames[pid] = new TimestampCollection();
-
-                            string name = "";
-                            var proc = Process.GetProcessById(pid);
-                            if (proc != null)
+                            //if process is not yet in Dictionary, add it
+                            if (!frames.ContainsKey(pid))
                             {
-                                using (proc)
+                                frames[pid] = new TimestampCollection();
+                                string name = "";
+                                var proc = Process.GetProcessById(pid);
+
+                                if (proc != null)
                                 {
-                                    name = proc.ProcessName;
+                                    using (proc)
+                                    {
+                                        name = proc.ProcessName;
+                                    }
                                 }
+                                else name = pid.ToString();
+
+                                frames[pid].Name = name;
                             }
-                            else name = pid.ToString();
-
-                            frames[pid].Name = name;
+                            frames[pid].Add((long)data.TimeStampRelativeMSec);
                         }
-
-                        //store frame timestamp in collection
-                        frames[pid].Add(t);
-                    }
+                    } catch { }
                 }
             };
 
@@ -178,11 +200,17 @@ namespace Game_Launcher_V2.Windows
             thOutput.IsBackground = true;
             thOutput.Start();
 
+
             //set up timer for sensor update
             DispatcherTimer sensor = new DispatcherTimer();
             sensor.Interval = TimeSpan.FromSeconds(2);
             sensor.Tick += Update_Tick;
             sensor.Start();
+
+            DispatcherTimer frame = new DispatcherTimer();
+            frame.Interval = TimeSpan.FromSeconds(1);
+            frame.Tick += FPS_Tick;
+            frame.Start();
 
             imgCPU.Source = new BitmapImage(new Uri(path + "\\Assets\\Icons\\cpu-line.png"));
             imgGPU.Source = new BitmapImage(new Uri(path + "\\Assets\\Icons\\cpu-fill.png"));
@@ -192,31 +220,15 @@ namespace Game_Launcher_V2.Windows
             _ = Tablet.TabletDevices;
         }
 
-        public static double GetFrameTime(int count)
-        {
-            double returnValue = 0;
-
-            int listCount = TimestampCollection.timestamps.Count;
-
-            if (listCount > count)
-            {
-                for (int i = 1; i <= count; i++)
-                {
-                    returnValue += TimestampCollection.timestamps[listCount - i] - TimestampCollection.timestamps[listCount - (i + 1)];
-                }
-
-                returnValue /= count;
-            }
-
-            return returnValue;
-        }
-
+        public static string proName;
         public static int CPUTemp, CPULoad, CPUClock, CPUPower;
         public static int GPUTemp, GPULoad, GPUClock;
         public static int RAMLoad, RAMData, RAMClock;
         async void Update_Tick(object sender, EventArgs e)
         {
-            await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package");});
+            if(Settings.Default.CPUName.ToLower() == "intel") await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package");});
+            else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
+
             await Task.Run(() => { CPUClock = (int)GetSensor.getCPUInfo(SensorType.Clock, "Core #1"); });
             await Task.Run(() => { CPULoad = (int)GetSensor.getCPUInfo(SensorType.Load, "Total"); });
             await Task.Run(() => { CPUPower = (int)GetSensor.getCPUInfo(SensorType.Power, "Package"); });
@@ -232,13 +244,36 @@ namespace Game_Launcher_V2.Windows
             lblCPU.Text = $"{CPUTemp}°C  {CPULoad}%  {CPUClock} MHz  {CPUPower}W";
             lblGPU.Text = $"{GPUTemp}°C  {GPULoad}%  {GPUClock} MHz";
             lblRAM.Text = $"{RAMLoad}%  {RAMData} MB  {RAMClock} MHz";
+        }
 
-            if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel")) spFrameData.Visibility = Visibility.Collapsed;
+        double lastFPS = 0;
+        double lastFrametime = 0;
+        async void FPS_Tick(object sender, EventArgs e)
+        {
+            FPS = 1000 / Frametime;
+
+            
+
+            if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) FPS = lastFPS;
+            if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) Frametime = lastFrametime;
+
+            Process[] processes = Process.GetProcessesByName(proName);
+
+            if (processes.Length > 0)
+            {
+                if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms  {proName}";
+            }
+            else
+            {
+                lblFPS.Text = "";
+            }
+
+            if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel") && processes.Length <= 0) spFrameData.Visibility = Visibility.Collapsed;
             else spFrameData.Visibility = Visibility.Visible;
 
-            Frametime = 1000 / FPS;
 
-            lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms";
+            if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFPS = FPS;
+            if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFrametime = Frametime;
         }
     }
 }

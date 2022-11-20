@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game_Launcher_V2.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -175,7 +176,7 @@ namespace Game_Launcher_V2.Scripts
                     lastBattery = batURL;
                 }
             }
-            catch(Exception ex) { MessageBox.Show(ex.Message); }
+            catch(Exception ex) { path = Settings.Default.Path; }
         }
     }
 }

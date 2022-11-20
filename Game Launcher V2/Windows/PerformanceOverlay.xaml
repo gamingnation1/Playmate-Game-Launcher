@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game_Launcher_V2.Windows"
         mc:Ignorable="d"
-        Title="PerformanceOverlay" Height="150" Width="450" AllowsTransparency="True" Background="Transparent" WindowState="Maximized"  Topmost="True" WindowStyle="None">
+        Title="PerformanceOverlay" Height="150" Width="450" AllowsTransparency="True" Background="Transparent" WindowState="Maximized" ShowInTaskbar="False" Topmost="True" WindowStyle="None">
     <Grid>
-        <DockPanel Margin="10,500,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <DockPanel Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Border  Background="#E6181818" Padding="7" CornerRadius="7">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Name="spCPUData" Margin="0,0,0,2">
@@ -25,7 +25,7 @@
                         <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0">RAM:</TextBlock>
                         <TextBlock VerticalAlignment="Center" x:Name="lblRAM" Foreground="White" FontSize="16" Margin="0,0,5,0" ></TextBlock>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Name="spFrameData" Margin="0,2,0,0">
+                    <StackPanel Orientation="Horizontal" Name="spFrameData" Margin="0,2,0,0" Visibility="Collapsed">
                         <Image Name="imgFrame" Source="..\Assets\Icons\time-line.png"  Height="24" Width="24" Margin="0,0,7,0" ></Image>
                         <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0">Game:</TextBlock>
                         <TextBlock VerticalAlignment="Center" x:Name="lblFPS" Foreground="White" FontSize="16" Margin="0,0,5,0" ></TextBlock>

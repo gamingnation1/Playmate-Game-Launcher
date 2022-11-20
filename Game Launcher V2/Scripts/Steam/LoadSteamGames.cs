@@ -30,7 +30,7 @@ namespace Game_Launcher_V2.Scripts
                 message = ""
             });
 
-            var lines = File.ReadAllLines("SavedList.txt");
+            var lines = File.ReadAllLines(path + "\\SavedList.txt");
             lines = lines.Distinct().ToArray();
             Array.Sort(lines);
             string path2 = AppDomain.CurrentDomain.BaseDirectory;
