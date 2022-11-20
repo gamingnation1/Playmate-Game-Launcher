@@ -8,7 +8,7 @@
         Title="PerformanceOverlay" Height="150" Width="450" AllowsTransparency="True" Background="Transparent" WindowState="Maximized" ShowInTaskbar="False" Topmost="True" WindowStyle="None">
     <Grid>
         <DockPanel Margin="16,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Border  Background="#BF181818" Padding="7" CornerRadius="7">
+            <Border  Background="#99181818" Padding="7" CornerRadius="7">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Name="spGPU" Margin="0,0,0,2">
                         <Image Name="imgGPU" Source="..\Assets\Icons\cpu-fill.png"  Height="24" Width="24" Margin="0,0,7,0" ></Image>
