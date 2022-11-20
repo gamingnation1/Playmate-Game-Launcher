@@ -18,6 +18,9 @@ using System.Windows.Threading;
 using Game_Launcher_V2.Scripts;
 using ControlzEx.Standard;
 using System.IO;
+using LibreHardwareMonitor.Hardware;
+using System.Windows.Forms;
+using Game_Launcher_V2.Properties;
 
 namespace Game_Launcher_V2.Windows
 {
@@ -60,25 +63,6 @@ namespace Game_Launcher_V2.Windows
                 }
                 return c;
             }
-
-            public static double GetFrameTime(int count)
-            {
-                double returnValue = 0;
-
-                int listCount = timestamps.Count;
-
-                if (listCount > count)
-                {
-                    for (int i = 1; i <= count; i++)
-                    {
-                        returnValue += timestamps[listCount - i] - timestamps[listCount - (i + 1)];
-                    }
-
-                    returnValue /= count;
-                }
-
-                return returnValue;
-            }
         }
 
         public const int EventID_D3D9PresentStart = 1;
@@ -103,23 +87,28 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                long t1, t2;
-                long dt = 2000;
-
-                lock (sync)
+                //console output loop
+                while (true)
                 {
-                    t2 = watch.ElapsedMilliseconds;
-                    t1 = t2 - dt;
+                    long t1, t2;
+                    long dt = 2000;
 
-                    foreach (var x in frames.Values)
+                    lock (sync)
                     {
-                        //get the number of frames
-                        int count = x.QueryCount(t1, t2);
+                        t2 = watch.ElapsedMilliseconds;
+                        t1 = t2 - dt;
 
-                        //calculate FPS
-                        FPS = (double)count / dt * 1000.0;
-                        Frametime = GetFrameTime(count);
+                        foreach (var x in frames.Values)
+                        {
+                            //get the number of frames
+                            int count = x.QueryCount(t1, t2);
+
+                            //calculate FPS
+                            FPS = (double)count / dt * 1000.0;
+                            //Frametime = GetFrameTime(count);
+                        }
                     }
+                    Thread.Sleep(1000);
                 }
             }
             catch { }
@@ -185,31 +174,22 @@ namespace Game_Launcher_V2.Windows
             thETW.IsBackground = true;
             thETW.Start();
 
-            OutputThreadProc();
+            Thread thOutput = new Thread(OutputThreadProc);
+            thOutput.IsBackground = true;
+            thOutput.Start();
 
             //set up timer for sensor update
             DispatcherTimer sensor = new DispatcherTimer();
-            sensor.Interval = TimeSpan.FromSeconds(1.5);
+            sensor.Interval = TimeSpan.FromSeconds(2);
             sensor.Tick += Update_Tick;
             sensor.Start();
 
+            imgCPU.Source = new BitmapImage(new Uri(path + "\\Assets\\Icons\\cpu-line.png"));
+            imgGPU.Source = new BitmapImage(new Uri(path + "\\Assets\\Icons\\cpu-fill.png"));
+            imgRAM.Source = new BitmapImage(new Uri(path + "\\Assets\\Icons\\database-2-line.png"));
+            imgFrame.Source = new BitmapImage(new Uri(path + "\\Assets\\Icons\\time-line.png"));
 
-            var bi2 = new BitmapImage();
-
-            string timeURL = "";
-
-            timeURL = path + "//Assets//Icons//time-line.png";
-
-            using (var stream = new FileStream(timeURL, FileMode.Open, FileAccess.Read))
-            {
-                bi2.BeginInit();
-                bi2.DecodePixelWidth = 24;
-                bi2.CacheOption = BitmapCacheOption.OnLoad;
-                bi2.StreamSource = stream;
-                bi2.EndInit();
-            }
-            bi2.Freeze();
-            imgFrame.Source = bi2;
+            _ = Tablet.TabletDevices;
         }
 
         public static double GetFrameTime(int count)
@@ -231,14 +211,34 @@ namespace Game_Launcher_V2.Windows
             return returnValue;
         }
 
-        //Get battery and time info evry 2 seconds
-        void Update_Tick(object sender, EventArgs e)
+        public static int CPUTemp, CPULoad, CPUClock, CPUPower;
+        public static int GPUTemp, GPULoad, GPUClock;
+        public static int RAMLoad, RAMData, RAMClock;
+        async void Update_Tick(object sender, EventArgs e)
         {
-            OutputThreadProc();
+            await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package");});
+            await Task.Run(() => { CPUClock = (int)GetSensor.getCPUInfo(SensorType.Clock, "Core #1"); });
+            await Task.Run(() => { CPULoad = (int)GetSensor.getCPUInfo(SensorType.Load, "Total"); });
+            await Task.Run(() => { CPUPower = (int)GetSensor.getCPUInfo(SensorType.Power, "Package"); });
 
-            if (this.WindowState != WindowState.Maximized) this.WindowState = WindowState.Maximized;
+            await Task.Run(() => { GPUTemp = (int)GetSensor.getAMDGPU(SensorType.Temperature, "GPU Core"); });
+            await Task.Run(() => { GPULoad = (int)GetSensor.getAMDGPU(SensorType.Load, "GPU Core"); });
+            await Task.Run(() => { GPUClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "GPU Core"); });
 
-            lblFPS.Text =$"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms" ;
+            await Task.Run(() => { RAMLoad = (int)GetSensor.getRAMInfo(SensorType.Load, "Virtual"); });
+            await Task.Run(() => { RAMData = (int)(GetSensor.getRAMInfo(SensorType.Data, "Memory Used") * 1000); });
+            await Task.Run(() => { RAMClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "Memory"); });
+
+            lblCPU.Text = $"{CPUTemp}°C  {CPULoad}%  {CPUClock} MHz  {CPUPower}W";
+            lblGPU.Text = $"{GPUTemp}°C  {GPULoad}%  {GPUClock} MHz";
+            lblRAM.Text = $"{RAMLoad}%  {RAMData} MB  {RAMClock} MHz";
+
+            if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel")) spFrameData.Visibility = Visibility.Collapsed;
+            else spFrameData.Visibility = Visibility.Visible;
+
+            Frametime = 1000 / FPS;
+
+            lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms";
         }
     }
 }

@@ -71,6 +71,8 @@ namespace Game_Launcher_V2
             {
                 InitializeComponent();
 
+                GetSensor.openSensor();
+
                 Settings.Default.CPUName = System.Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER");
 
                 SplashScreen splash = new SplashScreen();

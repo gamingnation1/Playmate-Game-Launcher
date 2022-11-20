@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Game_Launcher_V2
 {
@@ -16,7 +17,9 @@ namespace Game_Launcher_V2
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if(Settings.Default.openGameList == false)
+            _ = Tablet.TabletDevices;
+
+            if (Settings.Default.openGameList == false)
             {
                 StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
             }

@@ -25,6 +25,8 @@ namespace Game_Launcher_V2.Windows
         {
             InitializeComponent();
 
+            _ = Tablet.TabletDevices;
+
             //set up timer for sensor update
             DispatcherTimer sensor = new DispatcherTimer();
             sensor.Interval = TimeSpan.FromSeconds(1);
