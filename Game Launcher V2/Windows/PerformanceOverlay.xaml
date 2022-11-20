@@ -7,30 +7,34 @@
         mc:Ignorable="d"
         Title="PerformanceOverlay" Height="150" Width="450" AllowsTransparency="True" Background="Transparent" WindowState="Maximized" ShowInTaskbar="False" Topmost="True" WindowStyle="None">
     <Grid>
-        <DockPanel Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Border  Background="#E6181818" Padding="7" CornerRadius="7">
+        <DockPanel Margin="16,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Border  Background="#BF181818" Padding="7" CornerRadius="7">
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal" Name="spCPUData" Margin="0,0,0,2">
-                        <Image Name="imgCPU" Source="..\Assets\Icons\cpu-line.png" Height="24" Width="24" Margin="0,0,7,0" ></Image>
-                        <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0">CPU:</TextBlock>
-                        <TextBlock VerticalAlignment="Center" x:Name="lblCPU" Foreground="White" FontSize="16" Margin="0,0,5,0" ></TextBlock>
-                    </StackPanel>
                     <StackPanel Orientation="Horizontal" Name="spGPU" Margin="0,0,0,2">
                         <Image Name="imgGPU" Source="..\Assets\Icons\cpu-fill.png"  Height="24" Width="24" Margin="0,0,7,0" ></Image>
                         <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0">GPU:</TextBlock>
                         <TextBlock VerticalAlignment="Center" x:Name="lblGPU" Foreground="White" FontSize="16" Margin="0,0,5,0" ></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Name="spCPUData" Margin="0,0,0,2">
+                        <Image Name="imgCPU" Source="..\Assets\Icons\cpu-line.png" Height="24" Width="24" Margin="0,0,7,0" ></Image>
+                        <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0">CPU:</TextBlock>
+                        <TextBlock VerticalAlignment="Center" x:Name="lblCPU" Foreground="White" FontSize="16" Margin="0,0,5,0" ></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Name="spRAM">
                         <Image Name="imgRAM" Source="..\Assets\Icons\database-2-line.png" Height="24" Width="24" Margin="0,0,7,0" ></Image>
                         <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0">RAM:</TextBlock>
                         <TextBlock VerticalAlignment="Center" x:Name="lblRAM" Foreground="White" FontSize="16" Margin="0,0,5,0" ></TextBlock>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" Name="spBat" Margin="0,2,0,0" Visibility="Collapsed">
+                        <Image Name="imgBat"  Height="24" Width="24" Margin="0,0,7,0" ></Image>
+                        <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0">Battery:</TextBlock>
+                        <TextBlock VerticalAlignment="Center" x:Name="lblBat" Foreground="White" FontSize="16" Margin="0,0,5,0" ></TextBlock>
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal" Name="spFrameData" Margin="0,2,0,0" Visibility="Collapsed">
                         <Image Name="imgFrame" Source="..\Assets\Icons\time-line.png"  Height="24" Width="24" Margin="0,0,7,0" ></Image>
                         <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0">Game:</TextBlock>
                         <TextBlock VerticalAlignment="Center" x:Name="lblFPS" Foreground="White" FontSize="16" Margin="0,0,5,0" ></TextBlock>
                     </StackPanel>
-
                 </StackPanel>
             </Border>
         </DockPanel>

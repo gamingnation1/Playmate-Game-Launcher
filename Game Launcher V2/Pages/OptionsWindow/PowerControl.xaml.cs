@@ -124,6 +124,11 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 Settings.Default.isBoost = tsCPUClk.IsOn;
                 Settings.Default.isiGFX= tsGPU.IsOn;
                 Settings.Default.Save();
+                Settings.Default.TempLimit = (int)sdTemp.Value;
+                Settings.Default.PowerLimit = (int)sdPower.Value;
+                Settings.Default.iGFXClk = (int)sdGFXClock.Value;
+                Settings.Default.COCPU = 0;
+                Settings.Default.Save();
             }
 
             applySettings();

@@ -1,4 +1,5 @@
 ﻿using Game_Launcher_V2.Scripts;
+using Game_Launcher_V2.Windows;
 using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,9 @@ namespace Game_Launcher_V2.Pages
             setUpGUI();
 
             Global.isOpen = true;
+
+            PerformanceOverlay overlay = new PerformanceOverlay();
+            overlay.Show();
         }
 
         private void setUpTimers()

@@ -128,6 +128,34 @@ namespace Game_Launcher_V2.Scripts
             }
         }
 
+        public static float getBattery(SensorType sensorType, string sensorName)
+        {
+            float value = 0;
+            try
+            {
+                foreach (var hardware in thisPC.Hardware)
+                {
+                    hardware.Update();
+                    if (hardware.HardwareType == HardwareType.Battery)
+                    {
+                        foreach (var sensor in hardware.Sensors)
+                        {
+                            if (sensor.SensorType == sensorType && sensor.Name.Contains(sensorName))
+                            {
+                                value = (float)sensor.Value.GetValueOrDefault();
+                            }
+                        }
+                    }
+
+                }
+                return value;
+            }
+            catch (Exception ex)
+            {
+                return value;
+            }
+        }
+
         public static float getRAMInfo(SensorType sensorType, string sensorName)
         {
             float value = 0;

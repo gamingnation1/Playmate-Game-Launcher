@@ -163,7 +163,7 @@ namespace Game_Launcher_V2.Windows
                     try
                     {
                         var check = Process.GetProcessById(pid);
-                        if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wasclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware"))
+                        if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wasclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware") && !check.ProcessName.ToLower().Contains("spotify") && !check.ProcessName.ToLower().Contains("disneyplus") && !check.ProcessName.ToLower().Contains("microsoft.media"))
                         {
                             //if process is not yet in Dictionary, add it
                             if (!frames.ContainsKey(pid))
@@ -217,6 +217,11 @@ namespace Game_Launcher_V2.Windows
             imgRAM.Source = new BitmapImage(new Uri(path + "\\Assets\\Icons\\database-2-line.png"));
             imgFrame.Source = new BitmapImage(new Uri(path + "\\Assets\\Icons\\time-line.png"));
 
+            getBatteryTime();
+            updateBatIcon();
+
+            updateInfo();
+
             _ = Tablet.TabletDevices;
         }
 
@@ -224,9 +229,15 @@ namespace Game_Launcher_V2.Windows
         public static int CPUTemp, CPULoad, CPUClock, CPUPower;
         public static int GPUTemp, GPULoad, GPUClock;
         public static int RAMLoad, RAMData, RAMClock;
+        public static float batRate;
         async void Update_Tick(object sender, EventArgs e)
         {
-            if(Settings.Default.CPUName.ToLower() == "intel") await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package");});
+            updateInfo();
+        }
+
+        public async void updateInfo()
+        {
+            if (Settings.Default.CPUName.ToLower() == "intel") await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
             else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
 
             await Task.Run(() => { CPUClock = (int)GetSensor.getCPUInfo(SensorType.Clock, "Core #1"); });
@@ -252,7 +263,8 @@ namespace Game_Launcher_V2.Windows
         {
             FPS = 1000 / Frametime;
 
-            
+            getBatteryTime();
+            updateBatIcon();
 
             if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) FPS = lastFPS;
             if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) Frametime = lastFrametime;
@@ -271,9 +283,63 @@ namespace Game_Launcher_V2.Windows
             if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel") && processes.Length <= 0) spFrameData.Visibility = Visibility.Collapsed;
             else spFrameData.Visibility = Visibility.Visible;
 
+            if(lblFPS.Text == "") spFrameData.Visibility = Visibility.Collapsed;
 
             if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFPS = FPS;
             if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFrametime = Frametime;
+        }
+
+        static string lastBat = "";
+        public void updateBatIcon()
+        {
+            string batURL = "";
+
+            //Update battery icon based on battery level
+
+            //Update battery icon based on battery level
+            if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
+            {
+                batURL = path + "//Assets//Icons//battery-fill.png";
+            }
+            if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
+            {
+                batURL = path + "//Assets//Icons//battery-low-line.png";
+            }
+
+            if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
+            {
+                batURL = path + "//Assets//Icons//battery-charge-line.png";
+            }
+            imgBat.Source = new BitmapImage(new Uri(batURL));
+            lastBat = batURL;
+        }
+
+        public static TimeSpan time;
+        public static float batTime;
+
+
+        public void getBatteryTime()
+        {
+            PowerStatus pwr = System.Windows.Forms.SystemInformation.PowerStatus;
+            //Get battery life
+
+            batTime = (float)pwr.BatteryLifeRemaining;
+
+            bool isCharging = false;
+
+            if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
+            {
+                batTime = 0;
+                isCharging = true;
+            }
+            time = TimeSpan.FromSeconds(batTime);
+
+            lblBat.Text = $"{Time_and_Bat.batPercentInt}%  {time:%h} Hours {time:%m} Minutes";
+
+            if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == true) lblBat.Text = $"{Time_and_Bat.batPercentInt}%";
+            if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == false) lblBat.Text = $"{Time_and_Bat.batPercentInt}%  Calculating";
+
+            spBat.Visibility= Visibility.Visible;
         }
     }
 }

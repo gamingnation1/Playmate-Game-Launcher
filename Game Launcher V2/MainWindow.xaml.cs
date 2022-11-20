@@ -89,9 +89,6 @@ namespace Game_Launcher_V2
 
                 Global.path = Settings.Default.Path;
 
-                PerformanceOverlay overlay = new PerformanceOverlay();
-                overlay.Show();
-
                 _ = Tablet.TabletDevices;
 
                 //set up timer for sensor update
