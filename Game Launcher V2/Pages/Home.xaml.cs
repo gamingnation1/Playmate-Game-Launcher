@@ -53,6 +53,8 @@ namespace Game_Launcher_V2.Pages
 
         }
 
+        int currentGameStore;
+        bool thisWorking = true;
 
         public Home()
         {
@@ -68,6 +70,10 @@ namespace Game_Launcher_V2.Pages
                 LoadEpicGamesData.loadEpicGames(lbGames);
             }
 
+            thisWorking = true;
+
+            currentGameStore = Global.GameStore;
+
             setUpTimers();
 
             setUpGUI();
@@ -75,22 +81,25 @@ namespace Game_Launcher_V2.Pages
             Global.isOpen = true;
         }
 
+        public DispatcherTimer sensor = new DispatcherTimer();
+        public DispatcherTimer nameUpdate = new DispatcherTimer();
+        public DispatcherTimer checkKeyInput = new DispatcherTimer();
         private void setUpTimers()
         {
             //set up timer for sensor update
-            DispatcherTimer sensor = new DispatcherTimer();
+            
             sensor.Interval = TimeSpan.FromSeconds(2);
             sensor.Tick += Update_Tick;
             sensor.Start();
 
             //set up timer for game name label update
-            DispatcherTimer nameUpdate = new DispatcherTimer();
+            
             nameUpdate.Interval = TimeSpan.FromSeconds(0.05);
             nameUpdate.Tick += gameName_Tick;
             nameUpdate.Start();
 
             //set up timer for key combo system
-            DispatcherTimer checkKeyInput = new DispatcherTimer();
+            
             checkKeyInput.Interval = TimeSpan.FromSeconds(0.115);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
@@ -237,25 +246,35 @@ namespace Game_Launcher_V2.Pages
                 double width = lblGameName.ActualWidth;
                 GameNameBar.Width = (width + 28);
             }
+
+            if(Global.GameStore != currentGameStore)
+            {
+                mediaPlayer.Stop();
+                thisWorking = false;
+                checkKeyInput.Stop();
+                sensor.Stop();
+                nameUpdate.Stop();
+            }
         }
 
 
         private void lbGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-            SteamGame model = lbGames.SelectedItem as SteamGame;
-            LoadSteamGames.changeSteamGame(lbGames, lblGameName, btnControl);
-            updateBGImage(model.bgImagePath);
-            playAudio(model.musicPath);
-            lastAudio = model.musicPath;
-            lastBG = model.bgImagePath;
-
+            if (thisWorking)
+            {
+                SteamGame model = lbGames.SelectedItem as SteamGame;
+                LoadSteamGames.changeSteamGame(lbGames, lblGameName, btnControl);
+                updateBGImage(model.bgImagePath);
+                playAudio(model.musicPath);
+                lastAudio = model.musicPath;
+                lastBG = model.bgImagePath;
+            }
         }
 
         string lastBG = "";
         public async Task updateBGImage(string url)
         {
-            if (url != lastBG)
+            if (url != lastBG && thisWorking)
             {
                 await StartAnimationBGFadeOut();
                 //Save new image and load it
@@ -313,7 +332,7 @@ namespace Game_Launcher_V2.Pages
         //Update media player with current game BG music 
         private async Task playAudio(string audioPath)
         {
-            if (lastAudio != audioPath)
+            if (lastAudio != audioPath && thisWorking)
             {
                 if (audioPath == null || audioPath == "N/A")
                 {

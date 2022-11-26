@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game_Launcher_V2.Windows"
         mc:Ignorable="d"
+        Focusable="False"
         Title="PerformanceOverlay" Height="150" Width="450" AllowsTransparency="True" Background="Transparent" WindowState="Maximized" ShowInTaskbar="False" Topmost="True" WindowStyle="None">
     <Grid>
         <DockPanel Margin="16,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">

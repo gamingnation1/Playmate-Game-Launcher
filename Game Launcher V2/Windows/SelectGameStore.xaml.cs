@@ -96,12 +96,15 @@ namespace Game_Launcher_V2.Windows
                         if (hidden == false)
                         {
                             hidden = true;
+                            Global.menuSelectWasOpen = true;
+                            Global.menuselectOpen = false;
                             this.Hide();
                         }
                         //else hide window
                         else
                         {
                             hidden = false;
+                            Global.menuselectOpen = true;
                             this.Show();
                             this.Activate();
                         }

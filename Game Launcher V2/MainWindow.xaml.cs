@@ -162,6 +162,13 @@ namespace Game_Launcher_V2
                     PagesNavigation.Refresh();
                 }
 
+                if (Global.menuSelectWasOpen)
+                {
+                    this.Activate();
+
+                    Global.menuSelectWasOpen = false;
+                }
+
                 lastGameStore = Global.GameStore;
 
                 if (this.WindowState == WindowState.Minimized) Global.isMainActive = false;

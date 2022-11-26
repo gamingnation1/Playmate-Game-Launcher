@@ -239,6 +239,9 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
+                if(Global.isMainActive || Global.menuselectOpen) this.Hide();
+                else this.Show();
+
                 if (Settings.Default.CPUName.ToLower().Contains("intel")) await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
                 else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
 
