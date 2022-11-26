@@ -91,20 +91,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                 getBatteryTime();
                 updateBatIcon();
-
-                if (isFirstBoot == false)
-                {
-                    Settings.Default.isTemp = tsTemp.IsOn;
-                    Settings.Default.isPower = tsPower.IsOn;
-                    Settings.Default.isBoost = tsCPUClk.IsOn;
-                    Settings.Default.isiGFX = tsGPU.IsOn;
-                    Settings.Default.Save();
-                    Settings.Default.TempLimit = (int)sdTemp.Value;
-                    Settings.Default.PowerLimit = (int)sdPower.Value;
-                    Settings.Default.iGFXClk = (int)sdGFXClock.Value;
-                    Settings.Default.COCPU = 0;
-                    Settings.Default.Save();
-                }
             }
         }
 
@@ -390,6 +376,21 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         }
                     }
                     updateMenuSelected();
+
+
+                    if (isFirstBoot == false)
+                    {
+                        Settings.Default.isTemp = tsTemp.IsOn;
+                        Settings.Default.isPower = tsPower.IsOn;
+                        Settings.Default.isBoost = tsCPUClk.IsOn;
+                        Settings.Default.isiGFX = tsGPU.IsOn;
+                        Settings.Default.Save();
+                        Settings.Default.TempLimit = (int)sdTemp.Value;
+                        Settings.Default.PowerLimit = (int)sdPower.Value;
+                        Settings.Default.iGFXClk = (int)sdGFXClock.Value;
+                        Settings.Default.COCPU = 0;
+                        Settings.Default.Save();
+                    }
                 }
                 catch { }
             }

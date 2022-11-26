@@ -22,6 +22,7 @@ using LibreHardwareMonitor.Hardware;
 using System.Windows.Forms;
 using Game_Launcher_V2.Properties;
 using Microsoft.Diagnostics.Tracing.StackSources;
+using System.Windows.Forms.VisualStyles;
 
 namespace Game_Launcher_V2.Windows
 {
@@ -138,7 +139,7 @@ namespace Game_Launcher_V2.Windows
 
         public static double FPS;
         public static double Frametime;
-        public static string path = Global.path;
+        public static string path = Settings.Default.Path;
         public PerformanceOverlay()
         {
             InitializeComponent();
@@ -242,30 +243,33 @@ namespace Game_Launcher_V2.Windows
                 if(Global.isMainActive || Global.menuselectOpen) this.Hide();
                 else this.Show();
 
-                if (Settings.Default.CPUName.ToLower().Contains("intel")) await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
-                else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
-
-                await Task.Run(() => { CPUClock = (int)GetSensor.getCPUInfo(SensorType.Clock, "Core #1"); });
-                await Task.Run(() => { CPULoad = (int)GetSensor.getCPUInfo(SensorType.Load, "Total"); });
-                await Task.Run(() => { CPUPower = (int)GetSensor.getCPUInfo(SensorType.Power, "Package"); });
-
-                await Task.Run(() => { GPUTemp = (int)GetSensor.getAMDGPU(SensorType.Temperature, "GPU Core"); });
-                await Task.Run(() => { GPULoad = (int)GetSensor.getAMDGPU(SensorType.Load, "GPU Core"); });
-                await Task.Run(() => { GPUClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "GPU Core"); });
-
-                await Task.Run(() => { RAMLoad = (int)GetSensor.getRAMInfo(SensorType.Load, "Virtual"); });
-                await Task.Run(() => { RAMData = (int)(GetSensor.getRAMInfo(SensorType.Data, "Memory Used") * 1000); });
-                await Task.Run(() => { RAMClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "Memory"); });
-
-                lblCPU.Text = $"{CPUTemp}°C  {CPULoad}%  {CPUClock} MHz  {CPUPower}W";
-                lblGPU.Text = $"{GPUTemp}°C  {GPULoad}%  {GPUClock} MHz";
-
-                if (Settings.Default.CPUName.ToLower().Contains("intel"))
+                if(this.Visibility == Visibility.Visible)
                 {
-                    lblRAM.Text = $"{RAMLoad}%  {RAMData} MB";
-                    spGPU.Visibility = Visibility.Collapsed;
+                    if (Settings.Default.CPUName.ToLower().Contains("intel")) await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
+                    else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
+
+                    await Task.Run(() => { CPUClock = (int)GetSensor.getCPUInfo(SensorType.Clock, "Core #1"); });
+                    await Task.Run(() => { CPULoad = (int)GetSensor.getCPUInfo(SensorType.Load, "Total"); });
+                    await Task.Run(() => { CPUPower = (int)GetSensor.getCPUInfo(SensorType.Power, "Package"); });
+
+                    await Task.Run(() => { GPUTemp = (int)GetSensor.getAMDGPU(SensorType.Temperature, "GPU Core"); });
+                    await Task.Run(() => { GPULoad = (int)GetSensor.getAMDGPU(SensorType.Load, "GPU Core"); });
+                    await Task.Run(() => { GPUClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "GPU Core"); });
+
+                    await Task.Run(() => { RAMLoad = (int)GetSensor.getRAMInfo(SensorType.Load, "Virtual"); });
+                    await Task.Run(() => { RAMData = (int)(GetSensor.getRAMInfo(SensorType.Data, "Memory Used") * 1000); });
+                    await Task.Run(() => { RAMClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "Memory"); });
+
+                    lblCPU.Text = $"{CPUTemp}°C  {CPULoad}%  {CPUClock} MHz  {CPUPower}W";
+                    lblGPU.Text = $"{GPUTemp}°C  {GPULoad}%  {GPUClock} MHz";
+
+                    if (Settings.Default.CPUName.ToLower().Contains("intel"))
+                    {
+                        lblRAM.Text = $"{RAMLoad}%  {RAMData} MB";
+                        spGPU.Visibility = Visibility.Collapsed;
+                    }
+                    else lblRAM.Text = $"{RAMLoad}%  {RAMData} MB  {RAMClock} MHz";
                 }
-                else lblRAM.Text = $"{RAMLoad}%  {RAMData} MB  {RAMClock} MHz";
             }
             catch { }
         }
@@ -276,32 +280,42 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                FPS = 1000 / Frametime;
-
-                getBatteryTime();
-                updateBatIcon();
-
-                if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) FPS = lastFPS;
-                if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) Frametime = lastFrametime;
-
-                Process[] processes = Process.GetProcessesByName(proName);
-
-                if (processes.Length > 0)
+                if (Settings.Default.isPerfOpen == false)
                 {
-                    if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms  {proName}";
+                    mainGrid.Visibility = Visibility.Hidden;
+                    this.Hide();
                 }
                 else
                 {
-                    lblFPS.Text = "";
+                    this.Show(); mainGrid.Visibility = Visibility.Visible;
+
+                    FPS = 1000 / Frametime;
+
+                    getBatteryTime();
+                    updateBatIcon();
+
+                    if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) FPS = lastFPS;
+                    if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) Frametime = lastFrametime;
+
+                    Process[] processes = Process.GetProcessesByName(proName);
+
+                    if (processes.Length > 0)
+                    {
+                        if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms";
+                    }
+                    else
+                    {
+                        lblFPS.Text = "";
+                    }
+
+                    if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel") && processes.Length <= 0) spFrameData.Visibility = Visibility.Collapsed;
+                    else spFrameData.Visibility = Visibility.Visible;
+
+                    if (lblFPS.Text == "") spFrameData.Visibility = Visibility.Collapsed;
+
+                    if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFPS = FPS;
+                    if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFrametime = Frametime;
                 }
-
-                if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel") && processes.Length <= 0) spFrameData.Visibility = Visibility.Collapsed;
-                else spFrameData.Visibility = Visibility.Visible;
-
-                if (lblFPS.Text == "") spFrameData.Visibility = Visibility.Collapsed;
-
-                if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFPS = FPS;
-                if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFrametime = Frametime;
             }
             catch { }
         }

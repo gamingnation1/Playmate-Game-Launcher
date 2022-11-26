@@ -27,6 +27,7 @@ using System.Management;
 using Microsoft.Win32;
 using Color = System.Windows.Media.Color;
 using Brush = System.Windows.Media.Brush;
+using Application = System.Windows.Application;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -55,7 +56,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             tsBootOnStart.IsOn = Settings.Default.bootOnStart;
             tsMini.IsOn = Settings.Default.startMinimised;
-            tsGameList.IsOn = Settings.Default.openGameList;
+            tsPerf.IsOn = Settings.Default.isPerfOpen;
 
             ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
             isFirstBoot = false;
@@ -82,6 +83,14 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         {
             updateGUI();
         }
+
+        public static bool IsWindowOpen<T>(string name = "") where T : Window
+        {
+            return string.IsNullOrEmpty(name)
+               ? Application.Current.Windows.OfType<T>().Any()
+               : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
+        }
+
         private void updateGUI()
         {
             if (isFirstBoot == false)
@@ -103,8 +112,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                 if (tsMini.IsOn == true) Settings.Default.startMinimised = true; else Settings.Default.startMinimised = false;
                 if (tsBootOnStart.IsOn == true) Settings.Default.bootOnStart = true; else Settings.Default.bootOnStart = false;
+                if (tsPerf.IsOn == true) Settings.Default.isPerfOpen = true; else Settings.Default.isPerfOpen = false;
 
-                Settings.Default.openGameList = tsGameList.IsOn;
 
                 Settings.Default.Save();
             }
@@ -173,7 +182,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
-            borders = new Border[] { Section1, Section2, Section3, Section4 };
+            borders = new Border[] { Section1, Section2, Section3, Section4, Section51 };
 
             if (Global.AccessMenuSelected == 0)
             {
@@ -208,8 +217,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false)
                             {
-                                if (optionSelected < 3) optionSelected++;
-                                else optionSelected = 3;
+                                if (optionSelected < 4) optionSelected++;
+                                else optionSelected = 4;
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true)
@@ -269,6 +278,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                                 if (optionSelected == 3 && tsMini.IsOn == false) tsMini.IsOn = true;
                                 else if (optionSelected == 3 && tsMini.IsOn == true) tsMini.IsOn = false;
+
+                                if (optionSelected == 4 && tsPerf.IsOn == false) tsPerf.IsOn = true;
+                                else if (optionSelected == 4 && tsPerf.IsOn == true) tsPerf.IsOn = false;
                             }
                         }
                     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
+using Game_Launcher_V2.Windows;
 
 namespace Game_Launcher_V2.Scripts
 {

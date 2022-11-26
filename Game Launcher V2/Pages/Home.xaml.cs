@@ -185,59 +185,8 @@ namespace Game_Launcher_V2.Pages
         {
             GC.Collect();
 
-            string wifiURL = "";
-            double wifi = Global.wifi;
-
-            if (wifi > 75)
-            {
-                wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
-            }
-            if (wifi < 75 && wifi > 45)
-            {
-                wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
-            }
-            if (wifi < 45)
-            {
-                wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
-            }
-
-            if (wifiURL != lastWifi)
-            {
-                imgWiFi.Source = new BitmapImage(new Uri(wifiURL));
-
-                lastWifi = wifiURL;
-            }
-
-            //Update battery and time text blocks
-            lblBat.Text = Time_and_Bat.batPercent;
-            lblTime.Text = Time_and_Bat.time;
-
-            int batPercentInt = Time_and_Bat.batPercentInt;
-            UInt16 statuscode = Time_and_Bat.statuscode;
-
-            string batURL = "";
-
-
-            //Update battery icon based on battery level
-            if (Convert.ToInt32(batPercentInt) > 50)
-            {
-                batURL = path + "//Assets//Icons//battery-fill.png";
-            }
-            if (Convert.ToInt32(batPercentInt) < 45)
-            {
-                batURL = path + "//Assets//Icons//battery-low-line.png";
-            }
-
-            if (statuscode == 2 || statuscode == 6 || statuscode == 7 || statuscode == 8)
-            {
-                batURL = path + "//Assets//Icons//battery-charge-line.png";
-            }
-
-            if (batURL != lastBattery)
-            {
-                imgBat.Source = new BitmapImage(new Uri(batURL));
-                lastBattery = batURL;
-            }
+            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
+            Time_and_Bat.getWifi(imgWiFi);
         }
 
         void gameName_Tick(object sender, EventArgs e)

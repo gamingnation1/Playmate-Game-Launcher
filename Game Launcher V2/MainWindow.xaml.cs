@@ -92,7 +92,11 @@ namespace Game_Launcher_V2
 
                 if (Settings.Default.startMinimised == true) this.WindowState = WindowState.Minimized;
 
-                Global.path = Settings.Default.Path;
+                try
+                {
+                    Global.path = Settings.Default.Path;
+                } catch { Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath; }
+                
 
                 _ = Tablet.TabletDevices;
 
@@ -128,8 +132,9 @@ namespace Game_Launcher_V2
                     OptionsWindow win2 = new OptionsWindow();
                     win2.Show();
 
-                    PerformanceOverlay overlay = new PerformanceOverlay();
-                    overlay.Show();
+                    PerformanceOverlay perfOverlay = new PerformanceOverlay();
+                    perfOverlay.Show();
+
                     SelectGameStore gameStore = new SelectGameStore();
                     gameStore.Show();
                 }

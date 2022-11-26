@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:Game_Launcher_V2.Windows"
         mc:Ignorable="d"
         Focusable="False"
+        Visibility="Hidden"
         Title="PerformanceOverlay" Height="150" Width="450" AllowsTransparency="True" Background="Transparent" WindowState="Maximized" ShowInTaskbar="False" Topmost="True" WindowStyle="None">
-    <Grid>
+    <Grid Name="mainGrid" Visibility="Hidden">
         <DockPanel Margin="16,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Border  Background="#99181818" Padding="7" CornerRadius="7">
                 <StackPanel>

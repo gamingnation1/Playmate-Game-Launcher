@@ -190,5 +190,17 @@ namespace Game_Launcher_V2.Properties {
                 this["CPUName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isPerfOpen {
+            get {
+                return ((bool)(this["isPerfOpen"]));
+            }
+            set {
+                this["isPerfOpen"] = value;
+            }
+        }
     }
 }

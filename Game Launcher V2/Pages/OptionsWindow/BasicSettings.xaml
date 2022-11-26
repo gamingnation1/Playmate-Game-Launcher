@@ -46,10 +46,10 @@
                     </StackPanel>
                 </Border>
 
-                <Border Name="Section5"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                <Border Name="Section51"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Visible">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
-                        <mah:ToggleSwitch Name="tsGameList" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Quick Access Menu Only" OnContent="Quick Access Menu Only" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
-                        <TextBlock Foreground="White" FontSize="15">When application opens only open the quick access menu</TextBlock>
+                        <mah:ToggleSwitch Name="tsPerf" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Performance Overlay" OnContent="Performance Overlay" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">Shows performance overlay with sensor data</TextBlock>
                     </StackPanel>
                 </Border>
             </StackPanel>
