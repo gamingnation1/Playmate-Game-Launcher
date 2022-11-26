@@ -163,7 +163,7 @@ namespace Game_Launcher_V2.Windows
                     try
                     {
                         var check = Process.GetProcessById(pid);
-                        if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wsaclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware") && !check.ProcessName.ToLower().Contains("spotify") && !check.ProcessName.ToLower().Contains("disneyplus") && !check.ProcessName.ToLower().Contains("microsoft.media") && !check.ProcessName.ToLower().Contains("epicwebhandle"))
+                        if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wsaclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware") && !check.ProcessName.ToLower().Contains("spotify") && !check.ProcessName.ToLower().Contains("disneyplus") && !check.ProcessName.ToLower().Contains("microsoft.media") && !check.ProcessName.ToLower().Contains("epicwebh"))
                         {
                             //if process is not yet in Dictionary, add it
                             if (!frames.ContainsKey(pid))
@@ -239,7 +239,7 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                if (Settings.Default.CPUName.ToLower() == "intel") await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
+                if (Settings.Default.CPUName.ToLower().Contains("intel")) await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
                 else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
 
                 await Task.Run(() => { CPUClock = (int)GetSensor.getCPUInfo(SensorType.Clock, "Core #1"); });
@@ -256,7 +256,13 @@ namespace Game_Launcher_V2.Windows
 
                 lblCPU.Text = $"{CPUTemp}°C  {CPULoad}%  {CPUClock} MHz  {CPUPower}W";
                 lblGPU.Text = $"{GPUTemp}°C  {GPULoad}%  {GPUClock} MHz";
-                lblRAM.Text = $"{RAMLoad}%  {RAMData} MB  {RAMClock} MHz";
+
+                if (Settings.Default.CPUName.ToLower().Contains("intel"))
+                {
+                    lblRAM.Text = $"{RAMLoad}%  {RAMData} MB";
+                    spGPU.Visibility = Visibility.Collapsed;
+                }
+                else lblRAM.Text = $"{RAMLoad}%  {RAMData} MB  {RAMClock} MHz";
             }
             catch { }
         }

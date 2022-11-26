@@ -1,10 +1,14 @@
-﻿using System;
+﻿using AATUV3.Scripts;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Shapes;
 using static Game_Launcher_V2.Pages.Home;
 
 namespace Game_Launcher_V2.Scripts
@@ -152,9 +156,15 @@ namespace Game_Launcher_V2.Scripts
             if(Global.GameStore == 1)
             {
                 //Start selected game
-                string steamLaunch = steamID;
-                if (steamID != "0") System.Diagnostics.Process.Start(steamLaunch);
-                else if (gameName == "Open Steam") System.Diagnostics.Process.Start(@"C:\Program Files (x86)\Epic Games\Launcher\Engine\Binaries\Win64\EpicGamesLauncher.exe");
+                string steamLaunch = $"com.epicgames.launcher://apps/{steamID}?action=launch&silent=true";
+                if (steamID != "0")
+                {
+                    Process p = new Process();
+                    p.StartInfo.UseShellExecute = true;
+                    p.StartInfo.FileName = steamLaunch;
+                    p.Start();
+                }
+                else if (gameName == "Open EGS") System.Diagnostics.Process.Start(@"C:\Program Files (x86)\Epic Games\Launcher\Engine\Binaries\Win64\EpicGamesLauncher.exe");
             }
             
         }

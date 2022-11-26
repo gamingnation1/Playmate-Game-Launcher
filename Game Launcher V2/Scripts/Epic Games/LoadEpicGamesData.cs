@@ -108,7 +108,7 @@ namespace Game_Launcher_V2.Scripts.Epic_Games
                 {
                     ID = i,
                     gameName = gameList[0],
-                    steamID = gameList[1] + "\\" + gameList[2],
+                    steamID = gameList[3],
                     imagePath = icon,
                     bgImagePath = background,
                     musicPath = music,

@@ -139,17 +139,17 @@ namespace Game_Launcher_V2.Pages
             }
         }
 
-       
+
         private void lbGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-                SteamGame model = lbGames.SelectedItem as SteamGame;
-                LoadSteamGames.changeSteamGame(lbGames, lblGameName, btnControl);
-                updateBGImage(model.bgImagePath);
-                playAudio(model.musicPath);
-                lastAudio = model.musicPath;
-                lastBG = model.bgImagePath;
-            
+            SteamGame model = lbGames.SelectedItem as SteamGame;
+            LoadSteamGames.changeSteamGame(lbGames, lblGameName, btnControl);
+            updateBGImage(model.bgImagePath);
+            playAudio(model.musicPath);
+            lastAudio = model.musicPath;
+            lastBG = model.bgImagePath;
+
         }
 
         string lastBG = "";
@@ -177,7 +177,7 @@ namespace Game_Launcher_V2.Pages
                 await Task.Delay(145);
                 //Start fade in animation
                 await StartAnimationBGFadeIn();
-            }           
+            }
         }
 
         DoubleAnimation fadeOut = new DoubleAnimation
@@ -213,7 +213,7 @@ namespace Game_Launcher_V2.Pages
         //Update media player with current game BG music 
         private async Task playAudio(string audioPath)
         {
-            if(lastAudio != audioPath)
+            if (lastAudio != audioPath)
             {
                 if (audioPath == null || audioPath == "N/A")
                 {
@@ -265,7 +265,7 @@ namespace Game_Launcher_V2.Pages
             //If window is now focused resume music
             else if (isActive == true && wasNotFocused == true)
             {
-                if(lastAudio != "N/A") mediaPlayer.Play();
+                if (lastAudio != "N/A") mediaPlayer.Play();
                 wasNotFocused = false;
             }
 
@@ -317,11 +317,7 @@ namespace Game_Launcher_V2.Pages
 
         public void loadApp()
         {
-            if(Global.GameStore == 0)
-            {
-                LoadSteamGames.openSteamGame(lbGames);
-            }
-            
+            LoadSteamGames.openSteamGame(lbGames);
         }
 
         private void lbGames_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

@@ -33,11 +33,24 @@ namespace Game_Launcher_V2.Scripts.Epic_Games
                 string gameName = lines[30].Replace("\",", "");
                 string gameEXE = lines[4].Replace("\",", "");
                 string gamePath = lines[32].Replace("\",", "");
+                string ID = "";
+
+                foreach(string line in lines)
+                {
+                    if (line.Contains("\"MainGameAppName\":"))
+                    {
+                        ID = line.Replace("\",", "");
+                    }
+                }
+
+                gameEXE.Replace("/", "\\");
+
                 gameEXE = gameEXE.Remove(0, 22);
                 gamePath = gamePath.Remove(0, 21);
                 gameName = gameName.Remove(0, 17);
+                ID = ID.Remove(0, 21);
 
-                games[i] = $"{gameName}~{gamePath}~{gameEXE}";
+                games[i] = $"{gameName}~{gamePath}~{gameEXE}~{ID}";
                 i++;
             }
 
