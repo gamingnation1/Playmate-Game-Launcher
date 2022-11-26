@@ -163,7 +163,7 @@ namespace Game_Launcher_V2.Windows
                     try
                     {
                         var check = Process.GetProcessById(pid);
-                        if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wasclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware") && !check.ProcessName.ToLower().Contains("spotify") && !check.ProcessName.ToLower().Contains("disneyplus") && !check.ProcessName.ToLower().Contains("microsoft.media"))
+                        if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wsaclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware") && !check.ProcessName.ToLower().Contains("spotify") && !check.ProcessName.ToLower().Contains("disneyplus") && !check.ProcessName.ToLower().Contains("microsoft.media") && !check.ProcessName.ToLower().Contains("epicwebhandle"))
                         {
                             //if process is not yet in Dictionary, add it
                             if (!frames.ContainsKey(pid))
@@ -237,81 +237,92 @@ namespace Game_Launcher_V2.Windows
 
         public async void updateInfo()
         {
-            if (Settings.Default.CPUName.ToLower() == "intel") await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
-            else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
+            try
+            {
+                if (Settings.Default.CPUName.ToLower() == "intel") await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
+                else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
 
-            await Task.Run(() => { CPUClock = (int)GetSensor.getCPUInfo(SensorType.Clock, "Core #1"); });
-            await Task.Run(() => { CPULoad = (int)GetSensor.getCPUInfo(SensorType.Load, "Total"); });
-            await Task.Run(() => { CPUPower = (int)GetSensor.getCPUInfo(SensorType.Power, "Package"); });
+                await Task.Run(() => { CPUClock = (int)GetSensor.getCPUInfo(SensorType.Clock, "Core #1"); });
+                await Task.Run(() => { CPULoad = (int)GetSensor.getCPUInfo(SensorType.Load, "Total"); });
+                await Task.Run(() => { CPUPower = (int)GetSensor.getCPUInfo(SensorType.Power, "Package"); });
 
-            await Task.Run(() => { GPUTemp = (int)GetSensor.getAMDGPU(SensorType.Temperature, "GPU Core"); });
-            await Task.Run(() => { GPULoad = (int)GetSensor.getAMDGPU(SensorType.Load, "GPU Core"); });
-            await Task.Run(() => { GPUClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "GPU Core"); });
+                await Task.Run(() => { GPUTemp = (int)GetSensor.getAMDGPU(SensorType.Temperature, "GPU Core"); });
+                await Task.Run(() => { GPULoad = (int)GetSensor.getAMDGPU(SensorType.Load, "GPU Core"); });
+                await Task.Run(() => { GPUClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "GPU Core"); });
 
-            await Task.Run(() => { RAMLoad = (int)GetSensor.getRAMInfo(SensorType.Load, "Virtual"); });
-            await Task.Run(() => { RAMData = (int)(GetSensor.getRAMInfo(SensorType.Data, "Memory Used") * 1000); });
-            await Task.Run(() => { RAMClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "Memory"); });
+                await Task.Run(() => { RAMLoad = (int)GetSensor.getRAMInfo(SensorType.Load, "Virtual"); });
+                await Task.Run(() => { RAMData = (int)(GetSensor.getRAMInfo(SensorType.Data, "Memory Used") * 1000); });
+                await Task.Run(() => { RAMClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "Memory"); });
 
-            lblCPU.Text = $"{CPUTemp}°C  {CPULoad}%  {CPUClock} MHz  {CPUPower}W";
-            lblGPU.Text = $"{GPUTemp}°C  {GPULoad}%  {GPUClock} MHz";
-            lblRAM.Text = $"{RAMLoad}%  {RAMData} MB  {RAMClock} MHz";
+                lblCPU.Text = $"{CPUTemp}°C  {CPULoad}%  {CPUClock} MHz  {CPUPower}W";
+                lblGPU.Text = $"{GPUTemp}°C  {GPULoad}%  {GPUClock} MHz";
+                lblRAM.Text = $"{RAMLoad}%  {RAMData} MB  {RAMClock} MHz";
+            }
+            catch { }
         }
 
         double lastFPS = 0;
         double lastFrametime = 0;
         async void FPS_Tick(object sender, EventArgs e)
         {
-            FPS = 1000 / Frametime;
-
-            getBatteryTime();
-            updateBatIcon();
-
-            if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) FPS = lastFPS;
-            if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) Frametime = lastFrametime;
-
-            Process[] processes = Process.GetProcessesByName(proName);
-
-            if (processes.Length > 0)
+            try
             {
-                if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms  {proName}";
+                FPS = 1000 / Frametime;
+
+                getBatteryTime();
+                updateBatIcon();
+
+                if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) FPS = lastFPS;
+                if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) Frametime = lastFrametime;
+
+                Process[] processes = Process.GetProcessesByName(proName);
+
+                if (processes.Length > 0)
+                {
+                    if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms  {proName}";
+                }
+                else
+                {
+                    lblFPS.Text = "";
+                }
+
+                if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel") && processes.Length <= 0) spFrameData.Visibility = Visibility.Collapsed;
+                else spFrameData.Visibility = Visibility.Visible;
+
+                if (lblFPS.Text == "") spFrameData.Visibility = Visibility.Collapsed;
+
+                if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFPS = FPS;
+                if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFrametime = Frametime;
             }
-            else
-            {
-                lblFPS.Text = "";
-            }
-
-            if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel") && processes.Length <= 0) spFrameData.Visibility = Visibility.Collapsed;
-            else spFrameData.Visibility = Visibility.Visible;
-
-            if(lblFPS.Text == "") spFrameData.Visibility = Visibility.Collapsed;
-
-            if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFPS = FPS;
-            if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFrametime = Frametime;
+            catch { }
         }
 
         static string lastBat = "";
         public void updateBatIcon()
         {
-            string batURL = "";
-
-            //Update battery icon based on battery level
-
-            //Update battery icon based on battery level
-            if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
+            try
             {
-                batURL = path + "//Assets//Icons//battery-fill.png";
-            }
-            if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
-            {
-                batURL = path + "//Assets//Icons//battery-low-line.png";
-            }
+                string batURL = "";
 
-            if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
-            {
-                batURL = path + "//Assets//Icons//battery-charge-line.png";
-            }
-            imgBat.Source = new BitmapImage(new Uri(batURL));
-            lastBat = batURL;
+                //Update battery icon based on battery level
+
+                //Update battery icon based on battery level
+                if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
+                {
+                    batURL = path + "//Assets//Icons//battery-fill.png";
+                }
+                if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
+                {
+                    batURL = path + "//Assets//Icons//battery-low-line.png";
+                }
+
+                if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
+                {
+                    batURL = path + "//Assets//Icons//battery-charge-line.png";
+                }
+                imgBat.Source = new BitmapImage(new Uri(batURL));
+                lastBat = batURL;
+            } catch { }
         }
 
         public static TimeSpan time;
@@ -320,26 +331,29 @@ namespace Game_Launcher_V2.Windows
 
         public void getBatteryTime()
         {
-            PowerStatus pwr = System.Windows.Forms.SystemInformation.PowerStatus;
-            //Get battery life
-
-            batTime = (float)pwr.BatteryLifeRemaining;
-
-            bool isCharging = false;
-
-            if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
+            try
             {
-                batTime = 0;
-                isCharging = true;
-            }
-            time = TimeSpan.FromSeconds(batTime);
+                PowerStatus pwr = System.Windows.Forms.SystemInformation.PowerStatus;
+                //Get battery life
 
-            lblBat.Text = $"{Time_and_Bat.batPercentInt}%  {time:%h} Hours {time:%m} Minutes";
+                batTime = (float)pwr.BatteryLifeRemaining;
 
-            if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == true) lblBat.Text = $"{Time_and_Bat.batPercentInt}%";
-            if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == false) lblBat.Text = $"{Time_and_Bat.batPercentInt}%  Calculating";
+                bool isCharging = false;
 
-            spBat.Visibility= Visibility.Visible;
+                if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
+                {
+                    batTime = 0;
+                    isCharging = true;
+                }
+                time = TimeSpan.FromSeconds(batTime);
+
+                lblBat.Text = $"{Time_and_Bat.batPercentInt}%  {time:%h} Hours {time:%m} Minutes";
+
+                if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == true) lblBat.Text = $"{Time_and_Bat.batPercentInt}%";
+                if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == false) lblBat.Text = $"{Time_and_Bat.batPercentInt}%  Calculating";
+
+                spBat.Visibility = Visibility.Visible;
+            } catch { }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
+using Game_Launcher_V2.Scripts.Epic_Games;
 using Game_Launcher_V2.Windows;
 using Microsoft.Win32;
 using System;
@@ -107,7 +108,9 @@ namespace Game_Launcher_V2
                     }
 
                     if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");
+                    if (File.Exists("SavedListEpic.txt")) File.Delete("SavedListEpic.txt");
                     FindSteamData.getData();
+                    FindEpicGamesData.GetData();
                     PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));
 
                     OptionsWindow win2 = new OptionsWindow();

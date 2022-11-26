@@ -1,4 +1,5 @@
 ﻿using Game_Launcher_V2.Scripts;
+using Game_Launcher_V2.Scripts.Epic_Games;
 using Game_Launcher_V2.Windows;
 using SharpDX.XInput;
 using System;
@@ -42,7 +43,7 @@ namespace Game_Launcher_V2.Pages
         public class SteamGame
         {
             public int ID { get; set; }
-            public int steamID { get; set; }
+            public string steamID { get; set; }
             public string gameName { get; set; }
             public string imagePath { get; set; }
             public string bgImagePath { get; set; }
@@ -58,8 +59,11 @@ namespace Game_Launcher_V2.Pages
 
             setUpTimers();
 
-            LoadSteamGames.loadSteamGames(lbGames);
-           
+            //LoadSteamGames.loadSteamGames(lbGames);
+            Global.GameStore = 1;
+
+            LoadEpicGamesData.loadEpicGames(lbGames);
+
             setUpGUI();
 
             Global.isOpen = true;
@@ -138,15 +142,14 @@ namespace Game_Launcher_V2.Pages
        
         private void lbGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Global.GameStore == 0)
-            {
+
                 SteamGame model = lbGames.SelectedItem as SteamGame;
                 LoadSteamGames.changeSteamGame(lbGames, lblGameName, btnControl);
                 updateBGImage(model.bgImagePath);
                 playAudio(model.musicPath);
                 lastAudio = model.musicPath;
                 lastBG = model.bgImagePath;
-            }
+            
         }
 
         string lastBG = "";
@@ -258,6 +261,7 @@ namespace Game_Launcher_V2.Pages
                 mediaPlayer.Pause();
                 wasNotFocused = true;
             }
+
             //If window is now focused resume music
             else if (isActive == true && wasNotFocused == true)
             {
@@ -273,8 +277,6 @@ namespace Game_Launcher_V2.Pages
             var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
 
             btnControl.Visibility = Visibility.Visible;
-
-            
 
             if (connected && isActive == true)
             {

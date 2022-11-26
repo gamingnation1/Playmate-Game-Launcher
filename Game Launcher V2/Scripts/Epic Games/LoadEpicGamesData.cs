@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using static Game_Launcher_V2.Pages.Home;
 
-namespace Game_Launcher_V2.Scripts
+namespace Game_Launcher_V2.Scripts.Epic_Games
 {
-    class LoadSteamGames
+    class LoadEpicGamesData
     {
-        public static void loadSteamGames(ListBox lbGames)
+        public static void loadEpicGames(ListBox lbGames)
         {
             lbGames.Items.Clear();
 
@@ -22,15 +22,15 @@ namespace Game_Launcher_V2.Scripts
             games.Add(new SteamGame()
             {
                 ID = 0,
-                gameName = "Open Steam",
+                gameName = "Open EGS",
                 steamID = "0",
-                imagePath = path + $"\\GameAssets\\Steam\\icon.png",
-                bgImagePath = path + $"\\GameAssets\\Steam\\background.jpg",
+                imagePath = path + $"\\GameAssets\\EGS\\icon.png",
+                bgImagePath = path + $"\\GameAssets\\EGS\\background.jpg",
                 musicPath = path + $"\\GameAssets\\Default\\audio.mp3",
                 message = ""
             });
 
-            var lines = File.ReadAllLines(path + "\\SavedList.txt");
+            var lines = File.ReadAllLines(path + "\\SavedListEpic.txt");
             lines = lines.Distinct().ToArray();
             Array.Sort(lines);
             string path2 = AppDomain.CurrentDomain.BaseDirectory;
@@ -108,7 +108,7 @@ namespace Game_Launcher_V2.Scripts
                 {
                     ID = i,
                     gameName = gameList[0],
-                    steamID = gameList[1],
+                    steamID = gameList[1] + "\\" + gameList[2],
                     imagePath = icon,
                     bgImagePath = background,
                     musicPath = music,
@@ -133,42 +133,6 @@ namespace Game_Launcher_V2.Scripts
 
             lbGames.SelectedIndex = 0;
 
-        }
-
-        public static void openSteamGame(ListBox lbGames)
-        {
-            SteamGame model = lbGames.SelectedItem as SteamGame;
-            string steamID = model.steamID;
-            string gameName = model.gameName;
-
-            if(Global.GameStore == 0)
-            {
-                //Start selected game
-                string steamLaunch = "steam://rungameid/" + steamID;
-                if (steamID != "0") System.Diagnostics.Process.Start(@"C:\Program Files (x86)\Steam\steam.exe", steamLaunch);
-                else if (gameName == "Open Steam") System.Diagnostics.Process.Start(@"C:\Program Files (x86)\Steam\steam.exe");
-            }
-
-            if(Global.GameStore == 1)
-            {
-                //Start selected game
-                string steamLaunch = steamID;
-                if (steamID != "0") System.Diagnostics.Process.Start(steamLaunch);
-                else if (gameName == "Open Steam") System.Diagnostics.Process.Start(@"C:\Program Files (x86)\Epic Games\Launcher\Engine\Binaries\Win64\EpicGamesLauncher.exe");
-            }
-            
-        }
-
-        public static void changeSteamGame(ListBox lbGames, TextBlock lblGameName, Button btnControl) 
-        {
-            SteamGame model = lbGames.SelectedItem as SteamGame;
-            if (model.gameName.Contains("Open Steam")) lblGameName.Text = model.gameName.Replace("Open ", "");
-            else if (model.gameName.Contains("Open EGS")) lblGameName.Text = "Open Epic Games Store";
-            else lblGameName.Text = model.gameName;
-
-
-            if (model.gameName.Contains("Open EGS") || model.gameName.Contains("Open Steam") || model.gameName.Contains("All Software")) btnControl.Content = model.gameName;
-            else btnControl.Content = "Play Game";
         }
     }
 }

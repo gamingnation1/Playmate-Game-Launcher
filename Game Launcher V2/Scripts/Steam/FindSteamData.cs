@@ -19,7 +19,7 @@ namespace Game_Launcher_V2.Scripts
                 var libs = GetSteamLibs();
                 var apps = GetSteamApps(libs);
                 AppInfo[] games = apps.ToArray();
-                TextWriter tw = new StreamWriter("SavedList.txt");
+                TextWriter tw = new StreamWriter(Global.path + "\\SavedList.txt");
                 foreach (AppInfo game in games)
                 {
                     if (!game.Name.Contains("Steamworks Common Redistributables") && !game.Name.Contains("3DMark") && !game.Name.Contains("Wallpaper Engine")) tw.WriteLine(game);
