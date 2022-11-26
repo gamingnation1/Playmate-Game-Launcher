@@ -55,6 +55,8 @@ namespace Game_Launcher_V2.Windows
             checkKeyInput.Interval = TimeSpan.FromSeconds(0.117);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
+
+            _ = Tablet.TabletDevices;
         }
 
         private void lbGameStores_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -183,6 +183,8 @@ namespace Game_Launcher_V2.Pages
         //Get battery and time info evry 2 seconds
         void Update_Tick(object sender, EventArgs e)
         {
+            GC.Collect();
+
             string wifiURL = "";
             double wifi = Global.wifi;
 

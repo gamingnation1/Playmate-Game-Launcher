@@ -102,6 +102,12 @@ namespace Game_Launcher_V2
                 sensor.Tick += Update_Tick;
                 sensor.Start();
 
+                //set up timer for sensor update
+                DispatcherTimer battime = new DispatcherTimer();
+                battime.Interval = TimeSpan.FromSeconds(2);
+                battime.Tick += UpdateBatTime_Tick;
+                battime.Start();
+
                 try
                 {
                     RegistryKey myKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\CI\\Config", true);
@@ -174,6 +180,18 @@ namespace Game_Launcher_V2
                 if (this.WindowState == WindowState.Minimized) Global.isMainActive = false;
 
                 if (this.Visibility == Visibility && this.WindowState != WindowState.Minimized && this.WindowState != WindowState.Maximized && Global.isMainActive == true) this.WindowState= WindowState.Maximized;
+            }
+            catch { }
+        }
+
+        async void UpdateBatTime_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                Time_and_Bat.getBattery();
+                Time_and_Bat.getTime();
+
+                Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalString());
             }
             catch { }
         }
