@@ -303,6 +303,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             Section2.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
             Section3.Background = new SolidColorBrush(Colors.Transparent);
             Section4.Background = new SolidColorBrush(Colors.Transparent);
+            Section51.Background = new SolidColorBrush(Colors.Transparent);
 
             if (connected)
             {

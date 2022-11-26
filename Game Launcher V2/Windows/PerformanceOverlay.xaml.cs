@@ -240,9 +240,6 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                if(Global.isMainActive || Global.menuselectOpen) this.Hide();
-                else this.Show();
-
                 if(this.Visibility == Visibility.Visible)
                 {
                     if (Settings.Default.CPUName.ToLower().Contains("intel")) await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
@@ -280,41 +277,45 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                if (Settings.Default.isPerfOpen == false)
-                {
-                    mainGrid.Visibility = Visibility.Hidden;
-                    this.Hide();
-                }
+                if (Global.isMainActive || Global.menuselectOpen) this.Hide();
                 else
                 {
-                    this.Show(); mainGrid.Visibility = Visibility.Visible;
-
-                    FPS = 1000 / Frametime;
-
-                    getBatteryTime();
-                    updateBatIcon();
-
-                    if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) FPS = lastFPS;
-                    if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) Frametime = lastFrametime;
-
-                    Process[] processes = Process.GetProcessesByName(proName);
-
-                    if (processes.Length > 0)
+                    if (Settings.Default.isPerfOpen == false)
                     {
-                        if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms";
+                        mainGrid.Visibility = Visibility.Hidden;
+                        this.Hide();
                     }
                     else
                     {
-                        lblFPS.Text = "";
+                        this.Show(); mainGrid.Visibility = Visibility.Visible;
+
+                        FPS = 1000 / Frametime;
+
+                        getBatteryTime();
+                        updateBatIcon();
+
+                        if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) FPS = lastFPS;
+                        if (!double.IsFinite(Frametime) && !double.IsFinite(FPS)) Frametime = lastFrametime;
+
+                        Process[] processes = Process.GetProcessesByName(proName);
+
+                        if (processes.Length > 0)
+                        {
+                            if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lblFPS.Text = $"{Math.Round(FPS)} FPS  {Math.Round(Frametime, 2)} ms";
+                        }
+                        else
+                        {
+                            lblFPS.Text = "";
+                        }
+
+                        if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel") && processes.Length <= 0) spFrameData.Visibility = Visibility.Collapsed;
+                        else spFrameData.Visibility = Visibility.Visible;
+
+                        if (lblFPS.Text == "") spFrameData.Visibility = Visibility.Collapsed;
+
+                        if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFPS = FPS;
+                        if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFrametime = Frametime;
                     }
-
-                    if (GPULoad < 15 && !Settings.Default.CPUName.ToLower().Contains("intel") && processes.Length <= 0) spFrameData.Visibility = Visibility.Collapsed;
-                    else spFrameData.Visibility = Visibility.Visible;
-
-                    if (lblFPS.Text == "") spFrameData.Visibility = Visibility.Collapsed;
-
-                    if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFPS = FPS;
-                    if (double.IsFinite(Frametime) && double.IsFinite(FPS)) lastFrametime = Frametime;
                 }
             }
             catch { }
