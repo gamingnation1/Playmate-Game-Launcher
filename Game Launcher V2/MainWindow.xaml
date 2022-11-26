@@ -13,7 +13,7 @@
         Deactivated="Window_Deactivated"
         Closing="Window_Closing">
     <Grid>
-        <Frame x:Name="PagesNavigation" NavigationUIVisibility="Hidden">
+        <Frame x:FieldModifier="public" x:Name="PagesNavigation" NavigationUIVisibility="Hidden">
             <!-- Page Content -->
         </Frame>
     </Grid>

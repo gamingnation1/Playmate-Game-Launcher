@@ -1,4 +1,5 @@
-﻿using Game_Launcher_V2.Scripts;
+﻿using Game_Launcher_V2.Properties;
+using Game_Launcher_V2.Scripts;
 using Game_Launcher_V2.Scripts.Epic_Games;
 using Game_Launcher_V2.Windows;
 using SharpDX.XInput;
@@ -52,24 +53,26 @@ namespace Game_Launcher_V2.Pages
 
         }
 
+
         public Home()
         {
             InitializeComponent();
             _ = Tablet.TabletDevices;
 
+            if (Global.GameStore == 0)
+            {
+                LoadSteamGames.loadSteamGames(lbGames);
+            }
+            if (Global.GameStore == 1)
+            {
+                LoadEpicGamesData.loadEpicGames(lbGames);
+            }
+
             setUpTimers();
-
-            //LoadSteamGames.loadSteamGames(lbGames);
-            Global.GameStore = 1;
-
-            LoadEpicGamesData.loadEpicGames(lbGames);
 
             setUpGUI();
 
             Global.isOpen = true;
-
-            PerformanceOverlay overlay = new PerformanceOverlay();
-            overlay.Show();
         }
 
         private void setUpTimers()
@@ -116,17 +119,114 @@ namespace Game_Launcher_V2.Pages
 
             imgTime.Source = bi2;
 
-            Time_and_Bat.getBattery();
-            Time_and_Bat.getTime();
-            Time_and_Bat.getWifi(imgWiFi);
-            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
+            string wifiURL = "";
+            double wifi = Global.wifi;
+
+            if (wifi > 75)
+            {
+                wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
+            }
+            if (wifi < 75 && wifi > 45)
+            {
+                wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
+            }
+            if (wifi < 45)
+            {
+                wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
+            }
+
+                imgWiFi.Source = new BitmapImage(new Uri(wifiURL));
+
+                lastWifi = wifiURL;
+            
+
+            //Update battery and time text blocks
+            lblBat.Text = Time_and_Bat.batPercent;
+            lblTime.Text = Time_and_Bat.time;
+
+            int batPercentInt = Time_and_Bat.batPercentInt;
+            UInt16 statuscode = Time_and_Bat.statuscode;
+
+            string batURL = "";
+
+
+            //Update battery icon based on battery level
+            if (Convert.ToInt32(batPercentInt) > 50)
+            {
+                batURL = path + "//Assets//Icons//battery-fill.png";
+            }
+            if (Convert.ToInt32(batPercentInt) < 45)
+            {
+                batURL = path + "//Assets//Icons//battery-low-line.png";
+            }
+
+            if (statuscode == 2 || statuscode == 6 || statuscode == 7 || statuscode == 8)
+            {
+                batURL = path + "//Assets//Icons//battery-charge-line.png";
+            }
+
+                imgBat.Source = new BitmapImage(new Uri(batURL));
+                lastBattery = batURL;
+            
+
         }
 
         //Get battery and time info evry 2 seconds
         void Update_Tick(object sender, EventArgs e)
         {
-            Time_and_Bat.getWifi(imgWiFi);
-            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
+            string wifiURL = "";
+            double wifi = Global.wifi;
+
+            if (wifi > 75)
+            {
+                wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
+            }
+            if (wifi < 75 && wifi > 45)
+            {
+                wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
+            }
+            if (wifi < 45)
+            {
+                wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
+            }
+
+            if (wifiURL != lastWifi)
+            {
+                imgWiFi.Source = new BitmapImage(new Uri(wifiURL));
+
+                lastWifi = wifiURL;
+            }
+
+            //Update battery and time text blocks
+            lblBat.Text = Time_and_Bat.batPercent;
+            lblTime.Text = Time_and_Bat.time;
+
+            int batPercentInt = Time_and_Bat.batPercentInt;
+            UInt16 statuscode = Time_and_Bat.statuscode;
+
+            string batURL = "";
+
+
+            //Update battery icon based on battery level
+            if (Convert.ToInt32(batPercentInt) > 50)
+            {
+                batURL = path + "//Assets//Icons//battery-fill.png";
+            }
+            if (Convert.ToInt32(batPercentInt) < 45)
+            {
+                batURL = path + "//Assets//Icons//battery-low-line.png";
+            }
+
+            if (statuscode == 2 || statuscode == 6 || statuscode == 7 || statuscode == 8)
+            {
+                batURL = path + "//Assets//Icons//battery-charge-line.png";
+            }
+
+            if (batURL != lastBattery)
+            {
+                imgBat.Source = new BitmapImage(new Uri(batURL));
+                lastBattery = batURL;
+            }
         }
 
         void gameName_Tick(object sender, EventArgs e)
@@ -335,5 +435,9 @@ namespace Game_Launcher_V2.Pages
         {
             loadApp();
         }
+
+        static string lastWifi;
+
+        static string lastBattery;
     }
 }

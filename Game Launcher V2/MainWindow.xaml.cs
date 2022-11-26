@@ -51,6 +51,8 @@ namespace Game_Launcher_V2
             return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
+        public static Frame navFrame;
+
         public MainWindow()
         {
             if (!IsRunningAsAdministrator())
@@ -73,6 +75,8 @@ namespace Game_Launcher_V2
                 InitializeComponent();
 
                 GetSensor.openSensor();
+
+                navFrame = PagesNavigation;
 
                 Settings.Default.CPUName = System.Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER");
 
@@ -107,6 +111,8 @@ namespace Game_Launcher_V2
                         myKey.Close();
                     }
 
+                    Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+
                     if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");
                     if (File.Exists("SavedListEpic.txt")) File.Delete("SavedListEpic.txt");
                     FindSteamData.getData();
@@ -116,7 +122,10 @@ namespace Game_Launcher_V2
                     OptionsWindow win2 = new OptionsWindow();
                     win2.Show();
 
-                    Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+                    PerformanceOverlay overlay = new PerformanceOverlay();
+                    overlay.Show();
+                    SelectGameStore gameStore = new SelectGameStore();
+                    gameStore.Show();
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }
@@ -137,11 +146,25 @@ namespace Game_Launcher_V2
             Application.Current.Shutdown();
         }
 
-        void Update_Tick(object sender, EventArgs e)
+        int lastGameStore = 0;
+
+        async void Update_Tick(object sender, EventArgs e)
         {
             try
             {
-                if(this.WindowState == WindowState.Minimized) Global.isMainActive = false;
+                Time_and_Bat.getBattery();
+                Time_and_Bat.getTime();
+
+                Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalString());
+
+                if (Global.GameStore != lastGameStore)
+                {
+                    PagesNavigation.Refresh();
+                }
+
+                lastGameStore = Global.GameStore;
+
+                if (this.WindowState == WindowState.Minimized) Global.isMainActive = false;
 
                 if (this.Visibility == Visibility && this.WindowState != WindowState.Minimized && this.WindowState != WindowState.Maximized && Global.isMainActive == true) this.WindowState= WindowState.Maximized;
             }

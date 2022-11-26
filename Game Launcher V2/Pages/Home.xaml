@@ -126,7 +126,7 @@
                         <TextBlock Name="lblGameName" Foreground="White" FontSize="32" FontWeight="SemiBold" Margin="36,2,0,0" Panel.ZIndex="1" Width="auto">Game Name Menu Bar Top</TextBlock>
                     </StackPanel>
                 </Canvas>
-                <ListBox MinHeight="300" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="10,-15,10,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel"  Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True">
+                <ListBox x:FieldModifier="public" MinHeight="300" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="10,-15,10,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel"  Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel IsItemsHost="True" ScrollViewer.PanningMode="HorizontalFirst" />

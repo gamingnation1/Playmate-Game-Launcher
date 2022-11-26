@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 
 namespace Game_Launcher_V2.Scripts
 {
-    internal class Time_and_Bat_Options
+    internal class Time_and_Bat
     {
         public static string batPercent = "";
         public static int batPercentInt = 0;
@@ -94,7 +94,7 @@ namespace Game_Launcher_V2.Scripts
             var bi = new BitmapImage();
 
             string wifiURL = "";
-            double wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalString());
+            double wifi = Global.wifi;
 
             if (wifi > 75)
             {
@@ -132,9 +132,6 @@ namespace Game_Launcher_V2.Scripts
         {
             try
             {
-                await Task.Run(() => getBattery());
-                await Task.Run(() => getTime());
-
                 //Update battery and time text blocks
                 lblBat.Text = Time_and_Bat.batPercent;
                 lblTime.Text = Time_and_Bat.time;
@@ -176,7 +173,7 @@ namespace Game_Launcher_V2.Scripts
                     lastBattery = batURL;
                 }
             }
-            catch(Exception ex) { path = Settings.Default.Path; }
+            catch (Exception ex) { path = Settings.Default.Path; }
         }
     }
 }

@@ -22,6 +22,8 @@ namespace Game_Launcher_V2.Scripts
         public static bool isAccessMenuOpen = false;
         public static bool shortCut = false;
 
+        public static double wifi = 0;
+
         public static int AccessMenuSelected = 0;
 
         public static string RyzenAdj = "";
