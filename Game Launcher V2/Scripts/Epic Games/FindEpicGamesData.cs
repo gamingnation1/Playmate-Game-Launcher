@@ -30,13 +30,28 @@ namespace Game_Launcher_V2.Scripts.Epic_Games
             foreach (string file in gameDataFiles)
             {
                 var lines = File.ReadAllLines(gameDataFiles[i]);
-                string gameName = lines[30].Replace("\",", "");
-                string gameEXE = lines[4].Replace("\",", "");
-                string gamePath = lines[32].Replace("\",", "");
+                string gameName = "";
+                string gameEXE = "";
+                string gamePath = "";
                 string ID = "";
 
                 foreach(string line in lines)
                 {
+                    if (line.Contains("\"LaunchExecutable\":"))
+                    {
+                        gameEXE = line.Replace("\",", "");
+                    }
+
+                    if (line.Contains("\"DisplayName\":"))
+                    {
+                        gameName = line.Replace("\",", "");
+                    }
+
+                    if (line.Contains("\"InstallLocation\":"))
+                    {
+                        gamePath = line.Replace("\",", "");
+                    }
+
                     if (line.Contains("\"MainGameAppName\":"))
                     {
                         ID = line.Replace("\",", "");
