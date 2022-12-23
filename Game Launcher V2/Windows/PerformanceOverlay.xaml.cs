@@ -23,6 +23,7 @@ using System.Windows.Forms;
 using Game_Launcher_V2.Properties;
 using Microsoft.Diagnostics.Tracing.StackSources;
 using System.Windows.Forms.VisualStyles;
+using System.Runtime.CompilerServices;
 
 namespace Game_Launcher_V2.Windows
 {
@@ -44,44 +45,53 @@ namespace Game_Launcher_V2.Windows
             //add value to the collection
             public void Add(long timestamp)
             {
-                lock (sync)
+                try
                 {
-                    timestamps.Add(timestamp);
-                    if (timestamps.Count > MAXNUM) timestamps.RemoveAt(0);
+                    lock (sync)
+                    {
+                        timestamps.Add(timestamp);
+                        if (timestamps.Count > MAXNUM) timestamps.RemoveAt(0);
+                    }
                 }
+                catch { }
             }
 
             //get the number of timestamps withing interval
             public int QueryCount(long from, long to)
             {
                 int c = 0;
-
-                lock (sync)
+                try
                 {
-                    foreach (var ts in timestamps)
+                    lock (sync)
                     {
-                        if (ts >= from && ts <= to) c++;
+                        foreach (var ts in timestamps)
+                        {
+                            if (ts >= from && ts <= to) c++;
+                        }
                     }
                 }
+                catch { }
                 return c;
             }
 
             public static double GetFrameTime(int count)
             {
                 double returnValue = 0;
-
-                int listCount = timestamps.Count;
-
-                if (listCount > count)
+                try
                 {
-                    for (int i = 1; i <= count; i++)
+                    int listCount = timestamps.Count;
+
+                    if (listCount > count)
                     {
-                        returnValue += timestamps[listCount - i] - timestamps[listCount - (i + 1)];
+                        for (int i = 1; i <= count; i++)
+                        {
+                            returnValue += timestamps[listCount - i] - timestamps[listCount - (i + 1)];
+                        }
+
+                        returnValue /= count;
                     }
-
-                    returnValue /= count;
                 }
-
+                catch { }
                 return returnValue;
             }
         }
@@ -154,40 +164,45 @@ namespace Game_Launcher_V2.Windows
             //handle event
             m_EtwSession.Source.AllEvents += data =>
             {
-                //filter out frame presentation events
-                if ((int)data.ID == EventID_DxgiPresentStart && data.ProviderGuid == DXGI_provider)
+                try
                 {
-                    int pid = data.ProcessID;
-                    long t;
-
-                    t = watch.ElapsedMilliseconds;
-                    try
+                    if (this.Visibility == Visibility.Visible)
                     {
-                        var check = Process.GetProcessById(pid);
-                        if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wsaclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware") && !check.ProcessName.ToLower().Contains("spotify") && !check.ProcessName.ToLower().Contains("disneyplus") && !check.ProcessName.ToLower().Contains("microsoft.media") && !check.ProcessName.ToLower().Contains("epicwebh"))
+                        //filter out frame presentation events
+                        if ((int)data.ID == EventID_DxgiPresentStart && data.ProviderGuid == DXGI_provider)
                         {
-                            //if process is not yet in Dictionary, add it
-                            if (!frames.ContainsKey(pid))
+                            int pid = data.ProcessID;
+                            long t;
+
+                            t = watch.ElapsedMilliseconds;
+
+                            var check = Process.GetProcessById(pid);
+                            if (!check.ProcessName.ToLower().Contains("steamweb") && !check.ProcessName.ToLower().Contains("discord") && !check.ProcessName.ToLower().Contains("msedge") && !check.ProcessName.ToLower().Contains("devenv") && !check.ProcessName.ToLower().Contains("chrome") && !check.ProcessName.ToLower().Contains("wsaclient") && !check.ProcessName.ToLower().Contains("epicgamesl") && !check.ProcessName.ToLower().Contains("eadesktop") && !check.ProcessName.ToLower().Contains("battle.net") && !check.ProcessName.ToLower().Contains("ayaspace") && !check.ProcessName.ToLower().Contains("galaxyclient") && check.ProcessName.ToLower() != "dwm" && !check.ProcessName.ToLower().Contains("socialclub") && !check.ProcessName.ToLower().Contains("amdrs") && !check.ProcessName.ToLower().Contains("amdow") && !check.ProcessName.ToLower().Contains("atieclxx") && !check.ProcessName.ToLower().Contains("radeonsoftware") && !check.ProcessName.ToLower().Contains("spotify") && !check.ProcessName.ToLower().Contains("disneyplus") && !check.ProcessName.ToLower().Contains("microsoft.media") && !check.ProcessName.ToLower().Contains("epicwebh"))
                             {
-                                frames[pid] = new TimestampCollection();
-                                string name = "";
-                                var proc = Process.GetProcessById(pid);
-
-                                if (proc != null)
+                                //if process is not yet in Dictionary, add it
+                                if (!frames.ContainsKey(pid))
                                 {
-                                    using (proc)
-                                    {
-                                        name = proc.ProcessName;
-                                    }
-                                }
-                                else name = pid.ToString();
+                                    frames[pid] = new TimestampCollection();
+                                    string name = "";
+                                    var proc = Process.GetProcessById(pid);
 
-                                frames[pid].Name = name;
+                                    if (proc != null)
+                                    {
+                                        using (proc)
+                                        {
+                                            name = proc.ProcessName;
+                                        }
+                                    }
+                                    else name = pid.ToString();
+
+                                    frames[pid].Name = name;
+                                }
+                                frames[pid].Add((long)data.TimeStampRelativeMSec);
                             }
-                            frames[pid].Add((long)data.TimeStampRelativeMSec);
                         }
-                    } catch { }
+                    }
                 }
+                catch { }
             };
 
             watch = new Stopwatch();
@@ -240,7 +255,7 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                if(this.Visibility == Visibility.Visible)
+                if (this.Visibility == Visibility.Visible)
                 {
                     if (Settings.Default.CPUName.ToLower().Contains("intel")) await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
                     else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
@@ -326,27 +341,31 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                string batURL = "";
-
-                //Update battery icon based on battery level
-
-                //Update battery icon based on battery level
-                if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
+                if (this.Visibility == Visibility.Visible)
                 {
-                    batURL = path + "//Assets//Icons//battery-fill.png";
-                }
-                if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
-                {
-                    batURL = path + "//Assets//Icons//battery-low-line.png";
-                }
+                    string batURL = "";
 
-                if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
-                {
-                    batURL = path + "//Assets//Icons//battery-charge-line.png";
+                    //Update battery icon based on battery level
+
+                    //Update battery icon based on battery level
+                    if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
+                    {
+                        batURL = path + "//Assets//Icons//battery-fill.png";
+                    }
+                    if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
+                    {
+                        batURL = path + "//Assets//Icons//battery-low-line.png";
+                    }
+
+                    if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
+                    {
+                        batURL = path + "//Assets//Icons//battery-charge-line.png";
+                    }
+                    imgBat.Source = new BitmapImage(new Uri(batURL));
+                    lastBat = batURL;
                 }
-                imgBat.Source = new BitmapImage(new Uri(batURL));
-                lastBat = batURL;
-            } catch { }
+            }
+            catch { }
         }
 
         public static TimeSpan time;
@@ -377,7 +396,8 @@ namespace Game_Launcher_V2.Windows
                 if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == false) lblBat.Text = $"{Time_and_Bat.batPercentInt}%  Calculating";
 
                 spBat.Visibility = Visibility.Visible;
-            } catch { }
+            }
+            catch { }
         }
     }
 }

@@ -107,75 +107,81 @@ namespace Game_Launcher_V2.Pages
 
         private void setUpGUI()
         {
-            var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
-            scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
-
-            var bi2 = new BitmapImage();
-
-            string timeURL = "";
-
-            timeURL = path + "//Assets//Icons//time-line.png";
-
-            using (var stream = new FileStream(timeURL, FileMode.Open, FileAccess.Read))
+            try
             {
-                bi2.BeginInit();
-                bi2.DecodePixelWidth = 48;
-                bi2.CacheOption = BitmapCacheOption.OnLoad;
-                bi2.StreamSource = stream;
-                bi2.EndInit();
-            }
-            bi2.Freeze();
 
-            imgTime.Source = bi2;
 
-            string wifiURL = "";
-            double wifi = Global.wifi;
+                var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
+                scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
 
-            if (wifi > 75)
-            {
-                wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
-            }
-            if (wifi < 75 && wifi > 45)
-            {
-                wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
-            }
-            if (wifi < 45)
-            {
-                wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
-            }
+                var bi2 = new BitmapImage();
+
+                string timeURL = "";
+
+                timeURL = path + "//Assets//Icons//time-line.png";
+
+                using (var stream = new FileStream(timeURL, FileMode.Open, FileAccess.Read))
+                {
+                    bi2.BeginInit();
+                    bi2.DecodePixelWidth = 48;
+                    bi2.CacheOption = BitmapCacheOption.OnLoad;
+                    bi2.StreamSource = stream;
+                    bi2.EndInit();
+                }
+                bi2.Freeze();
+
+                imgTime.Source = bi2;
+
+                string wifiURL = "";
+                double wifi = Global.wifi;
+
+                if (wifi > 75)
+                {
+                    wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
+                }
+                if (wifi < 75 && wifi > 45)
+                {
+                    wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
+                }
+                if (wifi < 45)
+                {
+                    wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
+                }
 
                 imgWiFi.Source = new BitmapImage(new Uri(wifiURL));
 
                 lastWifi = wifiURL;
-            
-
-            //Update battery and time text blocks
-            lblBat.Text = Time_and_Bat.batPercent;
-            lblTime.Text = Time_and_Bat.time;
-
-            int batPercentInt = Time_and_Bat.batPercentInt;
-            UInt16 statuscode = Time_and_Bat.statuscode;
-
-            string batURL = "";
 
 
-            //Update battery icon based on battery level
-            if (Convert.ToInt32(batPercentInt) > 50)
-            {
-                batURL = path + "//Assets//Icons//battery-fill.png";
-            }
-            if (Convert.ToInt32(batPercentInt) < 45)
-            {
-                batURL = path + "//Assets//Icons//battery-low-line.png";
-            }
+                //Update battery and time text blocks
+                lblBat.Text = Time_and_Bat.batPercent;
+                lblTime.Text = Time_and_Bat.time;
 
-            if (statuscode == 2 || statuscode == 6 || statuscode == 7 || statuscode == 8)
-            {
-                batURL = path + "//Assets//Icons//battery-charge-line.png";
-            }
+                int batPercentInt = Time_and_Bat.batPercentInt;
+                UInt16 statuscode = Time_and_Bat.statuscode;
+
+                string batURL = "";
+
+
+                //Update battery icon based on battery level
+                if (Convert.ToInt32(batPercentInt) > 50)
+                {
+                    batURL = path + "//Assets//Icons//battery-fill.png";
+                }
+                if (Convert.ToInt32(batPercentInt) < 45)
+                {
+                    batURL = path + "//Assets//Icons//battery-low-line.png";
+                }
+
+                if (statuscode == 2 || statuscode == 6 || statuscode == 7 || statuscode == 8)
+                {
+                    batURL = path + "//Assets//Icons//battery-charge-line.png";
+                }
 
                 imgBat.Source = new BitmapImage(new Uri(batURL));
                 lastBattery = batURL;
+            }
+            catch { }
             
 
         }
@@ -183,10 +189,17 @@ namespace Game_Launcher_V2.Pages
         //Get battery and time info evry 2 seconds
         void Update_Tick(object sender, EventArgs e)
         {
-            GC.Collect();
+            try
+            {
+                GC.Collect();
 
-            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
-            Time_and_Bat.getWifi(imgWiFi);
+                Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
+                Time_and_Bat.getWifi(imgWiFi);
+            }
+            catch
+            {
+
+            }
         }
 
         void gameName_Tick(object sender, EventArgs e)
@@ -225,29 +238,33 @@ namespace Game_Launcher_V2.Pages
         string lastBG = "";
         public async Task updateBGImage(string url)
         {
-            if (url != lastBG && thisWorking)
+            try
             {
-                await StartAnimationBGFadeOut();
-                //Save new image and load it
-                var bi = new BitmapImage();
-
-                using (var stream = new FileStream(url, FileMode.Open, FileAccess.Read))
+                if (url != lastBG && thisWorking)
                 {
-                    bi.BeginInit();
-                    bi.DecodePixelWidth = 3072;
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.StreamSource = stream;
-                    bi.EndInit();
-                }
+                    await StartAnimationBGFadeOut();
+                    //Save new image and load it
+                    var bi = new BitmapImage();
 
-                bi.Freeze();
-                //Set BG image
-                await Task.Delay(145);
-                GameBG.Source = bi;
-                await Task.Delay(145);
-                //Start fade in animation
-                await StartAnimationBGFadeIn();
+                    using (var stream = new FileStream(url, FileMode.Open, FileAccess.Read))
+                    {
+                        bi.BeginInit();
+                        bi.DecodePixelWidth = 3072;
+                        bi.CacheOption = BitmapCacheOption.OnLoad;
+                        bi.StreamSource = stream;
+                        bi.EndInit();
+                    }
+
+                    bi.Freeze();
+                    //Set BG image
+                    await Task.Delay(145);
+                    GameBG.Source = bi;
+                    await Task.Delay(145);
+                    //Start fade in animation
+                    await StartAnimationBGFadeIn();
+                }
             }
+            catch { }
         }
 
         DoubleAnimation fadeOut = new DoubleAnimation
@@ -283,29 +300,33 @@ namespace Game_Launcher_V2.Pages
         //Update media player with current game BG music 
         private async Task playAudio(string audioPath)
         {
-            if (lastAudio != audioPath && thisWorking)
+            try
             {
-                if (audioPath == null || audioPath == "N/A")
+                if (lastAudio != audioPath && thisWorking)
                 {
-                    //Stop current music 
-                    mediaPlayer.Stop();
-                }
-                else
-                {
-                    await Task.Delay(350);
-                    //Stop current music 
-                    mediaPlayer.Stop();
-                    //Open new game music
-                    mediaPlayer.Open(new Uri(audioPath));
-                    MediaPath = audioPath;
-                    //Make sure music repeats on end
-                    mediaPlayer.MediaEnded += new EventHandler(Media_Ended);
-                    //Set volume to 90%
-                    mediaPlayer.Volume = 0.9;
-                    //Play music
-                    mediaPlayer.Play();
+                    if (audioPath == null || audioPath == "N/A")
+                    {
+                        //Stop current music 
+                        mediaPlayer.Stop();
+                    }
+                    else
+                    {
+                        await Task.Delay(350);
+                        //Stop current music 
+                        mediaPlayer.Stop();
+                        //Open new game music
+                        mediaPlayer.Open(new Uri(audioPath));
+                        MediaPath = audioPath;
+                        //Make sure music repeats on end
+                        mediaPlayer.MediaEnded += new EventHandler(Media_Ended);
+                        //Set volume to 90%
+                        mediaPlayer.Volume = 0.9;
+                        //Play music
+                        mediaPlayer.Play();
+                    }
                 }
             }
+            catch { }
         }
 
         private void Media_Ended(object sender, EventArgs e)
@@ -323,66 +344,70 @@ namespace Game_Launcher_V2.Pages
 
         private void ControllerInput()
         {
-            bool isActive = Global.isMainActive;
-
-            //If window is not focused stop music
-            if (isActive != true)
+            try
             {
-                mediaPlayer.Pause();
-                wasNotFocused = true;
-            }
+                bool isActive = Global.isMainActive;
 
-            //If window is now focused resume music
-            else if (isActive == true && wasNotFocused == true)
-            {
-                if (lastAudio != "N/A") mediaPlayer.Play();
-                wasNotFocused = false;
-            }
-
-            //Get controller
-            controller = new Controller(UserIndex.One);
-
-            bool connected = controller.IsConnected;
-
-            var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
-
-            btnControl.Visibility = Visibility.Visible;
-
-            if (connected && isActive == true)
-            {
-                //get controller state
-                var state = controller.GetState();
-
-                //detect if keyboard or controller combo is being activated
-                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.isAccessMenuOpen == false)
+                //If window is not focused stop music
+                if (isActive != true)
                 {
-                    //Increase selected item by 1
-                    int current = lbGames.SelectedIndex;
-
-                    if (current < lbGames.Items.Count) current++;
-
-                    lbGames.SelectedIndex = current;
-                    lbGames.ScrollIntoView(lbGames.SelectedItem);
+                    mediaPlayer.Pause();
+                    wasNotFocused = true;
                 }
 
-                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.isAccessMenuOpen == false)
+                //If window is now focused resume music
+                else if (isActive == true && wasNotFocused == true)
                 {
-                    //Decrease selected item by 1
-                    int current = lbGames.SelectedIndex;
-
-                    if (current > 0) current--;
-
-                    if (current == 0) scrollViewer.ScrollToHorizontalOffset(0);
-
-                    lbGames.SelectedIndex = current;
-                    lbGames.ScrollIntoView(lbGames.SelectedItem);
+                    if (lastAudio != "N/A") mediaPlayer.Play();
+                    wasNotFocused = false;
                 }
 
-                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && Global.isAccessMenuOpen == false)
+                //Get controller
+                controller = new Controller(UserIndex.One);
+
+                bool connected = controller.IsConnected;
+
+                var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
+
+                btnControl.Visibility = Visibility.Visible;
+
+                if (connected && isActive == true)
                 {
-                    loadApp();
+                    //get controller state
+                    var state = controller.GetState();
+
+                    //detect if keyboard or controller combo is being activated
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.isAccessMenuOpen == false)
+                    {
+                        //Increase selected item by 1
+                        int current = lbGames.SelectedIndex;
+
+                        if (current < lbGames.Items.Count) current++;
+
+                        lbGames.SelectedIndex = current;
+                        lbGames.ScrollIntoView(lbGames.SelectedItem);
+                    }
+
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.isAccessMenuOpen == false)
+                    {
+                        //Decrease selected item by 1
+                        int current = lbGames.SelectedIndex;
+
+                        if (current > 0) current--;
+
+                        if (current == 0) scrollViewer.ScrollToHorizontalOffset(0);
+
+                        lbGames.SelectedIndex = current;
+                        lbGames.ScrollIntoView(lbGames.SelectedItem);
+                    }
+
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && Global.isAccessMenuOpen == false)
+                    {
+                        loadApp();
+                    }
                 }
             }
+           catch { }
         }
 
         public void loadApp()

@@ -184,20 +184,24 @@ namespace Game_Launcher_V2.Windows
 
         private void changeMenu()
         {
-            PagesNavigation.Content = null;
-            PagesNavigation.NavigationService.RemoveBackEntry();
+            try
+            {
+                PagesNavigation.Content = null;
+                PagesNavigation.NavigationService.RemoveBackEntry();
 
-            if (menuSelected == 0) rdBasic.IsChecked = true;
-            if (menuSelected == 1) rdPower.IsChecked = true;
-            if (menuSelected == 2) rdDisplay.IsChecked = true;
-            if (menuSelected == 3) rdMagpie.IsChecked = true;
+                if (menuSelected == 0) rdBasic.IsChecked = true;
+                if (menuSelected == 1) rdPower.IsChecked = true;
+                if (menuSelected == 2) rdDisplay.IsChecked = true;
+                if (menuSelected == 3) rdMagpie.IsChecked = true;
 
-            if (rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
-            if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
-            if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
-            if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+                if (rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
+                if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
+                if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+                if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
 
-            Global.AccessMenuSelected = menuSelected;
+                Global.AccessMenuSelected = menuSelected;
+            }
+            catch { }
         }
 
         private void setUpGUI()
@@ -242,19 +246,23 @@ namespace Game_Launcher_V2.Windows
 
         private void rd_Click(object sender, RoutedEventArgs e)
         {
-            PagesNavigation.Content = null;
-            PagesNavigation.NavigationService.RemoveBackEntry();
+            try
+            {
+                PagesNavigation.Content = null;
+                PagesNavigation.NavigationService.RemoveBackEntry();
 
-            if (rdBasic.IsChecked == true) menuSelected = 0;
-            if (rdPower.IsChecked == true) menuSelected = 1;
-            if (rdDisplay.IsChecked == true) menuSelected = 2;
-            if (rdMagpie.IsChecked == true) menuSelected = 3;
-            Global.AccessMenuSelected = menuSelected;
+                if (rdBasic.IsChecked == true) menuSelected = 0;
+                if (rdPower.IsChecked == true) menuSelected = 1;
+                if (rdDisplay.IsChecked == true) menuSelected = 2;
+                if (rdMagpie.IsChecked == true) menuSelected = 3;
+                Global.AccessMenuSelected = menuSelected;
 
-            if (rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
-            if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
-            if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
-            if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+                if (rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
+                if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
+                if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+                if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+            }
+            catch { }
         }
 
         private void Window_Activated(object sender, EventArgs e)

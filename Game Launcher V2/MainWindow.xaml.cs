@@ -123,8 +123,8 @@ namespace Game_Launcher_V2
 
                     Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
 
-                    if (File.Exists("SavedList.txt")) File.Delete("SavedList.txt");
-                    if (File.Exists("SavedListEpic.txt")) File.Delete("SavedListEpic.txt");
+                    if (File.Exists(Global.path + "\\SavedList.txt")) File.Delete(Global.path + "\\SavedList.txt");
+                    if (File.Exists(Global.path + "\\SavedListEpic.txt")) File.Delete(Global.path + "\\SavedListEpic.txt");
                     FindSteamData.getData();
                     FindEpicGamesData.GetData();
                     PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));
