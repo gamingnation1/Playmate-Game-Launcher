@@ -49,7 +49,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             sdFPSLimit.Value = Settings.Default.fpsLimit;
 
 
-            if(Settings.Default.isTemp == true) tsTemp.IsOn = true;
+            if (Settings.Default.isTemp == true) tsTemp.IsOn = true;
             if (Settings.Default.isPower == true) tsPower.IsOn = true;
             if (Settings.Default.isBoost == true) tsCPUClk.IsOn = true;
             if (Settings.Default.isiGFX == true) tsGPU.IsOn = true;
@@ -88,7 +88,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         void Update_Tick(object sender, EventArgs e)
         {
-            if(this.Visibility == Visibility.Visible)
+            if (this.Visibility == Visibility.Visible)
             {
                 lblBat.Text = Time_and_Bat.batPercent;
 
@@ -119,8 +119,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             if (tsPower.IsOn == true) Section5.Visibility = Visibility.Visible; else Section5.Visibility = Visibility.Collapsed;
             if (tsGPU.IsOn == true) Section8.Visibility = Visibility.Visible; else Section8.Visibility = Visibility.Collapsed;
             if (tsFPS.IsOn == true) Section10.Visibility = Visibility.Visible; else Section10.Visibility = Visibility.Collapsed;
-            
-            if(isFirstBoot == false)
+
+            if (isFirstBoot == false)
             {
                 Settings.Default.isTemp = tsTemp.IsOn;
                 Settings.Default.isPower = tsPower.IsOn;
@@ -135,6 +135,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             }
 
             applySettings();
+            SetFPS();
         }
         private void tsCPUClk_Toggled(object sender, RoutedEventArgs e)
         {
@@ -147,11 +148,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             {
                 if (!Settings.Default.CPUName.ToLower().Contains("intel"))
                 {
-                    bool isEnabled = false;
-                    if (tsFPS.IsOn == true) isEnabled = true;
-                    int fpsLimit = (int)sdFPSLimit.Value;
-
-                    ADLXBackend.SetFPSLimit(0, isEnabled, fpsLimit);
 
                     string processRyzenAdj = "";
                     string result = "";
@@ -194,9 +190,21 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     {
                         ChangeTDP.changeTDP(TDP, TDP);
                     });
-                }          
+                }
             }
             catch (Exception ex) { }
+        }
+
+        private void SetFPS()
+        {
+            if (!Settings.Default.CPUName.ToLower().Contains("intel"))
+            {
+                bool isEnabled = false;
+                if (tsFPS.IsOn == true) isEnabled = true;
+                int fpsLimit = (int)sdFPSLimit.Value;
+
+                ADLXBackend.SetFPSLimit(0, isEnabled, fpsLimit);
+            }
         }
 
         static string lastBat = "";
@@ -220,8 +228,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             {
                 batURL = path + "//Assets//Icons//battery-charge-line-vert.png";
             }
-                imgBat.Source = new BitmapImage(new Uri(batURL));
-                lastBat = batURL;
+            imgBat.Source = new BitmapImage(new Uri(batURL));
+            lastBat = batURL;
         }
 
         public static TimeSpan time;
@@ -264,14 +272,14 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             if (Settings.Default.CPUName.ToLower().Contains("intel"))
             {
-                borders = new Border[] { Section4, Section5, Section6};
+                borders = new Border[] { Section4, Section5, Section6 };
             }
             else
             {
                 borders = new Border[] { Section2, Section3, Section4, Section5, Section6, Section7, Section8, Section9, Section10 };
             }
 
-            if(Global.AccessMenuSelected == 1)
+            if (Global.AccessMenuSelected == 1)
             {
                 try
                 {
@@ -335,6 +343,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 selectedSlider.Value = value;
 
                                 applySettings();
+                                SetFPS();
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.shortCut == false && isActive == true)
@@ -365,6 +374,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (value < minValue) value = minValue;
                                 selectedSlider.Value = value;
                                 applySettings();
+                                SetFPS();
                             }
 
 
@@ -414,6 +424,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         Settings.Default.iGFXClk = (int)sdGFXClock.Value;
                         Settings.Default.fpsLimit = (int)sdFPSLimit.Value;
                         Settings.Default.Save();
+
+                        SetFPS();
+                        applySettings();
                     }
                 }
                 catch { }
@@ -457,7 +470,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
                 }
 
-                if (borders[optionSelected] == Section10 && tsFPS.IsOn == false) { optionSelected = 7;}
+                if (borders[optionSelected] == Section10 && tsFPS.IsOn == false) { optionSelected = 7; }
                 if (borders[optionSelected] == Section10 && tsFPS.IsOn == false && lastBorder == Section10) { isActive = false; }
 
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
