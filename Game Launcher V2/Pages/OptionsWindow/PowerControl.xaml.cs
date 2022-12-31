@@ -135,7 +135,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             }
 
             applySettings();
-            SetFPS();
         }
         private void tsCPUClk_Toggled(object sender, RoutedEventArgs e)
         {
@@ -180,6 +179,12 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                     processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
                     RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+
+                    bool isEnabled = false;
+                    if (tsFPS.IsOn == true) isEnabled = true;
+                    int fpsLimit = (int)sdFPSLimit.Value;
+
+                    SetFPS(isEnabled, fpsLimit);
                 }
                 else
                 {
@@ -195,41 +200,41 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             catch (Exception ex) { }
         }
 
-        private void SetFPS()
+        private async void SetFPS(bool isEnabled, int fpsLimit)
         {
-            if (!Settings.Default.CPUName.ToLower().Contains("intel"))
-            {
-                bool isEnabled = false;
-                if (tsFPS.IsOn == true) isEnabled = true;
-                int fpsLimit = (int)sdFPSLimit.Value;
-
-                ADLXBackend.SetFPSLimit(0, isEnabled, fpsLimit);
-            }
+            ADLXBackend.SetFPSLimit(0, isEnabled, fpsLimit);
         }
 
         static string lastBat = "";
         public void updateBatIcon()
         {
-            string batURL = "";
-
-            //Update battery icon based on battery level
-
-            //Update battery icon based on battery level
-            if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
+            try
             {
-                batURL = path + "//Assets//Icons//battery-fill-vert.png";
-            }
-            if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
-            {
-                batURL = path + "//Assets//Icons//battery-low-line-vert.png";
-            }
+                string batURL = "";
 
-            if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
-            {
-                batURL = path + "//Assets//Icons//battery-charge-line-vert.png";
+                //Update battery icon based on battery level
+
+                //Update battery icon based on battery level
+                if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
+                {
+                    batURL = path + "//Assets//Icons//battery-fill-vert.png";
+                }
+                if (Convert.ToInt32(Time_and_Bat.batPercentInt) < 45)
+                {
+                    batURL = path + "//Assets//Icons//battery-low-line-vert.png";
+                }
+
+                if (Time_and_Bat.statuscode == 2 || Time_and_Bat.statuscode == 6 || Time_and_Bat.statuscode == 7 || Time_and_Bat.statuscode == 8)
+                {
+                    batURL = path + "//Assets//Icons//battery-charge-line-vert.png";
+                }
+                imgBat.Source = new BitmapImage(new Uri(batURL));
+                lastBat = batURL;
             }
-            imgBat.Source = new BitmapImage(new Uri(batURL));
-            lastBat = batURL;
+            catch
+            {
+                path = Global.path;
+            }
         }
 
         public static TimeSpan time;
@@ -341,9 +346,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (value > maxValue) value = maxValue;
                                 if (value < minValue) value = minValue;
                                 selectedSlider.Value = value;
-
-                                applySettings();
-                                SetFPS();
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.shortCut == false && isActive == true)
@@ -373,8 +375,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (value > maxValue) value = maxValue;
                                 if (value < minValue) value = minValue;
                                 selectedSlider.Value = value;
-                                applySettings();
-                                SetFPS();
                             }
 
 
@@ -424,9 +424,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         Settings.Default.iGFXClk = (int)sdGFXClock.Value;
                         Settings.Default.fpsLimit = (int)sdFPSLimit.Value;
                         Settings.Default.Save();
-
-                        SetFPS();
-                        applySettings();
                     }
                 }
                 catch { }
