@@ -99,12 +99,18 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         private void Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            applySettings();
+            if (isFirstBoot == false)
+            {
+                applySettings();
+            }
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            applySettings();
+            if (isFirstBoot == false)
+            {
+                applySettings();
+            }
         }
 
         private void Toggle_Toggled(object sender, RoutedEventArgs e)
@@ -132,9 +138,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 Settings.Default.iGFXClk = (int)sdGFXClock.Value;
                 Settings.Default.fpsLimit = (int)sdFPSLimit.Value;
                 Settings.Default.Save();
+                applySettings();
             }
-
-            applySettings();
         }
         private void tsCPUClk_Toggled(object sender, RoutedEventArgs e)
         {
