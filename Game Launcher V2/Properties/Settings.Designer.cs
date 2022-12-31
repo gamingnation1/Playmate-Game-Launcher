@@ -61,7 +61,7 @@ namespace Game_Launcher_V2.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public int COCPU {
             get {
                 return ((int)(this["COCPU"]));
@@ -200,6 +200,30 @@ namespace Game_Launcher_V2.Properties {
             }
             set {
                 this["isPerfOpen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isFPSLimit {
+            get {
+                return ((bool)(this["isFPSLimit"]));
+            }
+            set {
+                this["isFPSLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int fpsLimit {
+            get {
+                return ((int)(this["fpsLimit"]));
+            }
+            set {
+                this["fpsLimit"] = value;
             }
         }
     }

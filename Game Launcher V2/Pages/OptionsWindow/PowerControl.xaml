@@ -81,20 +81,20 @@
                     </StackPanel>
                 </Border>
                 
-                <Border Name="Section9"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Collapsed">
+                <Border Name="Section9"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Visible">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
-                        <mah:ToggleSwitch Name="tsCPUCO" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Curve Optimiser Offset" OnContent="Curve Optimiser Offset" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
-                        <TextBlock Foreground="White" FontSize="15">Allows you to set a curve optimiser offset</TextBlock>
+                        <mah:ToggleSwitch Name="tsFPS" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="FPS Limit" OnContent="FPS Limit" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">Allows you to set an FPS limit on AMD GPU systems</TextBlock>
                     </StackPanel>
                 </Border>
 
                 <Border Name="Section10"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="86" Padding="5" Visibility="Collapsed">
                     <StackPanel>
                         <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
-                            <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">Offset</TextBlock>
-                            <TextBlock Name="lblCOOffset"  Foreground="White" FontSize="22" DockPanel.Dock="Right" Margin="0,0,10,0" Text="{Binding ElementName=sdCOOffset, Path=Value}"/>
+                            <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">FPS</TextBlock>
+                            <TextBlock Name="lblFPSLimit"  Foreground="White" FontSize="22" DockPanel.Dock="Right" Margin="0,0,10,0" Text="{Binding ElementName=sdFPSLimit, Path=Value}"/>
                         </DockPanel>
-                        <Slider Name="sdCOOffset" Style="{StaticResource Horizontal_Slider}" Maximum="30" Minimum="-30" Value="0" Width="350" Margin="0,10,0,0" TickFrequency="1" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
+                        <Slider Name="sdFPSLimit" Style="{StaticResource Horizontal_Slider}" Maximum="90" Minimum="30" Value="60" Width="350" Margin="0,10,0,0" TickFrequency="1" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
                     </StackPanel>
                 </Border>
             </StackPanel>
