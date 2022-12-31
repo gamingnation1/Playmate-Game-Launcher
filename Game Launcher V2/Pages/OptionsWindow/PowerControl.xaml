@@ -11,7 +11,7 @@
       >
 
     <Grid>
-        <ScrollViewer CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst">
+        <ScrollViewer Name="mainView" CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst">
             <StackPanel>
                 <Border Name="Section1"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="82" Padding="5">
                     <StackPanel Orientation="Horizontal">

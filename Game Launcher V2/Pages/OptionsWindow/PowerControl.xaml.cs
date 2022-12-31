@@ -473,6 +473,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
                 lastBorder= borders[optionSelected];
 
+                if (optionSelected >= 6) mainView.ScrollToBottom();
+                else mainView.ScrollToTop();
+
                 if (isActive == true)
                 {
                     borders[optionSelected].BorderThickness = new Thickness(2.5);
