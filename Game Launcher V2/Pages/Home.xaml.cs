@@ -194,7 +194,7 @@ namespace Game_Launcher_V2.Pages
                 GC.Collect();
 
                 Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
-                Time_and_Bat.getWifi(imgWiFi);
+                Time_and_Bat.GetWifi(imgWiFi);
             }
             catch
             {

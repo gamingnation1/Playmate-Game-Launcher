@@ -26,6 +26,7 @@ using UXTU.Scripts.Intel;
 using Microsoft.VisualBasic;
 using Brush = System.Windows.Media.Brush;
 using Game_Launcher_V2.Scripts.ADLX;
+using ControlzEx.Standard;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -214,7 +215,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             {
                 string batURL = "";
 
-                //Update battery icon based on battery level
+                var bi = new BitmapImage();
 
                 //Update battery icon based on battery level
                 if (Convert.ToInt32(Time_and_Bat.batPercentInt) > 50)
@@ -230,7 +231,30 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 {
                     batURL = path + "//Assets//Icons//battery-charge-line-vert.png";
                 }
-                imgBat.Source = new BitmapImage(new Uri(batURL));
+
+                if (imgBat.Source != null && imgBat.Source is BitmapImage bitmapImage)
+                {
+                    if (bitmapImage.UriSource?.LocalPath == batURL)
+                    {
+                        return;
+                    }
+                }
+
+                try
+                {
+                    bi.BeginInit();
+                    bi.UriSource = new Uri(batURL, UriKind.RelativeOrAbsolute);
+                    bi.DecodePixelWidth = 48;
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.EndInit();
+
+                    bi.Freeze();
+                    imgBat.Source = bi;
+                }
+                catch
+                {
+
+                }
             }
             catch
             {

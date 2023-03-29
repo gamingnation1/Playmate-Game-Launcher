@@ -1,9 +1,11 @@
 ﻿using Game_Launcher_V2.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -58,38 +60,41 @@ namespace Game_Launcher_V2.Scripts
             time = currentTime.ToString("HH:mm");
         }
 
-        public static double lastWiFi = 0;
-        public static double RetrieveSignalString()
+        public static double RetrieveSignalStrength()
         {
             try
             {
-                System.Diagnostics.Process p = new System.Diagnostics.Process();
-                p.StartInfo.FileName = "netsh.exe";
-                p.StartInfo.Arguments = "wlan show interfaces";
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                p.StartInfo.CreateNoWindow = true;
-                p.Start();
+                int wifiStrengthPercentage = 0;
+                long bytesReceived = 0;
+                long bytesThreshold = 10000000; // adjust this threshold to suit your needs
 
-                string s = p.StandardOutput.ReadToEnd();
-                string s2 = s.Substring(s.IndexOf("Signal"));
-                s2 = s2.Substring(s2.IndexOf(":"));
-                s2 = s2.Substring(2, s2.IndexOf("\n")).Trim();
-                s2 = s2.Replace("%", "");
-                double singal = Convert.ToDouble(s2);
-                p.WaitForExit();
-                lastWiFi = singal;
-                return singal;
-            }
-            catch (Exception ex)
+                foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    // Only consider Wireless network interfaces
+                    if (nic.NetworkInterfaceType != NetworkInterfaceType.Wireless80211) continue;
+
+                    IPv4InterfaceStatistics statistics = nic.GetIPv4Statistics();
+                    bytesReceived += statistics.BytesReceived;
+                }
+
+                // Calculate the Wi-Fi signal strength as a percentage
+                if (bytesReceived < bytesThreshold)
+                {
+                    wifiStrengthPercentage = (int)((bytesReceived / (double)bytesThreshold) * 100);
+                }
+                else
+                {
+                    wifiStrengthPercentage = 100;
+                }
+
+                return wifiStrengthPercentage;
+            } catch
             {
-                return lastWiFi;
+                return 100;
             }
         }
 
-        static string lastWifi;
-        public static async void getWifi(Image imgWiFi)
+        public static async void GetWifi(Image imgWiFi)
         {
             var bi = new BitmapImage();
 
@@ -109,21 +114,28 @@ namespace Game_Launcher_V2.Scripts
                 wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
             }
 
-            if (wifiURL != lastWifi)
+            if (imgWiFi.Source != null && imgWiFi.Source is BitmapImage bitmapImage)
             {
-                using (var stream = new FileStream(wifiURL, FileMode.Open, FileAccess.Read))
+                if (bitmapImage.UriSource?.LocalPath == wifiURL)
                 {
-                    bi.BeginInit();
-                    bi.DecodePixelWidth = 48;
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.StreamSource = stream;
-                    bi.EndInit();
+                    return;
                 }
+            }
+
+            try
+            {
+                bi.BeginInit();
+                bi.UriSource = new Uri(wifiURL, UriKind.RelativeOrAbsolute);
+                bi.DecodePixelWidth = 48;
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.EndInit();
 
                 bi.Freeze();
                 imgWiFi.Source = bi;
-
-                lastWifi = wifiURL;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions here
             }
         }
 
@@ -157,20 +169,28 @@ namespace Game_Launcher_V2.Scripts
                     batURL = path + "//Assets//Icons//battery-charge-line.png";
                 }
 
-                if (batURL != lastBattery)
+                if (imgBat.Source != null && imgBat.Source is BitmapImage bitmapImage)
                 {
-                    using (var stream = new FileStream(batURL, FileMode.Open, FileAccess.Read))
+                    if (bitmapImage.UriSource?.LocalPath == batURL)
                     {
-                        bi.BeginInit();
-                        bi.DecodePixelWidth = 48;
-                        bi.CacheOption = BitmapCacheOption.OnLoad;
-                        bi.StreamSource = stream;
-                        bi.EndInit();
+                        return;
                     }
-                    bi.Freeze();
+                }
 
+                try
+                {
+                    bi.BeginInit();
+                    bi.UriSource = new Uri(batURL, UriKind.RelativeOrAbsolute);
+                    bi.DecodePixelWidth = 48;
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.EndInit();
+
+                    bi.Freeze();
                     imgBat.Source = bi;
-                    lastBattery = batURL;
+                }
+                catch
+                {
+
                 }
             }
             catch (Exception ex) { path = Settings.Default.Path; }
