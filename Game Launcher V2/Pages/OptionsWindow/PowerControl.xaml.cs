@@ -77,7 +77,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.117);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
 
@@ -173,6 +173,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         Settings.Default.PowerLimit = (int)sdPower.Value;
                         Settings.Default.iGFXClk = (int)sdGFXClock.Value;
                         Settings.Default.fpsLimit = (int)sdFPSLimit.Value;
+                        Settings.Default.RyzenAdj = commandArguments;
                         Settings.Default.Save();
                     }
 
@@ -471,7 +472,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
                 }
 
-                if (borders[optionSelected] == Section10 && tsFPS.Visibility == Visibility.Collapsed) { optionSelected = 9; }
+                if (borders[optionSelected] == Section10 && Section10.Visibility == Visibility.Collapsed) { optionSelected = 9; }
                 if (borders[optionSelected] == Section10 && tsFPS.IsOn == false && lastBorder == Section10) { isActive = false; }
 
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");

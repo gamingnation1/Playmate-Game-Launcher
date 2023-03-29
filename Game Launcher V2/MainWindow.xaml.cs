@@ -197,6 +197,16 @@ namespace Game_Launcher_V2
                 Time_and_Bat.getTime();
 
                 Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalString());
+
+
+                if(Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")
+                {
+                    string processRyzenAdj = "";
+                    string commandArguments = Settings.Default.RyzenAdj;
+
+                    processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                    RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+                }
             }
             catch { }
         }

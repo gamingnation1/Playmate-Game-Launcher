@@ -48,7 +48,7 @@ namespace Game_Launcher_V2.Windows
 
             //set up timer for key combo system
             DispatcherTimer checkKeyInput = new DispatcherTimer();
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.117);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
 

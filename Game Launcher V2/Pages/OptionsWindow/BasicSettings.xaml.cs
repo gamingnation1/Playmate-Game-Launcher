@@ -62,7 +62,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             isFirstBoot = false;
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.117);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
