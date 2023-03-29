@@ -92,7 +92,7 @@
                 </StackPanel>
             </Canvas>
             <Canvas DockPanel.Dock="Bottom" Height="75" HorizontalAlignment="Right">
-                <DockPanel Width="340" Height="50" Margin="-364,1,20,20" LastChildFill="True" Panel.ZIndex="0">
+                <DockPanel Width="310" Height="50" Margin="-344,1,20,20" LastChildFill="True" Panel.ZIndex="0">
                     <Border Panel.ZIndex="0" Name="BottomMenuBG" CornerRadius="20" Background="#0f0f0f" Opacity="0.80">
                         <Border Opacity="0.2">
                             <Border.Effect>
@@ -104,7 +104,7 @@
                         </Border>
                     </Border>
                 </DockPanel>
-                <StackPanel Panel.ZIndex="1" Width="300" Height="50" Margin="-365,0,15,20" Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Panel.ZIndex="1" Width="300" Height="50" Margin="-350,0,15,20" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0">Left</TextBlock>
                     <Image Height="32" Width="30" Name="imgDPad"  Margin="0,0,4,0"></Image>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0">Right</TextBlock>
