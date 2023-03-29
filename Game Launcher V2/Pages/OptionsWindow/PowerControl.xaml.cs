@@ -207,7 +207,11 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         private async void SetFPS(bool isEnabled, int fpsLimit)
         {
-            ADLXBackend.SetFPSLimit(0, isEnabled, fpsLimit);
+            try
+            {
+                ADLXBackend.SetFPSLimit(0, isEnabled, fpsLimit);
+            }
+            catch { }
         }
 
         static string lastBat = "";
@@ -316,6 +320,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (optionSelected > 0) optionSelected--;
                                 else optionSelected = 0;
                                 goingDown = false;
+
+                                if (optionSelected >= 6) mainView.ScrollToBottom();
+                                else mainView.ScrollToTop();
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false)
@@ -323,6 +330,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (optionSelected < 8) optionSelected++;
                                 else optionSelected = 8;
                                 goingDown = true;
+
+                                if (optionSelected >= 6) mainView.ScrollToBottom();
+                                else mainView.ScrollToTop();
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true)
@@ -477,9 +487,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
                 lastBorder= borders[optionSelected];
-
-                if (optionSelected >= 6) mainView.ScrollToBottom();
-                else mainView.ScrollToTop();
 
                 if (isActive == true)
                 {

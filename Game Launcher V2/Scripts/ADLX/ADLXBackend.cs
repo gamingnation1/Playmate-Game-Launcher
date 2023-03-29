@@ -9,7 +9,7 @@ namespace Game_Launcher_V2.Scripts.ADLX
 {
     internal class ADLXBackend
     {
-        public const string CppFunctionsDLL1 = @"Graphics3DSettings.dll";
+        public const string CppFunctionsDLL1 = @"ADLX_3DSettings.dll";
 
         [DllImport(CppFunctionsDLL1, CallingConvention = CallingConvention.Cdecl)] public static extern int SetFPSLimit(int GPU, bool isEnabled, int FPS);
     }
