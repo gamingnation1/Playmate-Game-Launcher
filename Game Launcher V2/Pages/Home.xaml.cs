@@ -105,6 +105,22 @@ namespace Game_Launcher_V2.Pages
             checkKeyInput.Start();
         }
 
+        private void SetImageSource(string imageUrl, Image image)
+        {
+            var imageSource = new BitmapImage();
+            using (var stream = new FileStream(imageUrl, FileMode.Open, FileAccess.Read))
+            {
+                imageSource.BeginInit();
+                imageSource.DecodePixelWidth = 48;
+                imageSource.CacheOption = BitmapCacheOption.OnLoad;
+                imageSource.StreamSource = stream;
+                imageSource.EndInit();
+            }
+            imageSource.Freeze();
+
+            image.Source = imageSource;
+        }
+
         private void setUpGUI()
         {
             try
@@ -114,23 +130,9 @@ namespace Game_Launcher_V2.Pages
                 var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
                 scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
 
-                var bi2 = new BitmapImage();
-
-                string timeURL = "";
-
-                timeURL = path + "//Assets//Icons//time-line.png";
-
-                using (var stream = new FileStream(timeURL, FileMode.Open, FileAccess.Read))
-                {
-                    bi2.BeginInit();
-                    bi2.DecodePixelWidth = 48;
-                    bi2.CacheOption = BitmapCacheOption.OnLoad;
-                    bi2.StreamSource = stream;
-                    bi2.EndInit();
-                }
-                bi2.Freeze();
-
-                imgTime.Source = bi2;
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "time-line.png"), imgTime);
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "A.png"), imgA);
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "D-Pad Left-Right.png"), imgDPad);
 
                 string wifiURL = "";
                 double wifi = Global.wifi;

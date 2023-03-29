@@ -91,22 +91,27 @@
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" FontSize="20" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
                 </StackPanel>
             </Canvas>
-            <StackPanel DockPanel.Dock="Bottom" Height="63" Visibility="Hidden">
-                <Border CornerRadius="20" BorderThickness="1" Width="650" Height="70" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <DockPanel ZIndex="1">
-                        <Border Name="BottomMenuBG" CornerRadius="25" Background="#E00f0f0f" Opacity="0.88">
-                            <Border Opacity="0.2">
-                                <Border.Effect>
-                                    <BlurEffect Radius="50"/>
-                                </Border.Effect>
-                                <Border.Background>
-                                    <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
-                                </Border.Background>
-                            </Border>
+            <Canvas DockPanel.Dock="Bottom" Height="75" HorizontalAlignment="Right">
+                <DockPanel Width="340" Height="50" Margin="-364,1,20,20" LastChildFill="True" Panel.ZIndex="0">
+                    <Border Panel.ZIndex="0" Name="BottomMenuBG" CornerRadius="20" Background="#0f0f0f" Opacity="0.80">
+                        <Border Opacity="0.2">
+                            <Border.Effect>
+                                <BlurEffect Radius="50"/>
+                            </Border.Effect>
+                            <Border.Background>
+                                <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
+                            </Border.Background>
                         </Border>
-                    </DockPanel>
-                </Border>
-            </StackPanel>
+                    </Border>
+                </DockPanel>
+                <StackPanel Panel.ZIndex="1" Width="300" Height="50" Margin="-365,0,15,20" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0">Left</TextBlock>
+                    <Image Height="32" Width="30" Name="imgDPad"  Margin="0,0,4,0"></Image>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0">Right</TextBlock>
+                    <Image Height="32" Width="30" Name="imgA"  Margin="18,0,5,0"></Image>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0" Text="{Binding ElementName=btnControl, Path=Content}" Width="110"/>
+                </StackPanel>
+            </Canvas>
 
             <StackPanel VerticalAlignment="Center">
                 <Canvas Height="75" HorizontalAlignment="left" Width="Auto" Margin="0,5,0,0">
@@ -178,7 +183,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button x:Name="btnControl" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" Background="#f2151515" FontSize="24" VerticalContentAlignment="Center" Foreground="White" Content="Play Game" Height="50" Width="195" Panel.ZIndex="2" HorizontalAlignment="Left" Margin="22,0,0,0" Click="btnControl_Click"/>
+                <Button x:Name="btnControl" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" Background="#f2151515" FontSize="24" VerticalContentAlignment="Center" Foreground="White" Content="Open Steam" Height="50" Width="195" Panel.ZIndex="2" HorizontalAlignment="Left" Margin="22,0,0,0" Click="btnControl_Click"/>
             </StackPanel>
         </DockPanel>
     </Grid>
