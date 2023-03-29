@@ -131,7 +131,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 Settings.Default.isTemp = tsTemp.IsOn;
                 Settings.Default.isPower = tsPower.IsOn;
                 Settings.Default.isBoost = tsCPUClk.IsOn;
-                Settings.Default.isiGFX= tsGPU.IsOn;
+                Settings.Default.isiGFX = tsGPU.IsOn;
                 Settings.Default.isFPSLimit = tsFPS.IsOn;
                 Settings.Default.TempLimit = (int)sdTemp.Value;
                 Settings.Default.PowerLimit = (int)sdPower.Value;
@@ -157,14 +157,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     string result = "";
                     string commandArguments = "";
 
-                    int TDP = (int)sdPower.Value;
-                    int Temp = (int)sdTemp.Value;
-                    TDP = TDP * 1000;
-                    int iGFX = (int)sdGFXClock.Value;
-
-                    if (tsTemp.IsOn == true) commandArguments = $"--tctl-temp={Temp} --skin-temp-limit={Temp} ";
-                    if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={TDP} --slow-limit={TDP} --fast-limit={TDP} --vrm-current={(int)(TDP * 1.33)} --vrmmax-current={(int)(TDP * 1.33)} ";
-                    if (tsGPU.IsOn == true) commandArguments = commandArguments + $"--gfx-clk={iGFX} ";
+                    if (tsTemp.IsOn == true) commandArguments = $"--tctl-temp={(int)sdTemp.Value} --skin-temp-limit={(int)sdTemp.Value} ";
+                    if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={(int)sdPower.Value * 1000} --slow-limit={(int)sdPower.Value * 1000} --fast-limit={(int)sdPower.Value * 1000} --vrm-current={((int)sdPower.Value * 1000) * 2} --vrmmax-current={((int)sdPower.Value * 1000) * 2} ";
+                    if (tsGPU.IsOn == true) commandArguments = commandArguments + $"--gfx-clk={(int)sdGFXClock.Value} ";
 
                     Global.RyzenAdj = commandArguments;
 
@@ -395,7 +390,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && Global.shortCut == false)
                             {
-                                if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section2 && tsTemp.IsOn == false) tsTemp.IsOn= true;
+                                if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section2 && tsTemp.IsOn == false) tsTemp.IsOn = true;
                                 else if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section2 && tsTemp.IsOn == true) tsTemp.IsOn = false;
 
                                 if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section4 && tsPower.IsOn == false) tsPower.IsOn = true;
@@ -480,7 +475,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 if (borders[optionSelected] == Section10 && tsFPS.IsOn == false && lastBorder == Section10) { isActive = false; }
 
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
-                lastBorder= borders[optionSelected];
+                lastBorder = borders[optionSelected];
 
                 if (isActive == true)
                 {
