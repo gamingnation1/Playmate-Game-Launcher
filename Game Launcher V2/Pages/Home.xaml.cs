@@ -93,14 +93,14 @@ namespace Game_Launcher_V2.Pages
             sensor.Start();
 
             //set up timer for game name label update
-            
+
             nameUpdate.Interval = TimeSpan.FromSeconds(0.05);
             nameUpdate.Tick += gameName_Tick;
             nameUpdate.Start();
 
             //set up timer for key combo system
             
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.115);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -204,20 +204,23 @@ namespace Game_Launcher_V2.Pages
 
         void gameName_Tick(object sender, EventArgs e)
         {
-            if (GameNameBar.ActualWidth != lblGameName.ActualWidth)
+            if (Global.isMainActive)
             {
-                //Update game name label 
-                double width = lblGameName.ActualWidth;
-                GameNameBar.Width = (width + 28);
-            }
+                if (GameNameBar.ActualWidth != lblGameName.ActualWidth)
+                {
+                    //Update game name label 
+                    double width = lblGameName.ActualWidth;
+                    GameNameBar.Width = (width + 28);
+                }
 
-            if(Global.GameStore != currentGameStore)
-            {
-                mediaPlayer.Stop();
-                thisWorking = false;
-                checkKeyInput.Stop();
-                sensor.Stop();
-                nameUpdate.Stop();
+                if (Global.GameStore != currentGameStore)
+                {
+                    mediaPlayer.Stop();
+                    thisWorking = false;
+                    checkKeyInput.Stop();
+                    sensor.Stop();
+                    nameUpdate.Stop();
+                }
             }
         }
 
@@ -336,7 +339,8 @@ namespace Game_Launcher_V2.Pages
             mediaPlayer.Play();
         }
 
-        private static Controller controller;
+        private static Controller controller = new Controller(UserIndex.One);
+
         void KeyShortCuts_Tick(object sender, EventArgs e)
         {
             ControllerInput();
@@ -363,21 +367,17 @@ namespace Game_Launcher_V2.Pages
                 }
 
                 //Get controller
-                controller = new Controller(UserIndex.One);
-
                 bool connected = controller.IsConnected;
 
                 var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
 
-                btnControl.Visibility = Visibility.Visible;
-
-                if (connected && isActive == true)
+                if (connected && isActive)
                 {
                     //get controller state
                     var state = controller.GetState();
 
                     //detect if keyboard or controller combo is being activated
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.isAccessMenuOpen == false)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && !Global.isAccessMenuOpen)
                     {
                         //Increase selected item by 1
                         int current = lbGames.SelectedIndex;
@@ -388,7 +388,7 @@ namespace Game_Launcher_V2.Pages
                         lbGames.ScrollIntoView(lbGames.SelectedItem);
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.isAccessMenuOpen == false)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && !Global.isAccessMenuOpen)
                     {
                         //Decrease selected item by 1
                         int current = lbGames.SelectedIndex;
@@ -401,14 +401,15 @@ namespace Game_Launcher_V2.Pages
                         lbGames.ScrollIntoView(lbGames.SelectedItem);
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && Global.isAccessMenuOpen == false)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && !Global.isAccessMenuOpen)
                     {
                         loadApp();
                     }
                 }
             }
-           catch { }
+            catch { }
         }
+
 
         public void loadApp()
         {

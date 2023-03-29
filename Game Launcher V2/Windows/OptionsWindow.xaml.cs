@@ -68,18 +68,16 @@ namespace Game_Launcher_V2.Windows
             Global.shortCut = true;
         }
 
-        private static Controller controller;
-
         public static bool hidden = true;
 
         int menuSelected = 0;
+
+        private static Controller controller = new Controller(UserIndex.One);
+
         async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
             try
             {
-                //Get controller
-                controller = new Controller(UserIndex.One);
-
                 bool connected = controller.IsConnected;
                 if (MainDock.Visibility == Visibility.Hidden) MainDock.Visibility = Visibility.Visible;
 
@@ -144,13 +142,7 @@ namespace Game_Launcher_V2.Windows
                     Global.shortCut = false;
                 }
 
-                int i = 0;
-                await Task.Run(() =>
-                {
-                    foreach (var process in Process.GetProcessesByName("ayaspace")) i++;
-                    foreach (var process in Process.GetProcessesByName("AYASpace")) i++;
-                });
-                if (i < 1 && mbo.Contains("aya"))
+                if (mbo.Contains("aya"))
                 {
                     //detect if keyboard or controller combo is being activated
                     if ((Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.F12) & KeyStates.Down) > 0 || (Keyboard.GetKeyStates(Key.RightCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.F12) & KeyStates.Down) > 0 || (Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.LWin) & KeyStates.Down) > 0 || (Keyboard.GetKeyStates(Key.RightCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.LWin) & KeyStates.Down) > 0 || (Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.RWin) & KeyStates.Down) > 0 || (Keyboard.GetKeyStates(Key.RightCtrl) & KeyStates.Down) > 0 && (Keyboard.GetKeyStates(Key.RWin) & KeyStates.Down) > 0)
