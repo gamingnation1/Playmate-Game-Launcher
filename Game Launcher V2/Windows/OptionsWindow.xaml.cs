@@ -1,4 +1,5 @@
-﻿using Game_Launcher_V2.Scripts;
+﻿using Game_Launcher_V2.Pages.OptionsWindow;
+using Game_Launcher_V2.Scripts;
 using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Game_Launcher_V2.Windows
         //Get current working directory
         public static string path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
         public static string mbo = "";
-        
+
 
         public OptionsWindow()
         {
@@ -117,7 +118,7 @@ namespace Game_Launcher_V2.Windows
                         }
                     }
 
-                    if(this.Visibility == Visibility.Visible && Global.shortCut == false)
+                    if (this.Visibility == Visibility.Visible && Global.shortCut == false)
                     {
                         if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && Global.shortCut == false)
                         {
@@ -133,7 +134,7 @@ namespace Game_Launcher_V2.Windows
                             changeMenu();
                         }
                     }
-                    
+
 
                     //if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
                     //{
@@ -186,22 +187,40 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                PagesNavigation.Content = null;
-                PagesNavigation.NavigationService.RemoveBackEntry();
-
                 if (menuSelected == 0) rdBasic.IsChecked = true;
                 if (menuSelected == 1) rdPower.IsChecked = true;
                 if (menuSelected == 2) rdDisplay.IsChecked = true;
                 if (menuSelected == 3) rdMagpie.IsChecked = true;
 
-                if (rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
-                if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
-                if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
-                if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+                if (rdBasic.IsChecked == true) NavigateToPage(typeof(BasicSettings));
+                if (rdPower.IsChecked == true) NavigateToPage(typeof(PowerControl));
+                if (rdDisplay.IsChecked == true) NavigateToPage(typeof(ComingSoon));
+                if (rdMagpie.IsChecked == true) NavigateToPage(typeof(ComingSoon));
 
                 Global.AccessMenuSelected = menuSelected;
             }
             catch { }
+        }
+
+        private Dictionary<Type, Page> pages = new Dictionary<Type, Page>();
+
+        public void NavigateToPage(Type pageType)
+        {
+            // Check if the page instance already exists in the dictionary
+            if (!pages.TryGetValue(pageType, out Page pageInstance))
+            {
+                // If the page instance does not exist, create a new instance and add it to the dictionary
+                pageInstance = (Page)Activator.CreateInstance(pageType);
+                pages.Add(pageType, pageInstance);
+
+                // Add the new page instance to the frame
+                PagesNavigation.Content = pageInstance;
+            }
+            else
+            {
+                // If the page instance already exists, set it as the content of the frame
+                PagesNavigation.Content = pageInstance;
+            }
         }
 
         private void setUpGUI()
@@ -248,19 +267,16 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                PagesNavigation.Content = null;
-                PagesNavigation.NavigationService.RemoveBackEntry();
-
                 if (rdBasic.IsChecked == true) menuSelected = 0;
                 if (rdPower.IsChecked == true) menuSelected = 1;
                 if (rdDisplay.IsChecked == true) menuSelected = 2;
                 if (rdMagpie.IsChecked == true) menuSelected = 3;
                 Global.AccessMenuSelected = menuSelected;
 
-                if (rdBasic.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
-                if (rdPower.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/PowerControl.xaml", UriKind.RelativeOrAbsolute));
-                if (rdDisplay.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
-                if (rdMagpie.IsChecked == true) PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/ComingSoon.xaml", UriKind.RelativeOrAbsolute));
+                if (rdBasic.IsChecked == true) NavigateToPage(typeof(BasicSettings));
+                if (rdPower.IsChecked == true) NavigateToPage(typeof(PowerControl));
+                if (rdDisplay.IsChecked == true) NavigateToPage(typeof(ComingSoon));
+                if (rdMagpie.IsChecked == true) NavigateToPage(typeof(ComingSoon));
             }
             catch { }
         }

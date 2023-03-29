@@ -91,7 +91,6 @@ namespace Game_Launcher_V2.Scripts
             }
         }
 
-        static string lastWifi;
         public static async void getWifi(Image imgWiFi)
         {
             var bi = new BitmapImage();
@@ -112,25 +111,19 @@ namespace Game_Launcher_V2.Scripts
                 wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
             }
 
-            if (wifiURL != lastWifi)
+            using (var stream = new FileStream(wifiURL, FileMode.Open, FileAccess.Read))
             {
-                using (var stream = new FileStream(wifiURL, FileMode.Open, FileAccess.Read))
-                {
-                    bi.BeginInit();
-                    bi.DecodePixelWidth = 48;
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.StreamSource = stream;
-                    bi.EndInit();
-                }
-
-                bi.Freeze();
-                imgWiFi.Source = bi;
-
-                lastWifi = wifiURL;
+                bi.BeginInit();
+                bi.DecodePixelWidth = 48;
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.StreamSource = stream;
+                bi.EndInit();
             }
+
+            bi.Freeze();
+            imgWiFi.Source = bi;
         }
 
-        static string lastBattery;
         public async static void updateBatTime(TextBlock lblBat, TextBlock lblTime, Image imgBat)
         {
             try
@@ -163,23 +156,20 @@ namespace Game_Launcher_V2.Scripts
                     batURL = path + "//Assets//Icons//battery-charge-line.png";
                 }
 
-                if (batURL != lastBattery)
+                using (var stream = new FileStream(batURL, FileMode.Open, FileAccess.Read))
                 {
-                    using (var stream = new FileStream(batURL, FileMode.Open, FileAccess.Read))
-                    {
-                        bi.BeginInit();
-                        bi.DecodePixelWidth = 48;
-                        bi.CacheOption = BitmapCacheOption.OnLoad;
-                        bi.StreamSource = stream;
-                        bi.EndInit();
-                    }
-                    bi.Freeze();
-
-                    imgBat.Source = bi;
-                    lastBattery = batURL;
+                    bi.BeginInit();
+                    bi.DecodePixelWidth = 48;
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.StreamSource = stream;
+                    bi.EndInit();
                 }
+                bi.Freeze();
+
+                imgBat.Source = bi;
+
             }
-            catch(Exception ex) { path = Settings.Default.Path; }
+            catch (Exception ex) { path = Settings.Default.Path; }
         }
     }
 }

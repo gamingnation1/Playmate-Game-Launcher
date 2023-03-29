@@ -186,8 +186,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             if (Global.AccessMenuSelected == 0)
             {
-
-
                 try
                 {
                     //Get controller
@@ -287,10 +285,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     updateMenuSelected();
                 }
                 catch { }
-            }
-            else
-            {
-                checkKeyInput.Stop();
             }
          }
 

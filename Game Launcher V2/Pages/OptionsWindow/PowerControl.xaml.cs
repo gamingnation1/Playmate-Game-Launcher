@@ -163,7 +163,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     int iGFX = (int)sdGFXClock.Value;
 
                     if (tsTemp.IsOn == true) commandArguments = $"--tctl-temp={Temp} --skin-temp-limit={Temp} ";
-                    if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={TDP} --slow-limit={TDP} --fast-limit={TDP} --vrm-current={TDP * 1.33} --vrmmax-current={TDP * 1.33} ";
+                    if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={TDP} --slow-limit={TDP} --fast-limit={TDP} --vrm-current={(int)(TDP * 1.33)} --vrmmax-current={(int)(TDP * 1.33)} ";
                     if (tsGPU.IsOn == true) commandArguments = commandArguments + $"--gfx-clk={iGFX} ";
 
                     Global.RyzenAdj = commandArguments;
@@ -174,7 +174,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         Settings.Default.isPower = tsPower.IsOn;
                         Settings.Default.isBoost = tsCPUClk.IsOn;
                         Settings.Default.isiGFX = tsGPU.IsOn;
-                        Settings.Default.Save();
                         Settings.Default.TempLimit = (int)sdTemp.Value;
                         Settings.Default.PowerLimit = (int)sdPower.Value;
                         Settings.Default.iGFXClk = (int)sdGFXClock.Value;
@@ -213,8 +212,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             }
             catch { }
         }
-
-        static string lastBat = "";
         public void updateBatIcon()
         {
             try
@@ -238,7 +235,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     batURL = path + "//Assets//Icons//battery-charge-line-vert.png";
                 }
                 imgBat.Source = new BitmapImage(new Uri(batURL));
-                lastBat = batURL;
             }
             catch
             {
@@ -283,20 +279,24 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
-
-            if (Settings.Default.CPUName.ToLower().Contains("intel"))
-            {
-                borders = new Border[] { Section4, Section5, Section6 };
-            }
-            else
-            {
-                borders = new Border[] { Section2, Section3, Section4, Section5, Section6, Section7, Section8, Section9, Section10 };
-            }
-
             if (Global.AccessMenuSelected == 1)
             {
                 try
                 {
+                    if (Settings.Default.CPUName.ToLower().Contains("intel"))
+                    {
+                        borders = new Border[] { Section4, Section5, Section6 };
+                    }
+                    else
+                    {
+                        borders = new Border[] { Section2, Section3, Section4, Section5, Section6, Section7, Section8, Section9, Section10 };
+                    }
+
+                    lblBat.Text = Time_and_Bat.batPercent;
+
+                    getBatteryTime();
+                    updateBatIcon();
+
                     //Get controller
                     controller = new Controller(UserIndex.One);
 
@@ -433,7 +433,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         Settings.Default.isPower = tsPower.IsOn;
                         Settings.Default.isBoost = tsCPUClk.IsOn;
                         Settings.Default.isiGFX = tsGPU.IsOn;
-                        Settings.Default.Save();
                         Settings.Default.TempLimit = (int)sdTemp.Value;
                         Settings.Default.PowerLimit = (int)sdPower.Value;
                         Settings.Default.iGFXClk = (int)sdGFXClock.Value;
@@ -442,11 +441,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     }
                 }
                 catch { }
-            }
-            else
-            {
-                checkKeyInput.Stop();
-                sensor.Stop();
             }
         }
 
@@ -482,7 +476,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
                 }
 
-                if (borders[optionSelected] == Section10 && tsFPS.IsOn == false) { optionSelected = 7; }
+                if (borders[optionSelected] == Section10 && tsFPS.Visibility == Visibility.Collapsed) { optionSelected = 9; }
                 if (borders[optionSelected] == Section10 && tsFPS.IsOn == false && lastBorder == Section10) { isActive = false; }
 
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
