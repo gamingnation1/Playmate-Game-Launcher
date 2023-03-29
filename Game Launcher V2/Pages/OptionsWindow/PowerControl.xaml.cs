@@ -472,7 +472,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
                 }
 
-                if (borders[optionSelected] == Section10 && Section10.Visibility == Visibility.Collapsed) { optionSelected = 9; }
+                if (borders[optionSelected] == Section10 && Section10.Visibility == Visibility.Collapsed) { optionSelected = 8; }
                 if (borders[optionSelected] == Section10 && tsFPS.IsOn == false && lastBorder == Section10) { isActive = false; }
 
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
