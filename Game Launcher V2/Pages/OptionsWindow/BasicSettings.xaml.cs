@@ -188,12 +188,19 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         bool isActive = false;
         bool connected;
         public static Border[] borders;
-
+        bool wasClosed = false;
+        bool lastState = true;
         async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
             borders = new Border[] { Section1, Section2, Section3, Section4, Section51 };
+            
+            if (lastState == false && Global.isAccessMenuOpen == true) wasClosed = true;
 
-            if (Global.AccessMenuSelected == 0)
+            lastState = Global.isAccessMenuOpen;
+
+            if (wasClosed) { getVol(); getBrightness(); sdVol.Value = vol; sdBright.Value = bright; }
+
+            if (Global.AccessMenuSelected == 0 && Global.isAccessMenuOpen == true)
             {
                 try
                 {

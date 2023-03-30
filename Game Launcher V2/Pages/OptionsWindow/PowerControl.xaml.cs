@@ -299,7 +299,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
-            if (Global.AccessMenuSelected == 1)
+            if (Global.AccessMenuSelected == 1 && Global.isAccessMenuOpen == true)
             {
                 try
                 {
