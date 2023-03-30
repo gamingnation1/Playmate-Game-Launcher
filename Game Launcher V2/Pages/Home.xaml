@@ -38,7 +38,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="18" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" SnapsToDevicePixels="true">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="15" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" SnapsToDevicePixels="true">
                             <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -89,7 +89,7 @@
                 </StackPanel>
             </Grid>
 
-            <Grid DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,20,20">
+            <Grid DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,20,20"  Name="bottomBar">
                 <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
                     <Border Opacity="0.2">
                         <Border.Effect>
@@ -101,8 +101,9 @@
                     </Border>
                 </Border>
                 <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,4,0">Prev</TextBlock>
-                    <Image Height="32" Width="30" Name="imgDPad"  Margin="0,0,4,0"></Image>
+                    <Image Height="32" Width="30" Name="imgDPadLeft"  Margin="0,0,4,0"></Image>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Prev</TextBlock>
+                    <Image Height="32" Width="30" Name="imgDPadRight"  Margin="18,0,4,0"></Image>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Next</TextBlock>
                     <Image Height="32" Width="30" Name="imgA"  Margin="18,0,5,0"></Image>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="{Binding ElementName=btnControl, Path=Content}"/>
@@ -122,10 +123,10 @@
                         </Border>
                     </Border>
                     <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                        <TextBlock Name="lblGameName" Foreground="White" FontSize="32" FontWeight="SemiBold" Width="auto" VerticalAlignment="Center" Margin="0,-3,0,0">Game Name Menu Bar Top</TextBlock>
+                        <TextBlock Name="lblGameName" Foreground="White" FontSize="28" FontWeight="SemiBold" Width="auto" VerticalAlignment="Center" Margin="0,-3,0,0">Game Name Menu Bar Top</TextBlock>
                     </StackPanel>
                 </Grid>
-                <ListBox x:FieldModifier="public" MinHeight="300" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="10,-15,10,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel"  Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True">
+                <ListBox x:FieldModifier="public" MinHeight="265" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="10,-15,10,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel"  Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel IsItemsHost="True" ScrollViewer.PanningMode="HorizontalFirst" />
@@ -147,7 +148,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                                <Border Background="LightBlue" CornerRadius="16" Width="290" Height="290">
+                                                <Border Background="LightBlue" CornerRadius="16" Width="255" Height="255">
                                                     <ContentPresenter />
                                                 </Border>
                                             </ControlTemplate>
@@ -162,7 +163,7 @@
                     <ListBox.ItemTemplate>
 
                         <DataTemplate>
-                            <Border x:Name="GameBorder" Height="290" Width="290" BorderThickness="4" BorderBrush="Transparent" CornerRadius="16">
+                            <Border x:Name="GameBorder" Height="255" Width="255" BorderThickness="4" BorderBrush="Transparent" CornerRadius="16">
                                 <Border.Background>
                                     <ImageBrush ImageSource="{Binding imagePath}"  Stretch="UniformToFill"/>
                                 </Border.Background>
