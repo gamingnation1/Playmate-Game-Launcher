@@ -1,6 +1,5 @@
 ﻿using ControlzEx.Theming;
 using Game_Launcher_V2.Scripts;
-using AudioSwitcher.AudioApi.CoreAudio;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,6 +27,10 @@ using Microsoft.Win32;
 using Color = System.Windows.Media.Color;
 using Brush = System.Windows.Media.Brush;
 using Application = System.Windows.Application;
+using Windows.Media.Audio;
+using Windows.Media.Render;
+using System.Data;
+using NAudio.CoreAudioApi;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -38,7 +41,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
     {
         //Get current working directory
         public static string path = Global.path;
-        public static CoreAudioDevice defaultPlaybackDevice = new CoreAudioController().DefaultPlaybackDevice;
         public bool isFirstBoot = true;
         public static int bright = 0;
         public static int vol = 0;
@@ -159,17 +161,24 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             }
         }
 
-        public static void getVol()
+        public static async void getVol()
         {
-            vol = Convert.ToInt32(defaultPlaybackDevice.Volume);
+            // Get the default audio playback device
+            MMDevice defaultDevice = new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Render, NAudio.CoreAudioApi.Role.Multimedia);
+
+            // Get the current volume level of the device as an integer between 0 and 100
+            vol = (int)Math.Round(defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0);
         }
 
         public async void updateVolume(int newVolume)
         {
             await Task.Run(() =>
             {
+                // Get the default audio playback device
+                MMDevice defaultDevice = new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Render, NAudio.CoreAudioApi.Role.Multimedia);
+
                 //Set volume of current sound device
-                defaultPlaybackDevice.Volume = newVolume;
+                defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)newVolume / 100.0f;
             });
         }
 
