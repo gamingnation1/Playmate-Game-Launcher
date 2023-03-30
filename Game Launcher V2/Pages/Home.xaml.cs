@@ -92,12 +92,6 @@ namespace Game_Launcher_V2.Pages
             sensor.Tick += Update_Tick;
             sensor.Start();
 
-            //set up timer for game name label update
-
-            nameUpdate.Interval = TimeSpan.FromSeconds(0.05);
-            nameUpdate.Tick += gameName_Tick;
-            nameUpdate.Start();
-
             //set up timer for key combo system
             
             checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
@@ -201,28 +195,6 @@ namespace Game_Launcher_V2.Pages
             catch
             {
 
-            }
-        }
-
-        void gameName_Tick(object sender, EventArgs e)
-        {
-            if (Global.isMainActive)
-            {
-                if (GameNameBar.ActualWidth != lblGameName.ActualWidth)
-                {
-                    //Update game name label 
-                    double width = lblGameName.ActualWidth;
-                    GameNameBar.Width = (width + 28);
-                }
-
-                if (Global.GameStore != currentGameStore)
-                {
-                    mediaPlayer.Stop();
-                    thisWorking = false;
-                    checkKeyInput.Stop();
-                    sensor.Stop();
-                    nameUpdate.Stop();
-                }
             }
         }
 
