@@ -101,10 +101,10 @@
                         </Border>
                     </Border>
                     <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                        <Image Height="32" Width="30" Name="imgLB"  Margin="0,0,4,0"></Image>
+                        <Image Height="32" Width="30" Name="imgLB"/>
                         <TextBlock Name="lblSteam" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="DemiBold"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="22,-3,0,0">Steam</TextBlock>
                         <TextBlock Name="lblEpic" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="18,-3,0,0">Epic Games</TextBlock>
-                        <Image Height="32" Width="30" Name="imgRB"  Margin="22,0,5,0"></Image>
+                        <Image Height="32" Width="30" Name="imgRB"  Margin="22,0,0,0"></Image>
                     </StackPanel>
                 </Grid>
             </DockPanel>

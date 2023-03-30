@@ -102,7 +102,7 @@ namespace Game_Launcher_V2.Pages
 
             //set up timer for key combo system
             
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.16);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -393,34 +393,38 @@ namespace Game_Launcher_V2.Pages
                         loadApp();
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                    bool combo = false;
+
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder) && !Global.isAccessMenuOpen)
                     {
+                        combo = true;
                         return;
                     }
 
                     int min = 0;
                     int max = 1;
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder))
+                    int gameStore = Global.GameStore;
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && !Global.isAccessMenuOpen && !combo)
                     {
-                        int gameStore = Global.GameStore;
-
                         gameStore--;
 
                         if (gameStore < min) gameStore = max;
 
                         Global.GameStore = gameStore;
+
+                        checkKeyInput.Stop();
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder) && !Global.isAccessMenuOpen && !combo)
                     {
-                        int gameStore = Global.GameStore;
-
                         gameStore++;
 
                         if (gameStore > max) gameStore = min;
 
                         Global.GameStore = gameStore;
+
+                        checkKeyInput.Stop();
                     }
                 }
             }
