@@ -169,7 +169,7 @@ namespace Game_Launcher_V2.Scripts
             
         }
 
-        public static void changeSteamGame(ListBox lbGames, TextBlock lblGameName, Button btnControl) 
+        public static void changeSteamGame(ListBox lbGames, TextBlock lblGameName, Label lblControl) 
         {
             SteamGame model = lbGames.SelectedItem as SteamGame;
             if (model.gameName.Contains("Open Steam")) lblGameName.Text = model.gameName.Replace("Open ", "");
@@ -177,8 +177,8 @@ namespace Game_Launcher_V2.Scripts
             else lblGameName.Text = model.gameName;
 
 
-            if (model.gameName.Contains("Open EGS") || model.gameName.Contains("Open Steam") || model.gameName.Contains("All Software")) btnControl.Content = model.gameName;
-            else btnControl.Content = "Play Game";
+            if (model.gameName.Contains("Open EGS") || model.gameName.Contains("Open Steam") || model.gameName.Contains("All Software")) lblControl.Content = model.gameName;
+            else lblControl.Content = "Play Game";
         }
     }
 }

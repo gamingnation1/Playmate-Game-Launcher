@@ -135,8 +135,8 @@ namespace Game_Launcher_V2
                     PerformanceOverlay perfOverlay = new PerformanceOverlay();
                     perfOverlay.Show();
 
-                    SelectGameStore gameStore = new SelectGameStore();
-                    gameStore.Show();
+                    //SelectGameStore gameStore = new SelectGameStore();
+                    //gameStore.Show();
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }

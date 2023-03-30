@@ -64,10 +64,18 @@ namespace Game_Launcher_V2.Pages
             if (Global.GameStore == 0)
             {
                 LoadSteamGames.loadSteamGames(lbGames);
+                lblSteam.FontWeight = FontWeights.DemiBold;
+                lblSteam.Foreground = new SolidColorBrush(Colors.White);
+                lblEpic.FontWeight = FontWeights.Normal;
+                lblEpic.Foreground = new SolidColorBrush(Colors.Gray);
             }
             if (Global.GameStore == 1)
             {
                 LoadEpicGamesData.loadEpicGames(lbGames);
+                lblEpic.FontWeight = FontWeights.DemiBold;
+                lblEpic.Foreground = new SolidColorBrush(Colors.White);
+                lblSteam.FontWeight = FontWeights.Normal;
+                lblSteam.Foreground = new SolidColorBrush(Colors.Gray);
             }
 
             thisWorking = true;
@@ -119,8 +127,6 @@ namespace Game_Launcher_V2.Pages
         {
             try
             {
-
-
                 var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
                 scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
 
@@ -128,6 +134,9 @@ namespace Game_Launcher_V2.Pages
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "A.png"), imgA);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "D-Pad Left.png"), imgDPadLeft);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "D-Pad Right.png"), imgDPadRight);
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "play-mini-fill.png"), imgPlay);
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "Left Bumper.png"), imgLB);
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "Right Bumper.png"), imgRB);
 
                 string wifiURL = "";
                 double wifi = Global.wifi;
@@ -205,7 +214,7 @@ namespace Game_Launcher_V2.Pages
             if (thisWorking)
             {
                 SteamGame model = lbGames.SelectedItem as SteamGame;
-                LoadSteamGames.changeSteamGame(lbGames, lblGameName, btnControl);
+                LoadSteamGames.changeSteamGame(lbGames, lblGameName, lblControl);
                 updateBGImage(model.bgImagePath);
                 playAudio(model.musicPath);
                 lastAudio = model.musicPath;
@@ -382,6 +391,36 @@ namespace Game_Launcher_V2.Pages
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && !Global.isAccessMenuOpen)
                     {
                         loadApp();
+                    }
+
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                    {
+                        return;
+                    }
+
+                    int min = 0;
+                    int max = 1;
+
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder))
+                    {
+                        int gameStore = Global.GameStore;
+
+                        gameStore--;
+
+                        if (gameStore < min) gameStore = max;
+
+                        Global.GameStore = gameStore;
+                    }
+
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                    {
+                        int gameStore = Global.GameStore;
+
+                        gameStore++;
+
+                        if (gameStore > max) gameStore = min;
+
+                        Global.GameStore = gameStore;
                     }
                 }
             }
