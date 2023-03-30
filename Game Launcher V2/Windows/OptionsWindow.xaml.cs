@@ -166,7 +166,6 @@ namespace Game_Launcher_V2.Windows
                             this.Activate();
                             this.Focus();
                             Global.AccessMenuSelected = openMenu;
-                            PagesNavigation.NavigationService.Refresh();
                         }
 
                     }
@@ -235,10 +234,10 @@ namespace Game_Launcher_V2.Windows
 
             imgTime.Source = bi2;
 
-            Time_and_Bat_Options.getBattery();
-            Time_and_Bat_Options.getTime();
-            Time_and_Bat_Options.getWifi(imgWiFi);
-            Time_and_Bat_Options.updateBatTime(lblBat, lblTime, imgBat);
+            Time_and_Bat.getBattery();
+            Time_and_Bat.getTime();
+            Time_and_Bat.GetWifi(imgWiFi);
+            Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
         }
 
         //Get battery and time info evry 2 seconds
@@ -246,8 +245,8 @@ namespace Game_Launcher_V2.Windows
         {
             try
             {
-                Time_and_Bat_Options.getWifi(imgWiFi);
-                Time_and_Bat_Options.updateBatTime(lblBat, lblTime, imgBat);
+                Time_and_Bat.GetWifi(imgWiFi);
+                Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
 
                 string processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
                 if (Global.RyzenAdj != "" || Global.RyzenAdj != null) RunCLI.ApplySettings(processRyzenAdj, Global.RyzenAdj, true);

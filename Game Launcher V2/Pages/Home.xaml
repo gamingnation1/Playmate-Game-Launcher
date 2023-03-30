@@ -69,7 +69,7 @@
             <Image Name="GameBG" Stretch="UniformToFill"></Image>
         </DockPanel>
         <DockPanel Panel.ZIndex="1">
-            <Grid DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="0,20,20,0">
+            <Grid DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="0,12,12,0">
                 <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
                     <Border Opacity="0.2">
                         <Border.Effect>
@@ -89,7 +89,7 @@
                 </StackPanel>
             </Grid>
 
-            <Grid DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,20,20"  Name="bottomBar">
+            <Grid DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,12,12"  Name="bottomBar">
                 <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
                     <Border Opacity="0.2">
                         <Border.Effect>
@@ -101,7 +101,7 @@
                     </Border>
                 </Border>
                 <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                    <Image Height="32" Width="30" Name="imgDPadLeft"  Margin="0,0,4,0"></Image>
+                    <Image Height="32" Width="30" Name="imgDPadLeft"  Margin="18,0,4,0"></Image>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Prev</TextBlock>
                     <Image Height="32" Width="30" Name="imgDPadRight"  Margin="18,0,4,0"></Image>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Next</TextBlock>
@@ -134,7 +134,7 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
-                            <Setter Property="Margin" Value="10,0,0,10"></Setter>
+                            <Setter Property="Margin" Value="11,0,0,11"></Setter>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">

@@ -121,6 +121,9 @@
     <None Update="Assets\Icons\Xbox\Menu.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Icons\Xbox\Outline White 4k.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Icons\Xbox\Right Bumper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
