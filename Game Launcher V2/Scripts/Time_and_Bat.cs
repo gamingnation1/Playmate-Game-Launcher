@@ -1,4 +1,5 @@
 ﻿using Game_Launcher_V2.Properties;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Windows.Devices.WiFi;
 
 namespace Game_Launcher_V2.Scripts
 {
@@ -60,37 +62,23 @@ namespace Game_Launcher_V2.Scripts
             time = currentTime.ToString("HH:mm");
         }
 
-        public static double RetrieveSignalStrength()
+        public static async Task<double> RetrieveSignalStrengthAsync()
         {
             try
             {
-                int wifiStrengthPercentage = 0;
-                long bytesReceived = 0;
-                long bytesThreshold = 10000000; // adjust this threshold to suit your needs
-
-                foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+                var adapters = await WiFiAdapter.FindAllAdaptersAsync();
+                foreach (var adapter in adapters)
                 {
-                    // Only consider Wireless network interfaces
-                    if (nic.NetworkInterfaceType != NetworkInterfaceType.Wireless80211) continue;
-
-                    IPv4InterfaceStatistics statistics = nic.GetIPv4Statistics();
-                    bytesReceived += statistics.BytesReceived;
+                    foreach (var network in adapter.NetworkReport.AvailableNetworks)
+                    { 
+                        return network.SignalBars;
+                    }
+                    return 0;
                 }
-
-                // Calculate the Wi-Fi signal strength as a percentage
-                if (bytesReceived < bytesThreshold)
-                {
-                    wifiStrengthPercentage = (int)((bytesReceived / (double)bytesThreshold) * 100);
-                }
-                else
-                {
-                    wifiStrengthPercentage = 100;
-                }
-
-                return wifiStrengthPercentage;
+                return 0;
             } catch
             {
-                return 100;
+                return 0;
             }
         }
 
@@ -101,15 +89,15 @@ namespace Game_Launcher_V2.Scripts
             string wifiURL = "";
             double wifi = Global.wifi;
 
-            if (wifi > 75)
+            if (wifi >= 3)
             {
                 wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
             }
-            if (wifi < 75 && wifi > 45)
+            else if (wifi >= 1)
             {
                 wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
             }
-            if (wifi < 45)
+            else if (wifi < 1)
             {
                 wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
             }

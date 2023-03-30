@@ -166,7 +166,7 @@ namespace Game_Launcher_V2
                 Time_and_Bat.getBattery();
                 Time_and_Bat.getTime();
 
-                Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalStrength());
+                Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalStrengthAsync());
 
                 if (Global.GameStore != lastGameStore)
                 {
@@ -195,8 +195,6 @@ namespace Game_Launcher_V2
             {
                 Time_and_Bat.getBattery();
                 Time_and_Bat.getTime();
-
-                Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalStrength());
 
 
                 if(Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")

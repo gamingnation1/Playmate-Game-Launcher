@@ -132,15 +132,15 @@ namespace Game_Launcher_V2.Pages
                 string wifiURL = "";
                 double wifi = Global.wifi;
 
-                if (wifi > 75)
+                if (wifi >= 4)
                 {
                     wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
                 }
-                if (wifi < 75 && wifi > 45)
+                else if (wifi >= 2)
                 {
                     wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
                 }
-                if (wifi < 45)
+                else if (wifi < 2)
                 {
                     wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
                 }
