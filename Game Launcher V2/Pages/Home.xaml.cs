@@ -107,11 +107,11 @@ namespace Game_Launcher_V2.Pages
 
             if (scrollviewer != null)
             {
-                if (scrollviewer.HorizontalOffset <= 200)
+                if (scrollviewer.HorizontalOffset <= 50)
                 {
                     lbGames.Margin = new Thickness(10, -15, 0, 0);
                 }
-                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 200)
+                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                 {
                     lbGames.Margin = new Thickness(0, -15, 15, 0);
                 }
@@ -264,11 +264,11 @@ namespace Game_Launcher_V2.Pages
             ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
             if (scrollviewer != null)
             {
-                if (scrollviewer.HorizontalOffset <= 200)
+                if (scrollviewer.HorizontalOffset <= 50)
                 {
                     lbGames.Margin = new Thickness(10, -15, 0, 0);
                 }
-                else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 200)
+                else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 125)
                 {
                     lbGames.Margin = new Thickness(0, -15, 15, 0);
                 }
@@ -277,6 +277,8 @@ namespace Game_Launcher_V2.Pages
                     lbGames.Margin = new Thickness(0, -15, 0, 0);
                 }
             }
+
+            lbGames.ScrollIntoView(lbGames.SelectedItem);
         }
 
         string lastBG = "";
@@ -430,6 +432,7 @@ namespace Game_Launcher_V2.Pages
 
                         lbGames.SelectedIndex = current;
                         lbGames.ScrollIntoView(lbGames.SelectedItem);
+                        if (current == lbGames.Items.Count - 1) scrollViewer.ScrollToHorizontalOffset(scrollViewer.ScrollableWidth);
                     }
 
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && !Global.isAccessMenuOpen)
@@ -443,6 +446,7 @@ namespace Game_Launcher_V2.Pages
 
                         lbGames.SelectedIndex = current;
                         lbGames.ScrollIntoView(lbGames.SelectedItem);
+                        if (current == 0) scrollViewer.ScrollToHorizontalOffset(0);
 
                     }
 
@@ -512,11 +516,11 @@ namespace Game_Launcher_V2.Pages
 
             if (scrollviewer != null)
             {
-                if (scrollviewer.HorizontalOffset <= 200)
+                if (scrollviewer.HorizontalOffset <= 50)
                 {
                     lbGames.Margin = new Thickness(10, -15, 0, 0);
                 }
-                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 200)
+                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                 {
                     lbGames.Margin = new Thickness(0, -15, 15, 0);
                 }
@@ -546,11 +550,11 @@ namespace Game_Launcher_V2.Pages
             ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(lbGames).FirstOrDefault();
             if (scrollviewer != null)
             {
-                if (scrollviewer.HorizontalOffset <= 200)
+                if (scrollviewer.HorizontalOffset <= 50)
                 {
                     lbGames.Margin = new Thickness(10, -15, 0, 0);
                 }
-                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 200)
+                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                 {
                     lbGames.Margin = new Thickness(0, -15, 15, 0);
                 }

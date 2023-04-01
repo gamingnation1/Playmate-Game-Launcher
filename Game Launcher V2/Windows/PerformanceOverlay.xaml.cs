@@ -406,7 +406,10 @@ namespace Game_Launcher_V2.Windows
                 }
                 time = TimeSpan.FromSeconds(batTime);
 
-                lblBat.Text = $"{Time_and_Bat.batPercentInt}%  {time:%h} Hours {time:%m} Minutes";
+                float dischargeRate = (float)GetSensor.BatteryDischarge;
+
+                if (GetSensor.BatteryDischarge != 0) lblBat.Text = $"{Time_and_Bat.batPercentInt}%  {time:%h} Hours {time:%m} Minutes -{dischargeRate.ToString("0.00")}W";
+                else lblBat.Text = $"{Time_and_Bat.batPercentInt}%  {time:%h} Hours {time:%m} Minutes";
 
                 if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == true) lblBat.Text = $"{Time_and_Bat.batPercentInt}%";
                 if (lblBat.Text.Contains("0 Hours 0 Minutes") && isCharging == false) lblBat.Text = $"{Time_and_Bat.batPercentInt}%  Calculating";
