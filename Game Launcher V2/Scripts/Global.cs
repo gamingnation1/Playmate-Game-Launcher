@@ -32,6 +32,8 @@ namespace Game_Launcher_V2.Scripts
 
         public static string RyzenAdj = "";
 
+        public static string mbo = "";
+
         //Get current working directory
         public static string path;
         public static Visual GetDescendantByType(Visual element, Type type)

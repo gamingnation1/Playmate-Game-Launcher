@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -76,6 +77,14 @@ namespace Game_Launcher_V2
 
                 GetSensor.openSensor();
 
+                //Detect if an AYA Neo is being used
+
+                ManagementObjectSearcher baseboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
+                foreach (ManagementObject queryObj in baseboardSearcher.Get())
+                {
+                    Global.mbo = queryObj["Manufacturer"].ToString().ToLower();
+                }
+
                 navFrame = PagesNavigation;
 
                 Settings.Default.CPUName = System.Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER");
@@ -102,7 +111,7 @@ namespace Game_Launcher_V2
 
                 //set up timer for sensor update
                 DispatcherTimer sensor = new DispatcherTimer();
-                sensor.Interval = TimeSpan.FromSeconds(0.115);
+                sensor.Interval = TimeSpan.FromSeconds(0.16);
                 sensor.Tick += Update_Tick;
                 sensor.Start();
 
@@ -127,6 +136,7 @@ namespace Game_Launcher_V2
                     if (File.Exists(Global.path + "\\SavedListEpic.txt")) File.Delete(Global.path + "\\SavedListEpic.txt");
                     FindSteamData.getData();
                     FindEpicGamesData.GetData();
+                    getData();
                     PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));
 
                     OptionsWindow win2 = new OptionsWindow();
@@ -137,6 +147,12 @@ namespace Game_Launcher_V2
 
                     //SelectGameStore gameStore = new SelectGameStore();
                     //gameStore.Show();
+
+                    if(Settings.Default.startMinimised == false)
+                    {
+                        this.Activate();
+                        this.Focus();
+                    }
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }
@@ -163,11 +179,6 @@ namespace Game_Launcher_V2
         {
             try
             {
-                Time_and_Bat.getBattery();
-                Time_and_Bat.getTime();
-
-                Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalStrengthAsync());
-
                 if (Global.GameStore != lastGameStore)
                 {
                     PagesNavigation.Refresh();
@@ -189,13 +200,19 @@ namespace Game_Launcher_V2
             catch { }
         }
 
+        public async void getData()
+        {
+            Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalStrengthAsync());
+            Time_and_Bat.getBattery();
+            Time_and_Bat.getTime();
+            GetSensor.ReadSensors();
+        }
+
         async void UpdateBatTime_Tick(object sender, EventArgs e)
         {
             try
             {
-                Time_and_Bat.getBattery();
-                Time_and_Bat.getTime();
-                GetSensor.ReadSensors();
+                getData();
 
                 if(Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")
                 {

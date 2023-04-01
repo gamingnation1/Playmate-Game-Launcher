@@ -90,20 +90,16 @@ namespace Game_Launcher_V2.Pages
 
             Global.isOpen = true;
 
-
-            //Detect if an AYA Neo is being used
-            ManagementObjectSearcher baseboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
-            foreach (ManagementObject queryObj in baseboardSearcher.Get())
-            {
-                mbo = queryObj["Manufacturer"].ToString();
-                mbo = mbo.ToLower();
+            if (Global.mbo.Contains("aya")) { 
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "aya-logo.png"), imgSettings);
+                imgSettings.Visibility = Visibility.Visible;
+                lblSettings.Visibility = Visibility.Visible;
             }
-
-            if (mbo.Contains("aya")) SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "aya-logo.png"), imgSettings);
             else
             {
                 imgSettings.Visibility = Visibility.Collapsed;
                 lblSettings.Visibility = Visibility.Collapsed;
+                imgDPadLeft.Margin = new Thickness(0, 0, 4, 0);
             }
         }
 
@@ -128,10 +124,14 @@ namespace Game_Launcher_V2.Pages
         private void SetImageSource(string imageUrl, Image image)
         {
             var imageSource = new BitmapImage();
+            int pixelWidth = 48;
+
+            if (image == imgSettings) pixelWidth = 64;
+
             using (var stream = new FileStream(imageUrl, FileMode.Open, FileAccess.Read))
             {
                 imageSource.BeginInit();
-                imageSource.DecodePixelWidth = 48;
+                imageSource.DecodePixelWidth = pixelWidth;
                 imageSource.CacheOption = BitmapCacheOption.OnLoad;
                 imageSource.StreamSource = stream;
                 imageSource.EndInit();
@@ -141,7 +141,7 @@ namespace Game_Launcher_V2.Pages
             image.Source = imageSource;
         }
 
-        private void setUpGUI()
+        private async void setUpGUI()
         {
             try
             {
