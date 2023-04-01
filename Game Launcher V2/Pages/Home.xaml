@@ -89,7 +89,7 @@
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
                 </StackPanel>
             </Grid>
-                <Grid DockPanel.Dock="Right"  HorizontalAlignment="Left" Margin="0,12,12,0"  Name="bottomBarStore">
+                <Grid DockPanel.Dock="Right"  HorizontalAlignment="Left" Margin="12,12,12,0"  Name="bottomBarStore">
                     <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
                         <Border Opacity="0.2">
                             <Border.Effect>
@@ -107,6 +107,11 @@
                         <Image Height="32" Width="30" Name="imgRB"  Margin="22,0,0,0"></Image>
                     </StackPanel>
                 </Grid>
+                <Button DockPanel.Dock="Right" x:Name="btnSettings" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" VerticalContentAlignment="Center" Background="#f2151515" FontSize="24" Foreground="White" Height="50" Width="50" Margin="12,12,0,0" Click="btnSettings_Click">
+                    <StackPanel>
+                        <Image Height="32" Width="30" Name="imgSettingsBtn"/>
+                    </StackPanel>
+                </Button>
             </DockPanel>
             <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
                 <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,12,12"  Name="bottomBar">
@@ -127,6 +132,8 @@
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Prev</TextBlock>
                         <Image Height="32" Width="30" Name="imgDPadRight"  Margin="18,0,4,0"></Image>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Next</TextBlock>
+                        <Image Height="32" Width="30" Name="imgX"  Margin="18,0,5,0"></Image>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Desktop"/>
                         <Image Height="32" Width="30" Name="imgA"  Margin="18,0,5,0"></Image>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="{Binding ElementName=lblControl, Path=Content}"/>
                     </StackPanel>

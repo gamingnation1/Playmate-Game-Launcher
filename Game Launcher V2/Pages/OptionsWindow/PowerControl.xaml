@@ -15,7 +15,7 @@
             <StackPanel>
                 <Border Name="Section1"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="104" Padding="5">
                     <StackPanel Orientation="Horizontal">
-                        <Image Name="imgBat" Width="97" Margin="0,5,10,5"></Image>
+                        <Image Name="imgBat" Width="100" Margin="0,5,10,0"></Image>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Name="lblBat" Foreground="White" FontSize="24">100%</TextBlock>
                             <TextBlock Name="lblBatTime" Foreground="Gainsboro" FontSize="15.5">X Time Remaining</TextBlock>

@@ -244,7 +244,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 {
                     bi.BeginInit();
                     bi.UriSource = new Uri(batURL, UriKind.RelativeOrAbsolute);
-                    bi.DecodePixelWidth = 48;
+                    bi.DecodePixelWidth = 128;
                     bi.CacheOption = BitmapCacheOption.OnLoad;
                     bi.EndInit();
 
@@ -292,7 +292,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             if (dischargeRate != 0)
             {
                 lblBatDisCharge.Visibility = Visibility.Visible;
-                lblBatDisCharge.Text = $"-{dischargeRate.ToString("0.00")} W Charge Rate";
+                lblBatDisCharge.Text = $"-{dischargeRate.ToString("0.00")}W Charge Rate";
             }
             else lblBatDisCharge.Visibility = Visibility.Collapsed;
         }

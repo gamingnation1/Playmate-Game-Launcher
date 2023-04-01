@@ -193,6 +193,12 @@ namespace Game_Launcher_V2
 
                 lastGameStore = Global.GameStore;
 
+                if(Global.desktop >= 1)
+                {
+                    this.WindowState = WindowState.Minimized;
+                    Global.desktop = 0;
+                }
+
                 if (this.WindowState == WindowState.Minimized) Global.isMainActive = false;
 
                 if (this.Visibility == Visibility && this.WindowState != WindowState.Minimized && this.WindowState != WindowState.Maximized && Global.isMainActive == true) this.WindowState= WindowState.Maximized;

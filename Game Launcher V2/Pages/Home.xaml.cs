@@ -150,11 +150,14 @@ namespace Game_Launcher_V2.Pages
 
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "time-line.png"), imgTime);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "A.png"), imgA);
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "X.png"), imgX);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "D-Pad Left.png"), imgDPadLeft);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "D-Pad Right.png"), imgDPadRight);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "play-mini-fill.png"), imgPlay);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "Left Bumper.png"), imgLB);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "Right Bumper.png"), imgRB);
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "settings-4-line.png"), imgSettingsBtn);
+
                 string wifiURL = "";
                 double wifi = Global.wifi;
 
@@ -410,6 +413,11 @@ namespace Game_Launcher_V2.Pages
                         loadApp();
                     }
 
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.X) && !Global.isAccessMenuOpen)
+                    {
+                        Global.desktop = 1;
+                    }
+
                     bool combo = false;
 
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder) && !Global.isAccessMenuOpen)
@@ -473,5 +481,10 @@ namespace Game_Launcher_V2.Pages
         static string lastWifi;
 
         static string lastBattery;
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Global.settings = 1;
+        }
     }
 }

@@ -34,6 +34,10 @@ namespace Game_Launcher_V2.Scripts
 
         public static string mbo = "";
 
+        public static int desktop = 0;
+
+        public static int settings = 0;
+
         //Get current working directory
         public static string path;
         public static Visual GetDescendantByType(Visual element, Type type)

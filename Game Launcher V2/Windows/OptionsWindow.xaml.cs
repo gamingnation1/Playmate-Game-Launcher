@@ -142,6 +142,32 @@ namespace Game_Launcher_V2.Windows
                     Global.shortCut = false;
                 }
 
+                if (Global.settings == 1)
+                {
+                    //if hidden show window
+                    if (hidden == false)
+                    {
+                        hidden = true;
+                        Global.isAccessMenuOpen = false;
+                        this.Hide();
+                    }
+                    //else hide window
+                    else
+                    {
+                        hidden = false;
+                        this.Show();
+                        this.Activate();
+                        int openMenu = Global.AccessMenuSelected;
+                        Global.AccessMenuSelected = 9999;
+                        Global.isAccessMenuOpen = true;
+                        this.Activate();
+                        this.Focus();
+                        Global.AccessMenuSelected = openMenu;
+                    }
+
+                    Global.settings = 0;
+                }
+
                 if (mbo.Contains("aya"))
                 {
                     //detect if keyboard or controller combo is being activated
