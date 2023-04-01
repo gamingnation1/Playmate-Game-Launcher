@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -23,7 +24,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-
+using ListBox = System.Windows.Controls.ListBox;
 
 namespace Game_Launcher_V2.Pages
 {
@@ -100,6 +101,24 @@ namespace Game_Launcher_V2.Pages
                 imgSettings.Visibility = Visibility.Collapsed;
                 lblSettings.Visibility = Visibility.Collapsed;
                 imgDPadLeft.Margin = new Thickness(0, 0, 4, 0);
+            }
+
+            var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
+
+            if (scrollViewer != null)
+            {
+                if (scrollViewer.HorizontalOffset == 0)
+                {
+                    lbGames.Margin = new Thickness(10, -15, 0, 0);
+                }
+                else if (scrollViewer.HorizontalOffset == scrollViewer.ScrollableWidth)
+                {
+                    lbGames.Margin = new Thickness(0, -15, 15, 0);
+                }
+                else
+                {
+                    lbGames.Margin = new Thickness(0, -15, 0, 0);
+                }
             }
         }
 
@@ -239,6 +258,24 @@ namespace Game_Launcher_V2.Pages
                 playAudio(model.musicPath);
                 lastAudio = model.musicPath;
                 lastBG = model.bgImagePath;
+            }
+
+            var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
+
+            if (scrollViewer != null)
+            {
+                if (scrollViewer.HorizontalOffset == 0)
+                {
+                    lbGames.Margin = new Thickness(10, -15, 0, 0);
+                }
+                else if (scrollViewer.HorizontalOffset == scrollViewer.ScrollableWidth)
+                {
+                    lbGames.Margin = new Thickness(0, -15, 15, 0);
+                }
+                else
+                {
+                    lbGames.Margin = new Thickness(0, -15, 0, 0);
+                }
             }
         }
 
@@ -471,6 +508,22 @@ namespace Game_Launcher_V2.Pages
             else
                 scrollviewer.LineRight();
             e.Handled = true;
+
+            if (scrollviewer != null)
+            {
+                if (scrollviewer.HorizontalOffset == 0)
+                {
+                    lbGames.Margin = new Thickness(10, -15, 0, 0);
+                }
+                else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth)
+                {
+                    lbGames.Margin = new Thickness(0, -15, 15, 0);
+                }
+                else
+                {
+                    lbGames.Margin = new Thickness(0, -15, 0, 0);
+                }
+            }
         }
 
         private void btnControl_Click(object sender, RoutedEventArgs e)
@@ -485,6 +538,27 @@ namespace Game_Launcher_V2.Pages
         private void btnSettings_Click(object sender, RoutedEventArgs e)
         {
             Global.settings = 1;
+        }
+
+        private void lbGames_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            ListBox listBox = sender as ListBox;
+            ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
+            if (scrollviewer != null)
+            {
+                if (scrollviewer.HorizontalOffset == 0)
+                {
+                    lbGames.Margin = new Thickness(10, -15, 0, 0);
+                }
+                else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth)
+                {
+                    lbGames.Margin = new Thickness(0, -15, 15, 0);
+                }
+                else
+                {
+                    lbGames.Margin = new Thickness(0, -15, 0, 0);
+                }
+            }
         }
     }
 }

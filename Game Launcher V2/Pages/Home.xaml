@@ -163,7 +163,7 @@
                     </StackPanel>
                 </Button>
                 </StackPanel>
-                <ListBox x:FieldModifier="public" MinHeight="265" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="10,-15,10,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel"  Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True">
+                <ListBox x:FieldModifier="public" MinHeight="260" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="0,-15,0,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel"  Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True" ScrollViewer.ScrollChanged="lbGames_ScrollChanged">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel IsItemsHost="True" ScrollViewer.PanningMode="HorizontalFirst" />
@@ -171,7 +171,7 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
-                            <Setter Property="Margin" Value="11,0,0,11"></Setter>
+                            <Setter Property="Margin" Value="9,0,0,9"></Setter>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">
@@ -185,7 +185,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                                <Border Background="LightBlue" CornerRadius="16" Width="255" Height="255">
+                                                <Border Background="LightBlue" CornerRadius="16" Width="250" Height="250">
                                                     <ContentPresenter />
                                                 </Border>
                                             </ControlTemplate>
@@ -200,7 +200,7 @@
                     <ListBox.ItemTemplate>
 
                         <DataTemplate>
-                            <Border x:Name="GameBorder" Height="255" Width="255" BorderThickness="4" BorderBrush="Transparent" CornerRadius="16">
+                            <Border x:Name="GameBorder" Height="250" Width="250" BorderThickness="4" BorderBrush="Transparent" CornerRadius="16">
                                 <Border.Background>
                                     <ImageBrush ImageSource="{Binding imagePath}"  Stretch="UniformToFill"/>
                                 </Border.Background>
