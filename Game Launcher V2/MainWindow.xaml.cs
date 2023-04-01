@@ -214,41 +214,41 @@ namespace Game_Launcher_V2
             Time_and_Bat.getTime();
             GetSensor.ReadSensors();
         }
-
+        int lastiGPU = 0;
+        int ryzen = -1;
         async void UpdateBatTime_Tick(object sender, EventArgs e)
         {
             try
             {
                 getData();
-
+                ryzen++;
                 if(Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")
                 {
                     string processRyzenAdj = "";
                     string commandArguments = Settings.Default.RyzenAdj;
-
-                    if (Settings.Default.isiGFX == true)
+                    if(ryzen >= 2)
                     {
-                        if (!Settings.Default.CPUName.ToLower().Contains("intel"))
+                        if (Settings.Default.isiGFX == true)
                         {
-                            try
+                            if (!Settings.Default.CPUName.ToLower().Contains("intel"))
                             {
-                                int GPUClock = 0;
+                                try
+                                {
+                                    if (lastiGPU != Settings.Default.iGFXClk)
+                                    {
+                                        commandArguments = commandArguments + $" --gfx-clk={(int)Settings.Default.iGFXClk}";
+                                        lastiGPU = Settings.Default.iGFXClk;
+                                    }
 
-                                await Task.Run(() =>
-                                {
-                                    GPUClock = ADLXBackend.GetGPUMetrics(0, 0);
-                                });
-                                if (GPUClock != Settings.Default.iGFXClk)
-                                {
-                                    commandArguments = commandArguments + $" --gfx-clk={(int)Settings.Default.iGFXClk}";
                                 }
-
-                                processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
-                                RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
-
+                                catch { }
                             }
-                            catch { }
+
+                            processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                            RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
                         }
+
+                        ryzen = 0;
                     }
                 }
             }

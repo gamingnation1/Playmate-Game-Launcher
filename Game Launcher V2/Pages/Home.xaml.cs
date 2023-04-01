@@ -103,15 +103,15 @@ namespace Game_Launcher_V2.Pages
                 imgDPadLeft.Margin = new Thickness(0, 0, 4, 0);
             }
 
-            var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
+            var scrollviewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
 
-            if (scrollViewer != null)
+            if (scrollviewer != null)
             {
-                if (scrollViewer.HorizontalOffset == 0)
+                if (scrollviewer.HorizontalOffset <= 200)
                 {
                     lbGames.Margin = new Thickness(10, -15, 0, 0);
                 }
-                else if (scrollViewer.HorizontalOffset == scrollViewer.ScrollableWidth)
+                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 200)
                 {
                     lbGames.Margin = new Thickness(0, -15, 15, 0);
                 }
@@ -260,15 +260,15 @@ namespace Game_Launcher_V2.Pages
                 lastBG = model.bgImagePath;
             }
 
-            var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
-
-            if (scrollViewer != null)
+            ListBox listBox = sender as ListBox;
+            ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
+            if (scrollviewer != null)
             {
-                if (scrollViewer.HorizontalOffset == 0)
+                if (scrollviewer.HorizontalOffset <= 200)
                 {
                     lbGames.Margin = new Thickness(10, -15, 0, 0);
                 }
-                else if (scrollViewer.HorizontalOffset == scrollViewer.ScrollableWidth)
+                else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 200)
                 {
                     lbGames.Margin = new Thickness(0, -15, 15, 0);
                 }
@@ -443,6 +443,7 @@ namespace Game_Launcher_V2.Pages
 
                         lbGames.SelectedIndex = current;
                         lbGames.ScrollIntoView(lbGames.SelectedItem);
+
                     }
 
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && !Global.isAccessMenuOpen)
@@ -511,11 +512,11 @@ namespace Game_Launcher_V2.Pages
 
             if (scrollviewer != null)
             {
-                if (scrollviewer.HorizontalOffset == 0)
+                if (scrollviewer.HorizontalOffset <= 200)
                 {
                     lbGames.Margin = new Thickness(10, -15, 0, 0);
                 }
-                else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth)
+                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 200)
                 {
                     lbGames.Margin = new Thickness(0, -15, 15, 0);
                 }
@@ -542,15 +543,14 @@ namespace Game_Launcher_V2.Pages
 
         private void lbGames_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            ListBox listBox = sender as ListBox;
-            ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
+            ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(lbGames).FirstOrDefault();
             if (scrollviewer != null)
             {
-                if (scrollviewer.HorizontalOffset == 0)
+                if (scrollviewer.HorizontalOffset <= 200)
                 {
                     lbGames.Margin = new Thickness(10, -15, 0, 0);
                 }
-                else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth)
+                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 200)
                 {
                     lbGames.Margin = new Thickness(0, -15, 15, 0);
                 }

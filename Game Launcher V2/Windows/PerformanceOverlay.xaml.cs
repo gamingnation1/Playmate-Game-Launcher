@@ -279,14 +279,8 @@ namespace Game_Launcher_V2.Windows
                         {
                             await Task.Run(() => {
                                 GPUTemp = ADLXBackend.GetGPUMetrics(0, 3);
-                            });
-                            await Task.Run(() => {
                                 GPUClock = ADLXBackend.GetGPUMetrics(0, 0);
-                            });
-                            await Task.Run(() => {
                                 RAMClock = ADLXBackend.GetGPUMetrics(0, 1);
-                            });
-                            await Task.Run(() => {
                                 GPULoad = ADLXBackend.GetGPUMetrics(0, 7);
                             });
                         }
