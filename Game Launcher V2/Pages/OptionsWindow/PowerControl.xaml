@@ -13,12 +13,13 @@
     <Grid>
         <ScrollViewer Name="mainView" CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst">
             <StackPanel>
-                <Border Name="Section1"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="82" Padding="5">
+                <Border Name="Section1"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="104" Padding="5">
                     <StackPanel Orientation="Horizontal">
-                        <Image Name="imgBat" Width="75" Margin="0,5,10,5"></Image>
+                        <Image Name="imgBat" Width="97" Margin="0,5,10,5"></Image>
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock Name="lblBat" Foreground="White" FontSize="26">100%</TextBlock>
-                            <TextBlock Name="lblBatTime" Foreground="Gainsboro" FontSize="16">X Time Remaining</TextBlock>
+                            <TextBlock Name="lblBat" Foreground="White" FontSize="24">100%</TextBlock>
+                            <TextBlock Name="lblBatTime" Foreground="Gainsboro" FontSize="15.5">X Time Remaining</TextBlock>
+                            <TextBlock Name="lblBatDisCharge" Foreground="Gainsboro" FontSize="15.5">X Discharging</TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </Border>

@@ -27,6 +27,7 @@ using Microsoft.VisualBasic;
 using Brush = System.Windows.Media.Brush;
 using Game_Launcher_V2.Scripts.ADLX;
 using ControlzEx.Standard;
+using System.Xml;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -159,8 +160,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     string commandArguments = "";
 
                     if (tsTemp.IsOn == true) commandArguments = $"--tctl-temp={(int)sdTemp.Value} --skin-temp-limit={(int)sdTemp.Value} ";
-                    if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={(int)sdPower.Value * 1000} --slow-limit={(int)sdPower.Value * 1000} --fast-limit={(int)sdPower.Value * 1000} --vrm-current={((int)sdPower.Value * 1000) * 2} --vrmmax-current={((int)sdPower.Value * 1000) * 2} ";
-                    if (tsGPU.IsOn == true) commandArguments = commandArguments + $"--gfx-clk={(int)sdGFXClock.Value} ";
+                    if (tsPower.IsOn == true) commandArguments = commandArguments + $"--stapm-limit={(int)sdPower.Value * 1000} --slow-limit={(int)sdPower.Value * 1000} --fast-limit={(int)sdPower.Value * 1000} --vrm-current={((int)sdPower.Value * 1000) * 2} --vrmmax-current={((int)sdPower.Value * 1000) * 2}";
 
                     Global.RyzenAdj = commandArguments;
 
@@ -286,6 +286,15 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             if (lblBatTime.Text == "0 Hours 0 Minutes Remaining" && isCharging == true) lblBatTime.Text = "Battery Charging";
             if (lblBatTime.Text == "0 Hours 0 Minutes Remaining" && isCharging == false) lblBatTime.Text = "Calculating";
+
+            float dischargeRate = (float)GetSensor.BatteryDischarge;
+
+            if (dischargeRate != 0)
+            {
+                lblBatDisCharge.Visibility = Visibility.Visible;
+                lblBatDisCharge.Text = $"-{dischargeRate.ToString("0.00")} W Charge Rate";
+            }
+            else lblBatDisCharge.Visibility = Visibility.Collapsed;
         }
 
         private static Controller controller;

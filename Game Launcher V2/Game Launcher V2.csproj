@@ -28,6 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Icons\aya-logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Icons\battery-charge-line.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

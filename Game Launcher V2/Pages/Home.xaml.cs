@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Policy;
 using System.Text;
@@ -41,6 +42,7 @@ namespace Game_Launcher_V2.Pages
         //Save if window was out of focus
         private bool wasNotFocused = false;
 
+        string mbo = "";
         public class SteamGame
         {
             public int ID { get; set; }
@@ -87,6 +89,22 @@ namespace Game_Launcher_V2.Pages
             setUpGUI();
 
             Global.isOpen = true;
+
+
+            //Detect if an AYA Neo is being used
+            ManagementObjectSearcher baseboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
+            foreach (ManagementObject queryObj in baseboardSearcher.Get())
+            {
+                mbo = queryObj["Manufacturer"].ToString();
+                mbo = mbo.ToLower();
+            }
+
+            if (mbo.Contains("aya")) SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "aya-logo.png"), imgSettings);
+            else
+            {
+                imgSettings.Visibility = Visibility.Collapsed;
+                lblSettings.Visibility = Visibility.Collapsed;
+            }
         }
 
         public DispatcherTimer sensor = new DispatcherTimer();
@@ -137,7 +155,6 @@ namespace Game_Launcher_V2.Pages
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "play-mini-fill.png"), imgPlay);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "Left Bumper.png"), imgLB);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "Right Bumper.png"), imgRB);
-
                 string wifiURL = "";
                 double wifi = Global.wifi;
 

@@ -234,8 +234,6 @@ namespace Game_Launcher_V2.Windows
 
             imgTime.Source = bi2;
 
-            Time_and_Bat.getBattery();
-            Time_and_Bat.getTime();
             Time_and_Bat.GetWifi(imgWiFi);
             Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
         }

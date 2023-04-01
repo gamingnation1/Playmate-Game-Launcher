@@ -195,12 +195,14 @@ namespace Game_Launcher_V2
             {
                 Time_and_Bat.getBattery();
                 Time_and_Bat.getTime();
-
+                GetSensor.ReadSensors();
 
                 if(Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")
                 {
                     string processRyzenAdj = "";
                     string commandArguments = Settings.Default.RyzenAdj;
+
+                    if (Settings.Default.isiGFX == true) commandArguments = commandArguments + $" --gfx-clk={(int)Settings.Default.iGFXClk}";
 
                     processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
                     RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
