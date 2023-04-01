@@ -1,5 +1,6 @@
 ﻿using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
+using Game_Launcher_V2.Scripts.ADLX;
 using Game_Launcher_V2.Scripts.Epic_Games;
 using Game_Launcher_V2.Windows;
 using Microsoft.Win32;
@@ -225,10 +226,30 @@ namespace Game_Launcher_V2
                     string processRyzenAdj = "";
                     string commandArguments = Settings.Default.RyzenAdj;
 
-                    if (Settings.Default.isiGFX == true) commandArguments = commandArguments + $" --gfx-clk={(int)Settings.Default.iGFXClk}";
+                    if (Settings.Default.isiGFX == true)
+                    {
+                        if (!Settings.Default.CPUName.ToLower().Contains("intel"))
+                        {
+                            try
+                            {
+                                int GPUClock = 0;
 
-                    processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
-                    RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+                                await Task.Run(() =>
+                                {
+                                    GPUClock = ADLXBackend.GetGPUMetrics(0, 0);
+                                });
+                                if (GPUClock != Settings.Default.iGFXClk)
+                                {
+                                    commandArguments = commandArguments + $" --gfx-clk={(int)Settings.Default.iGFXClk}";
+                                }
+
+                                processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                                RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+
+                            }
+                            catch { }
+                        }
+                    }
                 }
             }
             catch { }

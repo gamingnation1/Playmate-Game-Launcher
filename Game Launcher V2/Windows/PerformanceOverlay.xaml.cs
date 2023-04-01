@@ -24,6 +24,7 @@ using Game_Launcher_V2.Properties;
 using Microsoft.Diagnostics.Tracing.StackSources;
 using System.Windows.Forms.VisualStyles;
 using System.Runtime.CompilerServices;
+using Game_Launcher_V2.Scripts.ADLX;
 
 namespace Game_Launcher_V2.Windows
 {
@@ -271,6 +272,27 @@ namespace Game_Launcher_V2.Windows
                     await Task.Run(() => { RAMLoad = (int)GetSensor.getRAMInfo(SensorType.Load, "Virtual"); });
                     await Task.Run(() => { RAMData = (int)(GetSensor.getRAMInfo(SensorType.Data, "Memory Used") * 1000); });
                     await Task.Run(() => { RAMClock = (int)GetSensor.getAMDGPU(SensorType.Clock, "Memory"); });
+
+                    if(GPUClock == 0 && RAMClock == 0 && !Settings.Default.CPUName.ToLower().Contains("intel"))
+                    {
+                        try
+                        {
+                            await Task.Run(() => {
+                                GPUTemp = ADLXBackend.GetGPUMetrics(0, 3);
+                            });
+                            await Task.Run(() => {
+                                GPUClock = ADLXBackend.GetGPUMetrics(0, 0);
+                            });
+                            await Task.Run(() => {
+                                RAMClock = ADLXBackend.GetGPUMetrics(0, 1);
+                            });
+                            await Task.Run(() => {
+                                GPULoad = ADLXBackend.GetGPUMetrics(0, 7);
+                            });
+                        }
+                        catch { }
+                    }
+
 
                     lblCPU.Text = $"{CPUTemp}°C  {CPULoad}%  {CPUClock} MHz  {CPUPower}W";
                     lblGPU.Text = $"{GPUTemp}°C  {GPULoad}%  {GPUClock} MHz";
