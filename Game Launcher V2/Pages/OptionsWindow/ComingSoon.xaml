@@ -7,10 +7,10 @@
       mc:Ignorable="d" 
       d:DesignHeight="670" d:DesignWidth="395"
       Title="PowerControl"
-      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" Background="#E6181818"
       >
 
     <Grid>
-        <TextBlock VerticalAlignment="Center" TextAlignment="Center" Foreground="White" FontSize="42">Coming Soon</TextBlock>
+        <TextBlock VerticalAlignment="Center" TextAlignment="Center" Foreground="White" FontSize="42" Margin="0.5,0,0,0">Coming Soon</TextBlock>
     </Grid>
 </Page>

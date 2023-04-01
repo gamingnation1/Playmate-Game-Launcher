@@ -7,11 +7,11 @@
       mc:Ignorable="d" 
       d:DesignHeight="670" d:DesignWidth="395"
       Title="PowerControl"
-      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" Background="#E6181818"
       >
 
     <Grid>
-        <ScrollViewer CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst">
+        <ScrollViewer CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst" Padding="0.5,0,0,0">
             <StackPanel>
                 <Border Name="Section1"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="86" Padding="5">
                     <StackPanel>
