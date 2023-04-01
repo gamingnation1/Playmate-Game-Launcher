@@ -85,7 +85,7 @@
                     <Image Height="32" Width="30" Name="imgWiFi" Margin="0,0,5,0"></Image>
                     <Image Height="32" Width="30" Name="imgTime" Margin="4,0,5,0"></Image>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTime" FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">10:00</TextBlock>
-                    <Image Height="32" Width="30" Name="imgBat" Margin="14,0,5,0"></Image>
+                    <Image Height="32" Width="30" Name="imgBat" Margin="12,0,5,0"></Image>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
                 </StackPanel>
             </Grid>

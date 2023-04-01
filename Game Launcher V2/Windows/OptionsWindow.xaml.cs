@@ -116,14 +116,6 @@ namespace Game_Launcher_V2.Windows
                             this.Activate();
                             this.Focus();
                             Global.AccessMenuSelected = openMenu;
-
-
-                            int radius = 16;
-                            double el1 = bTop.ActualWidth / bTop.ActualHeight;
-                            double el2 = bSide.ActualHeight / bSide.ActualWidth;
-
-                            bTop.CornerRadius = new CornerRadius((radius * el1), 0, 0, 0);
-                            bSide.CornerRadius = new CornerRadius(0, 0, 0, (radius * el2));
                         }
                     }
 
@@ -174,14 +166,6 @@ namespace Game_Launcher_V2.Windows
                         this.Activate();
                         this.Focus();
                         Global.AccessMenuSelected = openMenu;
-
-
-                        int radius = 16;
-                        double el1 = bTop.ActualWidth / bTop.ActualHeight;
-                        double el2 = bSide.ActualHeight / bSide.ActualWidth;
-
-                        bTop.CornerRadius = new CornerRadius((radius * el1), 0, 0, 0);
-                        bSide.CornerRadius = new CornerRadius(0, 0, 0, (radius * el2));
                     }
 
                     Global.settings = 0;
@@ -211,14 +195,6 @@ namespace Game_Launcher_V2.Windows
                             this.Activate();
                             this.Focus();
                             Global.AccessMenuSelected = openMenu;
-
-
-                            int radius = 16;
-                            double el1 = bTop.ActualWidth / bTop.ActualHeight;
-                            double el2 = bSide.ActualHeight / bSide.ActualWidth;
-
-                            bTop.CornerRadius = new CornerRadius((radius * el1), 0, 0, 0);
-                            bSide.CornerRadius = new CornerRadius(0, 0, 0, (radius * el2));
                         }
 
                     }
