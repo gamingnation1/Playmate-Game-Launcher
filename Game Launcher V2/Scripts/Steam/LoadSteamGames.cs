@@ -1,4 +1,5 @@
 ﻿using AATUV3.Scripts;
+using GameLib.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using static Game_Launcher_V2.Pages.Home;
 
@@ -145,39 +148,57 @@ namespace Game_Launcher_V2.Scripts
             string steamID = model.steamID;
             string gameName = model.gameName;
 
-            if(Global.GameStore == 0)
+            if(steamID == "0")
             {
-                //Start selected game
-                string steamLaunch = "steam://rungameid/" + steamID;
-                if (steamID != "0") System.Diagnostics.Process.Start(@"C:\Program Files (x86)\Steam\steam.exe", steamLaunch);
-                else if (gameName == "Open Steam") System.Diagnostics.Process.Start(@"C:\Program Files (x86)\Steam\steam.exe");
+                if (Global.GameStore == 1)
+                {
+                    steamID = LoadGames.getLauncherPath("Steam");
+                }
+                if (Global.GameStore == 2)
+                {
+                    steamID = LoadGames.getLauncherPath("Epic Games");
+                }
+                //if (Global.GameStore == 2)
+                //{
+                //    steamID = LoadGames.getLauncherPath("Battle.net");
+                //}
+                if (Global.GameStore == 4)
+                {
+                    steamID = LoadGames.getLauncherPath("GOG Galaxy");
+                }
+                if (Global.GameStore == 5)
+                {
+                    steamID = LoadGames.getLauncherPath("Origin");
+                }
+                if (Global.GameStore == 6)
+                {
+                    steamID = LoadGames.getLauncherPath("Ubisoft Connect");
+                }
+                //if (Global.GameStore == 6)
+                //{
+                //    steamID = LoadGames.getLauncherPath("Rockstar Games");
+                //}
             }
 
-            if(Global.GameStore == 1)
+            if(steamID != null && steamID != "")
             {
-                //Start selected game
-                string steamLaunch = $"com.epicgames.launcher://apps/{steamID}?action=launch&silent=true";
-                if (steamID != "0")
+                Process.Start(new ProcessStartInfo()
                 {
-                    Process p = new Process();
-                    p.StartInfo.UseShellExecute = true;
-                    p.StartInfo.FileName = steamLaunch;
-                    p.Start();
-                }
-                else if (gameName == "Open EGS") System.Diagnostics.Process.Start(@"C:\Program Files (x86)\Epic Games\Launcher\Engine\Binaries\Win64\EpicGamesLauncher.exe");
+                    UseShellExecute = true,
+                    FileName = steamID
+                });
             }
-            
         }
 
         public static void changeSteamGame(ListBox lbGames, TextBlock lblGameName, Label lblControl) 
         {
             SteamGame model = lbGames.SelectedItem as SteamGame;
             if (model.gameName.Contains("Open Steam")) lblGameName.Text = model.gameName.Replace("Open ", "");
-            else if (model.gameName.Contains("Open EGS")) lblGameName.Text = "Open Epic Games Store";
+            else if (model.gameName.Contains("Open Epic Games")) lblGameName.Text = "Open Epic Games Store";
             else lblGameName.Text = model.gameName;
 
 
-            if (model.gameName.Contains("Open EGS") || model.gameName.Contains("Open Steam") || model.gameName.Contains("All Software")) lblControl.Content = model.gameName;
+            if (model.gameName.Contains("Open Epic Games") || model.gameName.Contains("Open Steam") || model.gameName.Contains("All Software") || model.gameName.Contains("No Games Found")) lblControl.Content = model.gameName;
             else lblControl.Content = "Play Game";
         }
     }

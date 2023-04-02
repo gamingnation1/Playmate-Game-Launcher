@@ -64,22 +64,24 @@ namespace Game_Launcher_V2.Pages
             InitializeComponent();
             _ = Tablet.TabletDevices;
 
-            if (Global.GameStore == 0)
-            {
-                LoadSteamGames.loadSteamGames(lbGames);
-                lblSteam.FontWeight = FontWeights.DemiBold;
-                lblSteam.Foreground = new SolidColorBrush(Colors.White);
-                lblEpic.FontWeight = FontWeights.Normal;
-                lblEpic.Foreground = new SolidColorBrush(Colors.Gray);
-            }
-            if (Global.GameStore == 1)
-            {
-                LoadEpicGamesData.loadEpicGames(lbGames);
-                lblEpic.FontWeight = FontWeights.DemiBold;
-                lblEpic.Foreground = new SolidColorBrush(Colors.White);
-                lblSteam.FontWeight = FontWeights.Normal;
-                lblSteam.Foreground = new SolidColorBrush(Colors.Gray);
-            }
+            lblAll.FontWeight = FontWeights.Normal;
+            lblAll.Foreground = new SolidColorBrush(Colors.Gray);
+            lblSteam.FontWeight = FontWeights.Normal;
+            lblSteam.Foreground = new SolidColorBrush(Colors.Gray);
+            lblEpic.FontWeight = FontWeights.Normal;
+            lblEpic.Foreground = new SolidColorBrush(Colors.Gray);
+            lblBattle.FontWeight = FontWeights.Normal;
+            lblBattle.Foreground = new SolidColorBrush(Colors.Gray);
+            lblgog.FontWeight = FontWeights.Normal;
+            lblgog.Foreground = new SolidColorBrush(Colors.Gray);
+            lblea.FontWeight = FontWeights.Normal;
+            lblea.Foreground = new SolidColorBrush(Colors.Gray);
+            lblUbi.FontWeight = FontWeights.Normal;
+            lblUbi.Foreground = new SolidColorBrush(Colors.Gray);
+            lblRock.FontWeight = FontWeights.Normal;
+            lblRock.Foreground = new SolidColorBrush(Colors.Gray);
+
+            loadGames();
 
             thisWorking = true;
 
@@ -120,6 +122,58 @@ namespace Game_Launcher_V2.Pages
                     lbGames.Margin = new Thickness(0, -15, 0, 0);
                 }
             }
+        }
+
+        public void loadGames()
+        {
+            if (Global.GameStore == 0)
+            {
+                LoadGames.LoadAllGameData(lbGames);
+                lblAll.FontWeight = FontWeights.DemiBold;
+                lblAll.Foreground = new SolidColorBrush(Colors.White);
+            }
+            if (Global.GameStore == 1)
+            {
+                LoadGames.LoadGameData("Steam", lbGames);
+                lblSteam.FontWeight = FontWeights.DemiBold;
+                lblSteam.Foreground = new SolidColorBrush(Colors.White);
+            }
+            if (Global.GameStore == 2)
+            {
+                LoadGames.LoadGameData("Epic Games", lbGames);
+                lblEpic.FontWeight = FontWeights.DemiBold;
+                lblEpic.Foreground = new SolidColorBrush(Colors.White);
+            }
+            //if (Global.GameStore == 2)
+            //{
+            //    LoadGames.LoadGameData("Battle.net", lbGames);
+            //    lblBattle.FontWeight = FontWeights.DemiBold;
+            //    lblBattle.Foreground = new SolidColorBrush(Colors.White);
+            //}
+            if (Global.GameStore == 3)
+            {
+                LoadGames.LoadGameData("GOG Galaxy", lbGames);
+                lblgog.FontWeight = FontWeights.DemiBold;
+                lblgog.Foreground = new SolidColorBrush(Colors.White);
+            }
+            if (Global.GameStore == 4)
+            {
+                LoadGames.LoadGameData("Origin", lbGames);
+                lblea.FontWeight = FontWeights.DemiBold;
+                lblea.Foreground = new SolidColorBrush(Colors.White);
+            }
+            if (Global.GameStore == 5)
+            {
+                LoadGames.LoadGameData("Ubisoft Connect", lbGames);
+                lblUbi.FontWeight = FontWeights.DemiBold;
+                lblUbi.Foreground = new SolidColorBrush(Colors.White);
+            }
+            //if (Global.GameStore == 6)
+            //{
+            //    LoadGames.LoadGameData("Rockstar Games", lbGames);
+            //    lblRock.FontWeight = FontWeights.DemiBold;
+            //    lblRock.Foreground = new SolidColorBrush(Colors.White);
+            //}
         }
 
         public DispatcherTimer sensor = new DispatcherTimer();
@@ -170,6 +224,7 @@ namespace Game_Launcher_V2.Pages
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "time-line.png"), imgTime);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "A.png"), imgA);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "X.png"), imgX);
+                SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "B.png"), imgB);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "D-Pad Left.png"), imgDPadLeft);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "D-Pad Right.png"), imgDPadRight);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "play-mini-fill.png"), imgPlay);
@@ -236,8 +291,6 @@ namespace Game_Launcher_V2.Pages
         {
             try
             {
-                GC.Collect();
-
                 Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
                 Time_and_Bat.GetWifi(imgWiFi);
             }
@@ -455,9 +508,14 @@ namespace Game_Launcher_V2.Pages
                         loadApp();
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.X) && !Global.isAccessMenuOpen)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.Y) && !Global.isAccessMenuOpen)
                     {
                         Global.desktop = 1;
+                    }
+
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.X) && !Global.isAccessMenuOpen)
+                    {
+                        loadGames();
                     }
 
                     bool combo = false;
@@ -469,7 +527,7 @@ namespace Game_Launcher_V2.Pages
                     }
 
                     int min = 0;
-                    int max = 1;
+                    int max = 5;
 
                     int gameStore = Global.GameStore;
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && !Global.isAccessMenuOpen && !combo)

@@ -1,4 +1,5 @@
-﻿using Game_Launcher_V2.Properties;
+﻿using AATUV3.Scripts;
+using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
 using Game_Launcher_V2.Scripts.ADLX;
 using Game_Launcher_V2.Scripts.Epic_Games;
@@ -133,10 +134,11 @@ namespace Game_Launcher_V2
 
                     Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
 
-                    if (File.Exists(Global.path + "\\SavedList.txt")) File.Delete(Global.path + "\\SavedList.txt");
-                    if (File.Exists(Global.path + "\\SavedListEpic.txt")) File.Delete(Global.path + "\\SavedListEpic.txt");
-                    FindSteamData.getData();
-                    FindEpicGamesData.GetData();
+                    //if (File.Exists(Global.path + "\\SavedList.txt")) File.Delete(Global.path + "\\SavedList.txt");
+                    //if (File.Exists(Global.path + "\\SavedListEpic.txt")) File.Delete(Global.path + "\\SavedListEpic.txt");
+                    //FindSteamData.getData();
+                    //FindEpicGamesData.GetData();
+
                     getData();
                     PagesNavigation.Navigate(new System.Uri("Pages/Home.xaml", UriKind.RelativeOrAbsolute));
 
@@ -154,6 +156,8 @@ namespace Game_Launcher_V2
                         this.Activate();
                         this.Focus();
                     }
+
+                    BasicExeBackend.Garbage_Collect();
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }
@@ -216,6 +220,7 @@ namespace Game_Launcher_V2
         }
         int lastiGPU = 0;
         int ryzen = -1;
+        int GC = -1;
         async void UpdateBatTime_Tick(object sender, EventArgs e)
         {
             try
@@ -250,6 +255,13 @@ namespace Game_Launcher_V2
 
                         ryzen = 0;
                     }
+
+                    if(GC >= 5)
+                    {
+                        BasicExeBackend.Garbage_Collect();
+                        GC = 0;
+                    }
+                    GC++;
                 }
             }
             catch { }

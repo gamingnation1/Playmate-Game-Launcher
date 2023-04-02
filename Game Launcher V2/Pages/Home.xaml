@@ -100,11 +100,17 @@
                             </Border.Background>
                         </Border>
                     </Border>
-                    <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
+                    <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,12,0">
                         <Image Height="32" Width="30" Name="imgLB"/>
-                        <TextBlock Name="lblSteam" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="DemiBold"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="22,-3,0,0">Steam</TextBlock>
-                        <TextBlock Name="lblEpic" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="18,-3,0,0">Epic Games</TextBlock>
-                        <Image Height="32" Width="30" Name="imgRB"  Margin="22,0,0,0"></Image>
+                        <TextBlock Name="lblAll" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="DemiBold"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="18,-3,0,0">All Games</TextBlock>
+                        <TextBlock Name="lblSteam" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="DemiBold"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="14,-3,0,0">Steam</TextBlock>
+                        <TextBlock Name="lblEpic" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Epic</TextBlock>
+                        <TextBlock Visibility="Collapsed" Name="lblBattle" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Battle.net</TextBlock>
+                        <TextBlock Name="lblgog" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">GOG</TextBlock>
+                        <TextBlock Name="lblea" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">EA</TextBlock>
+                        <TextBlock Name="lblUbi" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Ubisoft</TextBlock>
+                        <TextBlock Visibility="Collapsed" Name="lblRock" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Rockstar</TextBlock>
+                        <Image Height="32" Width="30" Name="imgRB"  Margin="18,0,0,0"></Image>
                     </StackPanel>
                 </Grid>
                 <Button DockPanel.Dock="Right" x:Name="btnSettings" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" VerticalContentAlignment="Center" Background="#f2151515" FontSize="24" Foreground="White" Height="50" Width="50" Margin="12,12,0,0" Click="btnSettings_Click">
@@ -132,8 +138,10 @@
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Prev</TextBlock>
                         <Image Height="32" Width="30" Name="imgDPadRight"  Margin="18,0,4,0"></Image>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Next</TextBlock>
-                        <Image Height="32" Width="30" Name="imgX"  Margin="18,0,5,0"></Image>
+                        <Image Height="32" Width="30" Name="imgB"  Margin="18,0,5,0"></Image>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Desktop"/>
+                        <Image Height="32" Width="30" Name="imgX"  Margin="18,0,5,0"></Image>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Reload"/>
                         <Image Height="32" Width="30" Name="imgA"  Margin="18,0,5,0"></Image>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="{Binding ElementName=lblControl, Path=Content}"/>
                     </StackPanel>
