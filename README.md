@@ -1,6 +1,6 @@
-# Game Launcher V2 (Actual name is TBD)
+# Playmate Game Launcher
 
-![image](https://user-images.githubusercontent.com/20888782/202249516-66eb95de-6fd7-4107-863a-e3e4a38f11c7.png)
+![image](https://user-images.githubusercontent.com/20888782/229572972-f3e26f31-e7c4-47e3-8b29-4398a4375f6b.png)
 
 This project is still very much a WORK IN PROGRESS!
 
