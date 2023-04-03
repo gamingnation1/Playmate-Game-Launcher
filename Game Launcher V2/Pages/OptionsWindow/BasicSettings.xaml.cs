@@ -208,7 +208,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     //Get controller
                     controller = new Controller(controllerNo);
 
-                    connected = controller.IsConnected;
+                    if (controllerNo == UserIndex.One) connected = controller.IsConnected;
 
                     if (connected)
                     {

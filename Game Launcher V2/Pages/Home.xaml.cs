@@ -472,8 +472,11 @@ namespace Game_Launcher_V2.Pages
 
                 var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
 
-                if (connected && bottomBar.Visibility == Visibility.Hidden) bottomBar.Visibility = Visibility.Visible;
-                if (!connected && bottomBar.Visibility == Visibility.Visible) bottomBar.Visibility = Visibility.Hidden;
+                if (controllerNo == UserIndex.One)
+                {
+                    if (connected && bottomBar.Visibility == Visibility.Hidden) bottomBar.Visibility = Visibility.Visible;
+                    if (!connected && bottomBar.Visibility == Visibility.Visible) bottomBar.Visibility = Visibility.Hidden;
+                }
 
                 if (connected && isActive)
                 {

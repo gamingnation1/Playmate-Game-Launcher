@@ -14,7 +14,7 @@
         Deactivated="Window_Deactivated"
         WindowState="Maximized" Visibility="Hidden" ShowInTaskbar="False">
     <Grid>
-        <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False" Margin="0,0,0,4" >
+        <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False" Margin="0,0,0,3" >
             <DockPanel DockPanel.Dock="Right" Width="462">
                 <Border Name="bTop" DockPanel.Dock="Top" Panel.ZIndex="3" Height="50" Background="#101010">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
