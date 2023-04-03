@@ -64,7 +64,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             isFirstBoot = false;
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.16);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -211,6 +211,10 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                     if (connected)
                     {
+                        SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
+                        float tx = gamepad.LeftThumbX;
+                        float ty = gamepad.LeftThumbY;
+
                         //get controller state
                         var state = controller.GetState();
 
@@ -222,20 +226,20 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                         if (Global.isAccessMenuOpen == true && Global.shortCut == false)
                         {
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && Global.shortCut == false && isActive == false)
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && Global.shortCut == false && isActive == false || ty > 18000 && Global.shortCut == false && isActive == false)
                             {
                                 if (optionSelected > 0) optionSelected--;
                                 else optionSelected = 0;
 
                             }
 
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false)
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
                             {
                                 if (optionSelected < 4) optionSelected++;
                                 else optionSelected = 4;
                             }
 
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true)
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true || tx < -18000 && Global.shortCut == false && isActive == true)
                             {
                                 int value = 0;
                                 int maxValue = 0;
@@ -258,7 +262,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 selectedSlider.Value = value;
                             }
 
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.shortCut == false && isActive == true)
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.shortCut == false && isActive == true || tx > 18000 && Global.shortCut == false && isActive == true)
                             {
                                 int value = 0;
                                 int maxValue = 0;

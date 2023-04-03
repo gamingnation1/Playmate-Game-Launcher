@@ -24,6 +24,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Windows.Gaming.Input;
+using Windows.Gaming.Preview.GamesEnumeration;
 using ListBox = System.Windows.Controls.ListBox;
 
 namespace Game_Launcher_V2.Pages
@@ -144,7 +146,7 @@ namespace Game_Launcher_V2.Pages
                 lblEpic.FontWeight = FontWeights.DemiBold;
                 lblEpic.Foreground = new SolidColorBrush(Colors.White);
             }
-            //if (Global.GameStore == 2)
+            //if (Global.GameStore == 3)
             //{
             //    LoadGames.LoadGameData("Battle.net", lbGames);
             //    lblBattle.FontWeight = FontWeights.DemiBold;
@@ -156,13 +158,13 @@ namespace Game_Launcher_V2.Pages
                 lblgog.FontWeight = FontWeights.DemiBold;
                 lblgog.Foreground = new SolidColorBrush(Colors.White);
             }
+            //if (Global.GameStore == 4)
+            //{
+            //    LoadGames.LoadGameData("Origin", lbGames);
+            //    lblea.FontWeight = FontWeights.DemiBold;
+            //    lblea.Foreground = new SolidColorBrush(Colors.White);
+            //}
             if (Global.GameStore == 4)
-            {
-                LoadGames.LoadGameData("Origin", lbGames);
-                lblea.FontWeight = FontWeights.DemiBold;
-                lblea.Foreground = new SolidColorBrush(Colors.White);
-            }
-            if (Global.GameStore == 5)
             {
                 LoadGames.LoadGameData("Ubisoft Connect", lbGames);
                 lblUbi.FontWeight = FontWeights.DemiBold;
@@ -348,7 +350,7 @@ namespace Game_Launcher_V2.Pages
                     using (var stream = new FileStream(url, FileMode.Open, FileAccess.Read))
                     {
                         bi.BeginInit();
-                        bi.DecodePixelWidth = 3072;
+                        bi.DecodePixelWidth = 2048;
                         bi.CacheOption = BitmapCacheOption.OnLoad;
                         bi.StreamSource = stream;
                         bi.EndInit();
@@ -503,19 +505,51 @@ namespace Game_Launcher_V2.Pages
 
                     }
 
+                    SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
+                    float tx = gamepad.LeftThumbX;
+
+
+                    
+                    if (tx < -18000 && !Global.isAccessMenuOpen)
+                    {
+                        //Decrease selected item by 1
+                        int current = lbGames.SelectedIndex;
+
+                        if (current > 0) current--;
+
+                        if (current == 0) scrollViewer.ScrollToHorizontalOffset(0);
+
+                        lbGames.SelectedIndex = current;
+                        lbGames.ScrollIntoView(lbGames.SelectedItem);
+                        if (current == 0) scrollViewer.ScrollToHorizontalOffset(0);
+                    }
+
+                    
+                    if (tx > 18000 && !Global.isAccessMenuOpen)
+                    {
+                        //Increase selected item by 1
+                        int current = lbGames.SelectedIndex;
+
+                        if (current < lbGames.Items.Count) current++;
+
+                        lbGames.SelectedIndex = current;
+                        lbGames.ScrollIntoView(lbGames.SelectedItem);
+                        if (current == lbGames.Items.Count - 1) scrollViewer.ScrollToHorizontalOffset(scrollViewer.ScrollableWidth);
+                    }
+
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && !Global.isAccessMenuOpen)
                     {
                         loadApp();
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.Y) && !Global.isAccessMenuOpen)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.B) && !Global.isAccessMenuOpen)
                     {
                         Global.desktop = 1;
                     }
 
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.X) && !Global.isAccessMenuOpen)
                     {
-                        loadGames();
+                        Global.reload = 1;
                     }
 
                     bool combo = false;
@@ -527,7 +561,7 @@ namespace Game_Launcher_V2.Pages
                     }
 
                     int min = 0;
-                    int max = 5;
+                    int max = 4;
 
                     int gameStore = Global.GameStore;
                     if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && !Global.isAccessMenuOpen && !combo)

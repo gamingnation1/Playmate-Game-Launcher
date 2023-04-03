@@ -33,7 +33,7 @@ namespace Game_Launcher_V2.Scripts
             foreach (var game in allGames)
             {
                 string LauncherName = launcherManager.GetLaunchers().First(l => l.Id == game.LauncherId).Name;
-                if (LauncherName != "Battle.net" && LauncherName != "Rockstar Games")
+                if (LauncherName != "Battle.net" && LauncherName != "Origin" && LauncherName != "Rockstar Games")
                 {
                     if (!game.Name.Contains("Steamworks") && game.Name != "3DMark")
                     {

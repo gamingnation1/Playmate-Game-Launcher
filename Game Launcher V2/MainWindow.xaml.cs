@@ -61,7 +61,7 @@ namespace Game_Launcher_V2
             if (!IsRunningAsAdministrator())
             {
                 // Setting up start info of the new process of the same application
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase) + "\\Game Launcher V2.exe");
+                ProcessStartInfo processStartInfo = new ProcessStartInfo(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase) + "\\PlayBox.exe");
 
                 // Using operating shell and setting the ProcessStartInfo.Verb to “runas” will let it run as admin
                 processStartInfo.UseShellExecute = true;
@@ -202,6 +202,12 @@ namespace Game_Launcher_V2
                 {
                     this.WindowState = WindowState.Minimized;
                     Global.desktop = 0;
+                }
+
+                if (Global.reload >= 1)
+                {
+                    PagesNavigation.Refresh();
+                    Global.reload = 0;
                 }
 
                 if (this.WindowState == WindowState.Minimized) Global.isMainActive = false;

@@ -1,5 +1,6 @@
 ﻿using AATUV3.Scripts;
 using GameLib.Core;
+using Microsoft.Diagnostics.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +14,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using static Game_Launcher_V2.Pages.Home;
+using Path = System.IO.Path;
 
 namespace Game_Launcher_V2.Scripts
 {
@@ -182,11 +184,20 @@ namespace Game_Launcher_V2.Scripts
 
             if(steamID != null && steamID != "")
             {
-                Process.Start(new ProcessStartInfo()
+
+                if (steamID.Contains(".exe"))
                 {
-                    UseShellExecute = true,
-                    FileName = steamID
-                });
+                    MessageBox.Show(steamID);
+                    Process.Start("cmd.exe", "/C " + steamID);
+                }
+                else
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        UseShellExecute = true,
+                        FileName = steamID
+                    });
+                }
             }
         }
 
