@@ -61,7 +61,7 @@ namespace Game_Launcher_V2
             if (!IsRunningAsAdministrator())
             {
                 // Setting up start info of the new process of the same application
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase) + "\\PlayBox.exe");
+                ProcessStartInfo processStartInfo = new ProcessStartInfo(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase) + "\\Playmate Game Launcher.exe");
 
                 // Using operating shell and setting the ProcessStartInfo.Verb to “runas” will let it run as admin
                 processStartInfo.UseShellExecute = true;

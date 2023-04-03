@@ -191,7 +191,7 @@ namespace Game_Launcher_V2.Pages
 
             //set up timer for key combo system
             
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.16);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.14);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -509,7 +509,6 @@ namespace Game_Launcher_V2.Pages
                     float tx = gamepad.LeftThumbX;
 
 
-                    
                     if (tx < -18000 && !Global.isAccessMenuOpen)
                     {
                         //Decrease selected item by 1

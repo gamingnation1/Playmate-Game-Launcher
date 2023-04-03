@@ -8,8 +8,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
-    <AssemblyName>PlayBox</AssemblyName>
-    <Product>PlayBox</Product>
+    <AssemblyName>Playmate Game Launcher</AssemblyName>
+    <Product>Playmate Game Launcher</Product>
   </PropertyGroup>
 
   <ItemGroup>
