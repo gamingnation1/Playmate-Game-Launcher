@@ -10,6 +10,7 @@
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
     <AssemblyName>Playmate Game Launcher</AssemblyName>
     <Product>Playmate Game Launcher</Product>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>

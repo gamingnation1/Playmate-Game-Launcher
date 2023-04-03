@@ -190,10 +190,11 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         public static Border[] borders;
         bool wasClosed = false;
         bool lastState = true;
-        async void KeyShortCuts_Tick(object sender, EventArgs e)
+
+        private void ControllerInput(UserIndex controllerNo)
         {
             borders = new Border[] { Section1, Section2, Section3, Section4, Section51 };
-            
+
             if (lastState == false && Global.isAccessMenuOpen == true) wasClosed = true;
 
             lastState = Global.isAccessMenuOpen;
@@ -205,7 +206,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 try
                 {
                     //Get controller
-                    controller = new Controller(UserIndex.One);
+                    controller = new Controller(controllerNo);
 
                     connected = controller.IsConnected;
 
@@ -306,7 +307,14 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 }
                 catch { }
             }
-         }
+        }
+
+
+        async void KeyShortCuts_Tick(object sender, EventArgs e)
+        {
+            ControllerInput(UserIndex.One);
+            ControllerInput(UserIndex.Two);
+        }
 
         public void updateMenuSelected()
         {

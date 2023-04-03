@@ -306,7 +306,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         public static Border lastBorder;
         bool goingDown = true;
 
-        async void KeyShortCuts_Tick(object sender, EventArgs e)
+        private void ControllerInput(UserIndex controllerNo)
         {
             if (Global.AccessMenuSelected == 1 && Global.isAccessMenuOpen == true)
             {
@@ -327,7 +327,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     updateBatIcon();
 
                     //Get controller
-                    controller = new Controller(UserIndex.One);
+                    controller = new Controller(controllerNo);
 
                     connected = controller.IsConnected;
 
@@ -476,6 +476,12 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 }
                 catch { }
             }
+        }
+
+        void KeyShortCuts_Tick(object sender, EventArgs e)
+        {
+            ControllerInput(UserIndex.One);
+            ControllerInput(UserIndex.Two);
         }
 
         public void updateMenuSelected()

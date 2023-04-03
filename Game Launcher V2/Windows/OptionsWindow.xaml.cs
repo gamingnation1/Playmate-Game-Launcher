@@ -72,12 +72,20 @@ namespace Game_Launcher_V2.Windows
 
         int menuSelected = 0;
 
-        private static Controller controller = new Controller(UserIndex.One);
+        private static Controller controller;
 
         async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
+            ControllerInput(UserIndex.One);
+            ControllerInput(UserIndex.Two);
+        }
+
+        private void ControllerInput(UserIndex controllerNo)
+        {
             try
             {
+                controller = new Controller(controllerNo);
+
                 bool connected = controller.IsConnected;
                 if (MainDock.Visibility == Visibility.Hidden) MainDock.Visibility = Visibility.Visible;
 

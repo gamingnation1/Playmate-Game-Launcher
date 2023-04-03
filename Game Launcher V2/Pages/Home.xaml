@@ -66,30 +66,35 @@
     </Page.Resources>
     <Grid>
         <DockPanel ZIndex="0" LastChildFill="True">
-            <Image Name="GameBG" Stretch="UniformToFill"></Image>
+            <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Image Name="GameBG" Stretch="UniformToFill"></Image>
+            </Viewbox>
         </DockPanel>
         <DockPanel Panel.ZIndex="1">
             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-                <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,12,12,0">
-                <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
-                    <Border Opacity="0.2">
-                        <Border.Effect>
-                            <BlurEffect Radius="50"/>
-                        </Border.Effect>
-                        <Border.Background>
-                            <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
-                        </Border.Background>
+                <Viewbox Stretch="None" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,12,12,0">
+                <Grid>
+                    <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
+                        <Border Opacity="0.2">
+                            <Border.Effect>
+                                <BlurEffect Radius="50"/>
+                            </Border.Effect>
+                            <Border.Background>
+                                <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
+                            </Border.Background>
+                        </Border>
                     </Border>
-                </Border>
-                <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                    <Image Height="32" Width="30" Name="imgWiFi" Margin="0,0,5,0"></Image>
-                    <Image Height="32" Width="30" Name="imgTime" Margin="4,0,5,0"></Image>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTime" FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">10:00</TextBlock>
-                    <Image Height="32" Width="30" Name="imgBat" Margin="12,0,5,0"></Image>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
-                </StackPanel>
-            </Grid>
-                <Grid DockPanel.Dock="Right"  HorizontalAlignment="Left" Margin="11.5,12,12,0"  Name="bottomBarStore">
+                    <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
+                        <Image Height="32" Width="30" Name="imgWiFi" Margin="0,0,5,0"></Image>
+                        <Image Height="32" Width="30" Name="imgTime" Margin="4,0,5,0"></Image>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTime" FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">10:00</TextBlock>
+                        <Image Height="32" Width="30" Name="imgBat" Margin="12,0,5,0"></Image>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
+                    </StackPanel>
+                </Grid>
+                </Viewbox>
+                <Viewbox DockPanel.Dock="Right"  HorizontalAlignment="Left" Margin="11.5,12,12,0"  Stretch="None">
+                <Grid Name="bottomBarStore">
                     <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
                         <Border Opacity="0.2">
                             <Border.Effect>
@@ -113,63 +118,73 @@
                         <Image Height="32" Width="30" Name="imgRB"  Margin="18,0,0,0"></Image>
                     </StackPanel>
                 </Grid>
-                <Button DockPanel.Dock="Right" x:Name="btnSettings" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" VerticalContentAlignment="Center" Background="#f2151515" FontSize="24" Foreground="White" Height="50" Width="50" Margin="12,12,0,0" Click="btnSettings_Click">
+                </Viewbox>
+                <Viewbox Stretch="None" DockPanel.Dock="Right" Margin="12,12,0,0">
+                <Button  x:Name="btnSettings" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" VerticalContentAlignment="Center" Background="#f2151515" FontSize="24" Foreground="White" Height="50" Width="50" Click="btnSettings_Click">
                     <StackPanel>
                         <Image Height="32" Width="30" Name="imgSettingsBtn"/>
                     </StackPanel>
                 </Button>
+                </Viewbox>
             </DockPanel>
+
             <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
-                <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,12,12"  Name="bottomBar">
-                    <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
-                        <Border Opacity="0.2">
-                            <Border.Effect>
-                                <BlurEffect Radius="50"/>
-                            </Border.Effect>
-                            <Border.Background>
-                                <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
-                            </Border.Background>
+                <Viewbox Stretch="None" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,12,12">
+                    <Grid Name="bottomBar">
+                        <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
+                            <Border Opacity="0.2">
+                                <Border.Effect>
+                                    <BlurEffect Radius="50"/>
+                                </Border.Effect>
+                                <Border.Background>
+                                    <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
+                                </Border.Background>
+                            </Border>
                         </Border>
-                    </Border>
-                    <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                        <Image Height="37" Width="35" Name="imgSettings"  Margin="0,0,9,0" Visibility="Collapsed"></Image>
-                        <TextBlock Name="lblSettings" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0" Visibility="Collapsed">Settings</TextBlock>
-                        <Image Visibility="Collapsed" Height="32" Width="30" Name="imgDPadLeft"  Margin="18,0,4,0"></Image>
-                        <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Prev</TextBlock>
-                        <Image Visibility="Collapsed" Height="32" Width="30" Name="imgDPadRight"  Margin="18,0,4,0"></Image>
-                        <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Next</TextBlock>
-                        <Image Height="32" Width="30" Name="imgB"  Margin="18,0,5,0"></Image>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Desktop"/>
-                        <Image Height="32" Width="30" Name="imgX"  Margin="18,0,5,0"></Image>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Reload"/>
-                        <Image Height="32" Width="30" Name="imgA"  Margin="18,0,5,0"></Image>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="{Binding ElementName=lblControl, Path=Content}"/>
-                    </StackPanel>
-                </Grid>
+                        <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
+                            <Image Height="37" Width="35" Name="imgSettings"  Margin="0,0,9,0" Visibility="Collapsed"></Image>
+                            <TextBlock Name="lblSettings" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0" Visibility="Collapsed">Settings</TextBlock>
+                            <Image Visibility="Collapsed" Height="32" Width="30" Name="imgDPadLeft"  Margin="18,0,4,0"></Image>
+                            <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Prev</TextBlock>
+                            <Image Visibility="Collapsed" Height="32" Width="30" Name="imgDPadRight"  Margin="18,0,4,0"></Image>
+                            <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Next</TextBlock>
+                            <Image Height="32" Width="30" Name="imgB"  Margin="18,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Desktop"/>
+                            <Image Height="32" Width="30" Name="imgX"  Margin="18,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Reload"/>
+                            <Image Height="32" Width="30" Name="imgA"  Margin="18,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="{Binding ElementName=lblControl, Path=Content}"/>
+                        </StackPanel>
+                    </Grid>
+                </Viewbox>
             </DockPanel>
             <StackPanel VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
-                <Grid HorizontalAlignment="Left" Margin="24,20,0,30" MaxWidth="720">
-                    <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
-                        <Border Opacity="0.2">
-                            <Border.Effect>
-                                <BlurEffect Radius="50"/>
-                            </Border.Effect>
-                            <Border.Background>
-                                <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
-                            </Border.Background>
-                        </Border>
-                    </Border>
-                    <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                        <TextBlock Name="lblGameName" Foreground="White" FontSize="28" FontWeight="SemiBold" Width="auto" VerticalAlignment="Center" Margin="0,-3,0,0">Game Name Menu Bar Top</TextBlock>
-                    </StackPanel>
-                </Grid>
-                <Button x:Name="btnControl" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" Background="#f2151515" FontSize="24" VerticalContentAlignment="Center" VerticalAlignment="Center" Foreground="White" Height="50" Width="50" Panel.ZIndex="2" HorizontalAlignment="Left" Margin="9,0,0,10" Click="btnControl_Click">
-                    <StackPanel>
-                        <Label Name="lblControl" Visibility="Collapsed">Open Steam</Label>
-                        <Image Height="38" Width="36" Name="imgPlay"/>
-                    </StackPanel>
-                </Button>
+                    <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid HorizontalAlignment="Left" Margin="24,20,0,30" MaxWidth="720">
+                            <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
+                                <Border Opacity="0.2">
+                                    <Border.Effect>
+                                        <BlurEffect Radius="50"/>
+                                    </Border.Effect>
+                                    <Border.Background>
+                                        <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
+                                    </Border.Background>
+                                </Border>
+                            </Border>
+                            <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
+                                <TextBlock Name="lblGameName" Foreground="White" FontSize="28" FontWeight="SemiBold" Width="auto" VerticalAlignment="Center" Margin="0,-3,0,0">Game Name Menu Bar Top</TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Viewbox>
+                    <Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Button x:Name="btnControl" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" Background="#f2151515" FontSize="24" VerticalContentAlignment="Center" VerticalAlignment="Center" Foreground="White" Height="50" Width="50" Panel.ZIndex="2" HorizontalAlignment="Left" Margin="9,0,0,10" Click="btnControl_Click">
+                            <StackPanel>
+                                <Label Name="lblControl" Visibility="Collapsed">Open Steam</Label>
+                                <Image Height="38" Width="36" Name="imgPlay"/>
+                            </StackPanel>
+                        </Button>
+                    </Viewbox>
                 </StackPanel>
                 <ListBox x:FieldModifier="public" MinHeight="260" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="0,-15,0,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel"  Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True" ScrollViewer.ScrollChanged="lbGames_ScrollChanged">
                     <ListBox.ItemsPanel>
@@ -206,20 +221,21 @@
 
 
                     <ListBox.ItemTemplate>
-
                         <DataTemplate>
-                            <Border x:Name="GameBorder" Height="250" Width="250" BorderThickness="4" BorderBrush="Transparent" CornerRadius="16">
-                                <Border.Background>
-                                    <ImageBrush ImageSource="{Binding imagePath}"  Stretch="UniformToFill"/>
-                                </Border.Background>
-                                <DockPanel>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ID}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding steamID}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding gameName}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding filePath}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding message}" Margin="8" TextAlignment="Center" HorizontalAlignment="Center" FontSize="32" Foreground="White" TextWrapping="WrapWithOverflow" Visibility="Visible"></TextBlock>
-                                </DockPanel>
-                            </Border>
+                            <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Border x:Name="GameBorder" Height="250" Width="250" BorderThickness="4" BorderBrush="Transparent" CornerRadius="16">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding imagePath}"  Stretch="UniformToFill"/>
+                                    </Border.Background>
+                                    <DockPanel>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding ID}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding steamID}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding gameName}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding filePath}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding message}" Margin="8" TextAlignment="Center" HorizontalAlignment="Center" FontSize="32" Foreground="White" TextWrapping="WrapWithOverflow" Visibility="Visible"></TextBlock>
+                                    </DockPanel>
+                                </Border>
+                            </Viewbox>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

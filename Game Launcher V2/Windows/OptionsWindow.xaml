@@ -14,11 +14,11 @@
         Deactivated="Window_Deactivated"
         WindowState="Maximized" Visibility="Hidden" ShowInTaskbar="False">
     <Grid>
-        <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False" >
-            <DockPanel DockPanel.Dock="Right" Width="462" Margin="0,0,6,6.35">
-                <Border Name="bTop" DockPanel.Dock="Top" Panel.ZIndex="3" Height="45" Background="#101010" Margin="0,6.33,0,-0.5">
+        <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False" Margin="0,0,0,4" >
+            <DockPanel DockPanel.Dock="Right" Width="462">
+                <Border Name="bTop" DockPanel.Dock="Top" Panel.ZIndex="3" Height="50" Background="#101010">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
-                        <StackPanel Orientation="Horizontal" DockPanel.Dock="right" VerticalAlignment="Center" Margin="0,0,20,0">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="right" VerticalAlignment="Center" Margin="0,5,20,0">
                             <Image Height="34" Width="32" Name="imgWiFi" Margin="4,0,5,0"></Image>
                             <Image Height="34" Width="32" Name="imgTime" Margin="18,0,5,0"></Image>
                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTime" FontSize="22" Foreground="White" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0">10:00</TextBlock>

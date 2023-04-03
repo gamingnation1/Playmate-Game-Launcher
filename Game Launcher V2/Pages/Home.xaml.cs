@@ -199,9 +199,9 @@ namespace Game_Launcher_V2.Pages
         private void SetImageSource(string imageUrl, Image image)
         {
             var imageSource = new BitmapImage();
-            int pixelWidth = 48;
+            int pixelWidth = 64;
 
-            if (image == imgSettings) pixelWidth = 64;
+            if (image == imgSettings) pixelWidth = 96;
 
             using (var stream = new FileStream(imageUrl, FileMode.Open, FileAccess.Read))
             {
@@ -350,7 +350,7 @@ namespace Game_Launcher_V2.Pages
                     using (var stream = new FileStream(url, FileMode.Open, FileAccess.Read))
                     {
                         bi.BeginInit();
-                        bi.DecodePixelWidth = 2048;
+                        bi.DecodePixelWidth = 3072;
                         bi.CacheOption = BitmapCacheOption.OnLoad;
                         bi.StreamSource = stream;
                         bi.EndInit();
@@ -437,17 +437,20 @@ namespace Game_Launcher_V2.Pages
             mediaPlayer.Play();
         }
 
-        private static Controller controller = new Controller(UserIndex.One);
-
         void KeyShortCuts_Tick(object sender, EventArgs e)
         {
-            ControllerInput();
+            ControllerInput(UserIndex.One);
+            ControllerInput(UserIndex.Two);
         }
 
-        private void ControllerInput()
+        private static Controller controller;
+
+        private void ControllerInput(UserIndex controllerNo)
         {
             try
             {
+                controller = new Controller(controllerNo);
+
                 bool isActive = Global.isMainActive;
 
                 //If window is not focused stop music
@@ -654,6 +657,21 @@ namespace Game_Launcher_V2.Pages
                     lbGames.Margin = new Thickness(0, -15, 0, 0);
                 }
             }
+        }
+    }
+
+    public class DpiDecorator : Decorator
+    {
+        public DpiDecorator()
+        {
+            this.Loaded += (s, e) =>
+            {
+                System.Windows.Media.Matrix m = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice;
+                ScaleTransform dpiTransform = new ScaleTransform(1 / m.M11, 1 / m.M22);
+                if (dpiTransform.CanFreeze)
+                    dpiTransform.Freeze();
+                this.LayoutTransform = dpiTransform;
+            };
         }
     }
 }
