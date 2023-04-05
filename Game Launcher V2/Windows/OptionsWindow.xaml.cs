@@ -57,7 +57,7 @@ namespace Game_Launcher_V2.Windows
             _ = Tablet.TabletDevices;
             setUpGUI();
 
-            PagesNavigation.Navigate(new System.Uri("Pages/OptionsWindow/BasicSettings.xaml", UriKind.RelativeOrAbsolute));
+            NavigateToPage(typeof(BasicSettings));
 
             //Detect if an AYA Neo is being used
             ManagementObjectSearcher baseboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");

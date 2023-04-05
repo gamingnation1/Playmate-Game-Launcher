@@ -246,25 +246,24 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         private async void ControllerInput(UserIndex controllerNo)
         {
+            if (lastState == false && Global.isAccessMenuOpen == true) wasClosed = true;
+
+            lastState = Global.isAccessMenuOpen;
+
+            if (wasClosed)
+            {
+                getVol();
+                getBrightness();
+                sdVol.Value = vol;
+                sdBright.Value = bright;
+
+                getWifi();
+                getBluetooth();
+            }
+
             if (Global.AccessMenuSelected == 0 && Global.isAccessMenuOpen == true)
             {
                 borders = new Border[] { Section01, Section02, Section1, Section2, Section3, Section4, Section51 };
-
-                if (lastState == false && Global.isAccessMenuOpen == true) wasClosed = true;
-
-                lastState = Global.isAccessMenuOpen;
-
-                if (wasClosed) {
-                    getVol(); 
-                    getBrightness();
-                    sdVol.Value = vol; 
-                    sdBright.Value = bright;
-
-                    getWifi();
-                    getBluetooth();
-
-                    wasClosed = false;
-                }
 
                 try
                 {
