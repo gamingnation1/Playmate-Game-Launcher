@@ -5,29 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game_Launcher_V2.Windows"
         mc:Ignorable="d"
-        Title="OptionsWindow" Height="720" Width="1280"
+        Title="OptionsWindow" 
+        Width="{x:Static SystemParameters.PrimaryScreenWidth}"  
+        Height="{x:Static SystemParameters.PrimaryScreenHeight}" 
         AllowsTransparency="True"
+        Left="0"
+        Top="0"
         Background="Transparent"
         WindowStyle="None"
+        WindowState="Maximized"
         Topmost="True"
         Activated="Window_Activated"
         Deactivated="Window_Deactivated"
-        WindowState="Maximized" Visibility="Hidden" ShowInTaskbar="False">
-    <Grid>
-        <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False" Margin="0,0,0,3" >
+        Visibility="Hidden" ShowInTaskbar="False">
+    
+    <Grid VerticalAlignment="Stretch" Width="{x:Static SystemParameters.PrimaryScreenWidth}"  Height="{x:Static SystemParameters.PrimaryScreenHeight}">
+        <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False">
             <DockPanel DockPanel.Dock="Right" Width="462">
                 <Border Name="bTop" DockPanel.Dock="Top" Panel.ZIndex="3" Height="50" Background="#101010">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right">
-                        <StackPanel Orientation="Horizontal" DockPanel.Dock="right" VerticalAlignment="Center" Margin="0,5,20,0">
-                            <Image Height="34" Width="32" Name="imgWiFi" Margin="4,0,5,0"></Image>
-                            <Image Height="34" Width="32" Name="imgTime" Margin="18,0,5,0"></Image>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTime" FontSize="22" Foreground="White" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0">10:00</TextBlock>
-                            <Image Height="34" Width="32" Name="imgBat" Margin="18,0,5,0"></Image>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" FontSize="22" MinWidth="49" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
+                    <DockPanel Width="462" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="right" VerticalAlignment="Center" Margin="0,0,16,0">
+                            <Image Height="32" Width="30" Name="imgTemp" Margin="0,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTemp" FontSize="20" MinWidth="40" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">100*C</TextBlock>
+
+                            <Image Height="32" Width="30" Name="imgPow" Margin="12,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblPow" FontSize="20" MinWidth="40" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">100W</TextBlock>
+
+                            <Image Height="32" Width="30" Name="imgWiFi" Margin="12,0,0,0"/>
+
+                            <Image Height="32" Width="30" Name="imgTime" Margin="12,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTime" FontSize="20" MinWidth="40" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">10:00</TextBlock>
+
+                            <Image Height="32" Width="30" Name="imgBat" Margin="12,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" MinWidth="40" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
                         </StackPanel>
-                    </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="6,0,0,0">
+                            
+                        </StackPanel>
+                    </DockPanel>
                 </Border>
-                <Border Name="bSide" BorderBrush="DarkGray" Panel.ZIndex="2" BorderThickness="0,0,0.8,0" Background="#181818">
+                <Border Name="bSide" BorderBrush="DarkGray" Panel.ZIndex="2" BorderThickness="0,0,0.8,0" Background="#181818" Margin="0,-0.2,0,0">
                     <StackPanel DockPanel.Dock="Left" Width="54" Background="#181818" VerticalAlignment="Center">
                         <StackPanel Orientation="Vertical" Margin="0,2,0,2">
                             <RadioButton x:Name="rdBasic" IsChecked="true" Content="Basic Settings" Style="{DynamicResource MenuRadioButtonStyle}" Tag="{DynamicResource settings}" Height="50" Width="54" Margin="0,2,0,0" Click="rd_Click"/>
@@ -37,7 +55,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
-                <Frame x:Name="PagesNavigation" NavigationUIVisibility="Hidden" Panel.ZIndex="1" Margin="-0.5,0,0,0" BorderBrush="DarkGray" BorderThickness="0.8,1.5,1.1,1">
+                <Frame x:Name="PagesNavigation" NavigationUIVisibility="Hidden" Panel.ZIndex="1" Margin="-0.5,0,0,0" BorderBrush="DarkGray" BorderThickness="0.8,0.8,0.8,0.8">
                     <!-- Page Content -->
                 </Frame>
             </DockPanel>

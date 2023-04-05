@@ -361,8 +361,13 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
                             {
-                                if (optionSelected < 8) optionSelected++;
-                                else optionSelected = 8;
+                                int max = 0;
+                                if (Settings.Default.CPUName.ToLower().Contains("intel")) max = 2;
+                                else if (tsFPS.IsOn == false) max = 7;
+                                else max = 8;
+
+                                if (optionSelected < max) optionSelected++;
+                                else optionSelected = max;
                                 goingDown = true;
 
                                 if (optionSelected >= 6) mainView.ScrollToBottom();

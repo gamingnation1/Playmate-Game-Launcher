@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Numerics;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Policy;
 using System.Text;
@@ -24,6 +25,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Windows.Devices.Sensors;
 using Windows.Gaming.Input;
 using Windows.Gaming.Preview.GamesEnumeration;
 using ListBox = System.Windows.Controls.ListBox;
@@ -191,7 +193,7 @@ namespace Game_Launcher_V2.Pages
 
             //set up timer for key combo system
             
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.14);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.16);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -219,7 +221,7 @@ namespace Game_Launcher_V2.Pages
         private async void setUpGUI()
         {
             try
-            {
+            { 
                 var scrollViewer = Global.GetDescendantByType(lbGames, typeof(ScrollViewer)) as ScrollViewer;
                 scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
 
@@ -437,11 +439,14 @@ namespace Game_Launcher_V2.Pages
             mediaPlayer.Play();
         }
 
-        void KeyShortCuts_Tick(object sender, EventArgs e)
+        Vector2 position = new Vector2(0, 0);
+
+        async void KeyShortCuts_Tick(object sender, EventArgs e)
         {
             ControllerInput(UserIndex.One);
             ControllerInput(UserIndex.Two);
         }
+
 
         private static Controller controller;
 

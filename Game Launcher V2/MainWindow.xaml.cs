@@ -27,6 +27,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Windows.Devices.Sensors;
+using static Game_Launcher_V2.Scripts.SystemDeviceControl;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.Forms.MessageBox;
 using SplashScreen = Game_Launcher_V2.Windows.SplashScreen;
@@ -55,6 +57,8 @@ namespace Game_Launcher_V2
         }
 
         public static Frame navFrame;
+
+
 
         public MainWindow()
         {
@@ -106,8 +110,9 @@ namespace Game_Launcher_V2
                 try
                 {
                     Global.path = Settings.Default.Path;
-                } catch { Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath; }
-                
+                }
+                catch { Global.path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath; }
+
 
                 _ = Tablet.TabletDevices;
 
@@ -151,17 +156,19 @@ namespace Game_Launcher_V2
                     //SelectGameStore gameStore = new SelectGameStore();
                     //gameStore.Show();
 
-                    if(Settings.Default.startMinimised == false)
+                    if (Settings.Default.startMinimised == false)
                     {
                         this.Activate();
                         this.Focus();
                     }
 
                     BasicExeBackend.Garbage_Collect();
+
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }
         }
+
 
         private void Window_Activated(object sender, EventArgs e)
         {
@@ -198,7 +205,7 @@ namespace Game_Launcher_V2
 
                 lastGameStore = Global.GameStore;
 
-                if(Global.desktop >= 1)
+                if (Global.desktop >= 1)
                 {
                     this.WindowState = WindowState.Minimized;
                     Global.desktop = 0;
@@ -212,7 +219,7 @@ namespace Game_Launcher_V2
 
                 if (this.WindowState == WindowState.Minimized) Global.isMainActive = false;
 
-                if (this.Visibility == Visibility && this.WindowState != WindowState.Minimized && this.WindowState != WindowState.Maximized && Global.isMainActive == true) this.WindowState= WindowState.Maximized;
+                if (this.Visibility == Visibility && this.WindowState != WindowState.Minimized && this.WindowState != WindowState.Maximized && Global.isMainActive == true) this.WindowState = WindowState.Maximized;
             }
             catch { }
         }
@@ -233,11 +240,11 @@ namespace Game_Launcher_V2
             {
                 getData();
                 ryzen++;
-                if(Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")
+                if (Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")
                 {
                     string processRyzenAdj = "";
                     string commandArguments = Settings.Default.RyzenAdj;
-                    if(ryzen >= 2)
+                    if (ryzen >= 2)
                     {
                         if (Settings.Default.isiGFX == true)
                         {
@@ -262,7 +269,7 @@ namespace Game_Launcher_V2
                         ryzen = 0;
                     }
 
-                    if(GC >= 5)
+                    if (GC >= 5)
                     {
                         BasicExeBackend.Garbage_Collect();
                         GC = 0;

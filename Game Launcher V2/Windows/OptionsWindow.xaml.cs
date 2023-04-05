@@ -1,5 +1,7 @@
 ﻿using Game_Launcher_V2.Pages.OptionsWindow;
+using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
+using LibreHardwareMonitor.Hardware;
 using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
@@ -250,35 +252,54 @@ namespace Game_Launcher_V2.Windows
             }
         }
 
-        private void setUpGUI()
+        private void SetImageSource(string imageUrl, Image image)
         {
-            var bi2 = new BitmapImage();
+            var imageSource = new BitmapImage();
+            int pixelWidth = 64;
 
-            string timeURL = "";
-
-            timeURL = path + "//Assets//Icons//time-line.png";
-
-            using (var stream = new FileStream(timeURL, FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(imageUrl, FileMode.Open, FileAccess.Read))
             {
-                bi2.BeginInit();
-                bi2.DecodePixelWidth = 48;
-                bi2.CacheOption = BitmapCacheOption.OnLoad;
-                bi2.StreamSource = stream;
-                bi2.EndInit();
+                imageSource.BeginInit();
+                imageSource.DecodePixelWidth = pixelWidth;
+                imageSource.CacheOption = BitmapCacheOption.OnLoad;
+                imageSource.StreamSource = stream;
+                imageSource.EndInit();
             }
-            bi2.Freeze();
+            imageSource.Freeze();
 
-            imgTime.Source = bi2;
+            image.Source = imageSource;
+        }
+
+        private async void setUpGUI()
+        {
+            SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "time-line.png"), imgTime);
+            SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "temp-hot-line.png"), imgTemp);
+            SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "flashlight-line.png"), imgPow);
+
+            if (Settings.Default.CPUName.ToLower().Contains("intel")) await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
+            else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
+            await Task.Run(() => { CPUPower = (int)GetSensor.getCPUInfo(SensorType.Power, "Package"); });
+            lblTemp.Text = $"{CPUTemp}°C";
+            lblPow.Text = $"{CPUPower}W";
 
             Time_and_Bat.GetWifi(imgWiFi);
             Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
         }
 
         //Get battery and time info evry 2 seconds
-        void Update_Tick(object sender, EventArgs e)
+        int CPUTemp, CPUPower;
+
+        async void Update_Tick(object sender, EventArgs e)
         {
             try
             {
+                if (Settings.Default.CPUName.ToLower().Contains("intel")) await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Package"); });
+                else await Task.Run(() => { CPUTemp = (int)GetSensor.getCPUInfo(SensorType.Temperature, "Core"); });
+                await Task.Run(() => { CPUPower = (int)GetSensor.getCPUInfo(SensorType.Power, "Package"); });
+
+                lblTemp.Text = $"{CPUTemp}°C";
+                lblPow.Text = $"{CPUPower}W";
+
                 Time_and_Bat.GetWifi(imgWiFi);
                 Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
 

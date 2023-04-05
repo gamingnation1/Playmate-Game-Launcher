@@ -13,7 +13,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Windows.Devices.Radios;
 using Windows.Devices.WiFi;
+using Windows.Networking.Connectivity;
 
 namespace Game_Launcher_V2.Scripts
 {
@@ -89,17 +91,49 @@ namespace Game_Launcher_V2.Scripts
             string wifiURL = "";
             double wifi = Global.wifi;
 
-            if (wifi >= 3)
+            var wifiRadios = await Radio.GetRadiosAsync();
+            var wifiRadio = wifiRadios.FirstOrDefault(r => r.Kind == RadioKind.WiFi);
+            var internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+
+            if (wifiRadio != null && wifiRadio.State == RadioState.On)
             {
-                wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
+                if (wifi >= 3)
+                {
+                    wifiURL = path + "//Assets//Icons//signal-wifi-fill.png";
+                }
+                else if (wifi >= 2)
+                {
+                    wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
+                }
+                else if (wifi == 1)
+                {
+                    wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
+                }
+                else
+                {
+                    wifiURL = path + "//Assets//Icons//signal-wifi-line.png";
+                }
             }
-            else if (wifi >= 1)
+            else if (wifiRadio != null && wifiRadio.State == RadioState.Off)
             {
-                wifiURL = path + "//Assets//Icons//signal-wifi-2-fill.png";
+                wifiURL = path + "//Assets//Icons//signal-wifi-off-line.png";
             }
-            else if (wifi < 1)
+            else if (internetConnectionProfile != null)
             {
-                wifiURL = path + "//Assets//Icons//signal-wifi-1-fill.png";
+                var interfaceType = internetConnectionProfile.NetworkAdapter.IanaInterfaceType;
+
+                if (interfaceType == 71)
+                {
+                    wifiURL = path + "//Assets//Icons//sensor-line.png";
+                }
+                else
+                {
+                    wifiURL = path + "//Assets//Icons//signal-wifi-line.png";
+                }
+            }
+            else
+            {
+                wifiURL = path + "//Assets//Icons//signal-wifi-line.png";
             }
 
             if (imgWiFi.Source != null && imgWiFi.Source is BitmapImage bitmapImage)
@@ -169,7 +203,7 @@ namespace Game_Launcher_V2.Scripts
                 {
                     bi.BeginInit();
                     bi.UriSource = new Uri(batURL, UriKind.RelativeOrAbsolute);
-                    bi.DecodePixelWidth = 48;
+                    bi.DecodePixelWidth = 64;
                     bi.CacheOption = BitmapCacheOption.OnLoad;
                     bi.EndInit();
 

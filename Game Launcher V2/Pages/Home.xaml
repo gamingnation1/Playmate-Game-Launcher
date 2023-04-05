@@ -66,11 +66,11 @@
     </Page.Resources>
     <Grid>
         <DockPanel ZIndex="0" LastChildFill="True">
-            <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-12" Name="bgImageCon">
                 <Image Name="GameBG" Stretch="UniformToFill"></Image>
             </Viewbox>
         </DockPanel>
-        <DockPanel Panel.ZIndex="1">
+        <DockPanel Panel.ZIndex="1" Name="mainBody">
             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
                 <Viewbox Stretch="None" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,12,12,0">
                 <Grid>

@@ -31,6 +31,9 @@ using Windows.Media.Audio;
 using Windows.Media.Render;
 using System.Data;
 using NAudio.CoreAudioApi;
+using static System.Collections.Specialized.BitVector32;
+using Windows.Devices.Radios;
+using Windows.Networking.Connectivity;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -45,11 +48,14 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         public static int bright = 0;
         public static int vol = 0;
         public DispatcherTimer checkKeyInput = new DispatcherTimer();
+
         public BasicSettings()
         {
             InitializeComponent();
             _ = Tablet.TabletDevices;
 
+            getWifi();
+            getBluetooth();
             getVol();
             getBrightness();
 
@@ -93,7 +99,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
         }
 
-        private void updateGUI()
+        private async void updateGUI()
         {
             if (isFirstBoot == false)
             {
@@ -112,6 +118,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     key.DeleteValue("MyApplication", false);
                 }
 
+                SetWifiEnabled();
+                SetBluetoothEnabled();
+
                 if (tsMini.IsOn == true) Settings.Default.startMinimised = true; else Settings.Default.startMinimised = false;
                 if (tsBootOnStart.IsOn == true) Settings.Default.bootOnStart = true; else Settings.Default.bootOnStart = false;
                 if (tsPerf.IsOn == true) Settings.Default.isPerfOpen = true; else Settings.Default.isPerfOpen = false;
@@ -121,15 +130,59 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             }
         }
 
-        private void applySettings()
+        private async void getWifi()
+        {
+            // Check if Wi-Fi is enabled
+            var wifiRadios = await Radio.GetRadiosAsync();
+            var wifiRadio = wifiRadios.FirstOrDefault(r => r.Kind == RadioKind.WiFi);
+            bool isWifiEnabled = (wifiRadio != null && wifiRadio.State == RadioState.On);
+
+            tsWifi.IsOn = isWifiEnabled;
+
+        }
+
+        private async void getBluetooth()
+        {
+             // Check if Bluetooth is enabled
+            var bluetoothRadios = await Radio.GetRadiosAsync();
+            var bluetoothRadio = bluetoothRadios.FirstOrDefault(r => r.Kind == RadioKind.Bluetooth);
+            bool isBluetoothEnabled = (bluetoothRadio != null && bluetoothRadio.State == RadioState.On);
+            tsBlue.IsOn = isBluetoothEnabled;
+        }
+
+        private async void applySettings()
         {
             if (isFirstBoot == false)
             {
                 int bright = Convert.ToInt32(sdBright.Value);
                 int volume = Convert.ToInt32(sdVol.Value);
-                updateBrightness(bright);
-                updateVolume(volume);
+
+                await SetWifiEnabled();
+                await SetBluetoothEnabled();
+
+                await Task.Run(() =>
+                {
+                    updateBrightness(bright);
+                    updateVolume(volume);
+                });
             }
+        }
+
+        private async Task SetWifiEnabled()
+        {
+            // Check if Wi-Fi is enabled
+            var wifiRadios = await Radio.GetRadiosAsync();
+            var wifiRadio = wifiRadios.FirstOrDefault(r => r.Kind == RadioKind.WiFi);
+            await wifiRadio.SetStateAsync(tsWifi.IsOn ? RadioState.On : RadioState.Off);
+            
+        }
+
+        private async Task SetBluetoothEnabled()
+        {
+            // Check if Bluetooth is enabled
+            var bluetoothRadios = await Radio.GetRadiosAsync();
+            var bluetoothRadio = bluetoothRadios.FirstOrDefault(r => r.Kind == RadioKind.Bluetooth);
+            await bluetoothRadio.SetStateAsync(tsBlue.IsOn ? RadioState.On : RadioState.Off);
         }
 
         public async void updateBrightness(int newBirghtness)
@@ -191,18 +244,28 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         bool wasClosed = false;
         bool lastState = true;
 
-        private void ControllerInput(UserIndex controllerNo)
+        private async void ControllerInput(UserIndex controllerNo)
         {
-            borders = new Border[] { Section1, Section2, Section3, Section4, Section51 };
-
-            if (lastState == false && Global.isAccessMenuOpen == true) wasClosed = true;
-
-            lastState = Global.isAccessMenuOpen;
-
-            if (wasClosed) { getVol(); getBrightness(); sdVol.Value = vol; sdBright.Value = bright; }
-
             if (Global.AccessMenuSelected == 0 && Global.isAccessMenuOpen == true)
             {
+                borders = new Border[] { Section01, Section02, Section1, Section2, Section3, Section4, Section51 };
+
+                if (lastState == false && Global.isAccessMenuOpen == true) wasClosed = true;
+
+                lastState = Global.isAccessMenuOpen;
+
+                if (wasClosed) {
+                    getVol(); 
+                    getBrightness();
+                    sdVol.Value = vol; 
+                    sdBright.Value = bright;
+
+                    getWifi();
+                    getBluetooth();
+
+                    wasClosed = false;
+                }
+
                 try
                 {
                     //Get controller
@@ -212,10 +275,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                     if (connected)
                     {
-                        SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
-                        float tx = gamepad.LeftThumbX;
-                        float ty = gamepad.LeftThumbY;
-
                         //get controller state
                         var state = controller.GetState();
 
@@ -227,83 +286,101 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                         if (Global.isAccessMenuOpen == true && Global.shortCut == false)
                         {
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && Global.shortCut == false && isActive == false || ty > 18000 && Global.shortCut == false && isActive == false)
-                            {
-                                if (optionSelected > 0) optionSelected--;
-                                else optionSelected = 0;
+                            SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
+                            float tx = gamepad.LeftThumbX;
+                            float ty = gamepad.LeftThumbY;
 
+                            //detect if keyboard or controller combo is being activated
+                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+                            {
+                                Global.shortCut = true;
                             }
 
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
+                            if (Global.isAccessMenuOpen == true && Global.shortCut == false)
                             {
-                                if (optionSelected < 4) optionSelected++;
-                                else optionSelected = 4;
-                            }
+                                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadUp) && Global.shortCut == false && isActive == false || ty > 18000 && Global.shortCut == false && isActive == false)
+                                {
+                                    if (optionSelected > 0) optionSelected--;
+                                    else optionSelected = 0;
 
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true || tx < -18000 && Global.shortCut == false && isActive == true)
-                            {
-                                int value = 0;
-                                int maxValue = 0;
-                                int minValue = 0;
-                                Slider selectedSlider = null;
+                                }
 
-                                if (optionSelected == 0) selectedSlider = sdBright;
+                                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
+                                {
+                                    if (optionSelected < 6) optionSelected++;
+                                    else optionSelected = 6;
+                                }
 
-                                if (optionSelected == 1) selectedSlider = sdVol;
+                                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true || tx < -18000 && Global.shortCut == false && isActive == true)
+                                {
+                                    int value = 0;
+                                    int maxValue = 0;
+                                    int minValue = 0;
+                                    Slider selectedSlider = null;
 
-                                value = (int)selectedSlider.Value;
-                                maxValue = (int)selectedSlider.Maximum;
-                                minValue = (int)selectedSlider.Minimum;
+                                    if (borders[optionSelected] == Section1) selectedSlider = sdBright;
+                                    if (borders[optionSelected] == Section2) selectedSlider = sdVol;
 
-                                value--;
-                                value--;
+                                    value = (int)selectedSlider.Value;
+                                    maxValue = (int)selectedSlider.Maximum;
+                                    minValue = (int)selectedSlider.Minimum;
 
-                                if (value > maxValue) value = maxValue;
-                                if (value < minValue) value = minValue;
-                                selectedSlider.Value = value;
-                            }
+                                    value--;
+                                    value--;
 
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.shortCut == false && isActive == true || tx > 18000 && Global.shortCut == false && isActive == true)
-                            {
-                                int value = 0;
-                                int maxValue = 0;
-                                int minValue = 0;
-                                Slider selectedSlider = null;
+                                    if (value > maxValue) value = maxValue;
+                                    if (value < minValue) value = minValue;
+                                    selectedSlider.Value = value;
+                                }
 
-                                if (optionSelected == 0) selectedSlider = sdBright;
+                                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && Global.shortCut == false && isActive == true || tx > 18000 && Global.shortCut == false && isActive == true)
+                                {
+                                    int value = 0;
+                                    int maxValue = 0;
+                                    int minValue = 0;
+                                    Slider selectedSlider = null;
 
-                                if (optionSelected == 1) selectedSlider = sdVol;
+                                    if (borders[optionSelected] == Section1) selectedSlider = sdBright;
+                                    if (borders[optionSelected] == Section2) selectedSlider = sdVol;
 
-                                value = (int)selectedSlider.Value;
-                                maxValue = (int)selectedSlider.Maximum;
-                                minValue = (int)selectedSlider.Minimum;
+                                    value = (int)selectedSlider.Value;
+                                    maxValue = (int)selectedSlider.Maximum;
+                                    minValue = (int)selectedSlider.Minimum;
 
-                                value++;
-                                value++;
+                                    value++;
+                                    value++;
 
-                                if (value > maxValue) value = maxValue;
-                                if (value < minValue) value = minValue;
-                                selectedSlider.Value = value;
-                            }
+                                    if (value > maxValue) value = maxValue;
+                                    if (value < minValue) value = minValue;
+                                    selectedSlider.Value = value;
+                                }
 
 
-                            if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && Global.shortCut == false)
-                            {
-                                if (optionSelected < 2 && isActive == false) isActive = true;
-                                else isActive = false;
 
-                                if (optionSelected == 2 && tsBootOnStart.IsOn == false) tsBootOnStart.IsOn = true;
-                                else if (optionSelected == 2 && tsBootOnStart.IsOn == true) tsBootOnStart.IsOn = false;
+                                if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && Global.shortCut == false)
+                                {
+                                    if (optionSelected == 0 && tsWifi.IsOn == false) tsWifi.IsOn = true;
+                                    else if (optionSelected == 0 && tsWifi.IsOn == true) tsWifi.IsOn = false;
 
-                                if (optionSelected == 3 && tsMini.IsOn == false) tsMini.IsOn = true;
-                                else if (optionSelected == 3 && tsMini.IsOn == true) tsMini.IsOn = false;
+                                    if (optionSelected == 1 && tsBlue.IsOn == false) tsBlue.IsOn = true;
+                                    else if (optionSelected == 1 && tsBlue.IsOn == true) tsBlue.IsOn = false;
 
-                                if (optionSelected == 4 && tsPerf.IsOn == false) tsPerf.IsOn = true;
-                                else if (optionSelected == 4 && tsPerf.IsOn == true) tsPerf.IsOn = false;
+                                    if (borders[optionSelected] == Section1 && isActive == false || borders[optionSelected] == Section2 && isActive == false) isActive = true;
+                                    else isActive = false;
+
+                                    if (optionSelected == 4 && tsBootOnStart.IsOn == false) tsBootOnStart.IsOn = true;
+                                    else if (optionSelected == 4 && tsBootOnStart.IsOn == true) tsBootOnStart.IsOn = false;
+
+                                    if (optionSelected == 5 && tsMini.IsOn == false) tsMini.IsOn = true;
+                                    else if (optionSelected == 5 && tsMini.IsOn == true) tsMini.IsOn = false;
+
+                                    if (optionSelected == 6 && tsPerf.IsOn == false) tsPerf.IsOn = true;
+                                    else if (optionSelected == 6 && tsPerf.IsOn == true) tsPerf.IsOn = false;
+                                }
                             }
                         }
+                        updateMenuSelected();
                     }
-                    updateMenuSelected();
                 }
                 catch { }
             }
@@ -319,6 +396,10 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         public void updateMenuSelected()
         {
             var bc = new BrushConverter();
+            Section01.Background = new SolidColorBrush(Colors.Transparent);
+            Section01.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
+            Section02.Background = new SolidColorBrush(Colors.Transparent);
+            Section02.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
             Section1.Background = new SolidColorBrush(Colors.Transparent);
             Section1.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
             Section2.Background = new SolidColorBrush(Colors.Transparent);
@@ -331,7 +412,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             {
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
 
-                if (isActive == true && optionSelected < 2)
+                if (isActive == true && optionSelected >= 2 && optionSelected <=3)
                 {
                     borders[optionSelected].BorderThickness = new Thickness(2.5);
                 }
