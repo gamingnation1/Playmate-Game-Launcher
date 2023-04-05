@@ -35,7 +35,7 @@ namespace Game_Launcher_V2.Scripts
                 string LauncherName = launcherManager.GetLaunchers().First(l => l.Id == game.LauncherId).Name;
                 if (LauncherName != "Battle.net" && LauncherName != "Origin" && LauncherName != "Rockstar Games")
                 {
-                    if (!game.Name.Contains("Steamworks") && game.Name != "3DMark")
+                    if (!game.Name.Contains("Steamworks") && !game.Name.Contains("SteamVR") && !game.Name.Contains("Google Earth") && !game.Name.Contains("Wallpaper Engine") && !game.Name.Contains("tModLoader") && game.Name != "3DMark")
                     {
 
                         string path2 = AppDomain.CurrentDomain.BaseDirectory;

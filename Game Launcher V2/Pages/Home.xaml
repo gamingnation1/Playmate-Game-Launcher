@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:Game_Launcher_V2.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="720" d:DesignWidth="1280"
+       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       Title="Home">
     <Page.Resources>
         <Style x:Key="FocusVisual">
@@ -70,61 +71,103 @@
                 <Image Name="GameBG" Stretch="UniformToFill"></Image>
             </Viewbox>
         </DockPanel>
+        <DockPanel ZIndex="2" LastChildFill="True" Opacity="0" Name="gameLaunch" Visibility="Collapsed">
+            <Viewbox Stretch="None" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <Border CornerRadius="30" Background="#0f0f0f" Opacity="0.95">
+                        <Border Opacity="0.15">
+                            <Border.Effect>
+                                <BlurEffect KernelType="Gaussian" Radius="60"/>
+                            </Border.Effect>
+                            <Border.Background>
+                                <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
+                            </Border.Background>
+                        </Border>
+                    </Border>
+                    <Border Height="268" Width="618" VerticalAlignment="Center" Padding="20">
+                        <DockPanel LastChildFill="True">
+                            <Viewbox DockPanel.Dock="Left" Stretch="None" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Border x:Name="tbGameLaunchGameImg" Height="220" Width="220" BorderThickness="4" BorderBrush="LightBlue" CornerRadius="16" Margin="6,0,6,0">
+                                    <Border.Background>
+                                        <ImageBrush Stretch="UniformToFill"/>
+                                    </Border.Background>
+                                    <DockPanel>
+                                        <TextBlock Name="tbGameLaunchGameMessage" VerticalAlignment="Center" Text="{Binding message}" Margin="8" TextAlignment="Center" HorizontalAlignment="Center" FontSize="26" Foreground="White" TextWrapping="WrapWithOverflow" Visibility="Visible"></TextBlock>
+                                    </DockPanel>
+                                </Border>
+                            </Viewbox>
+                            <Viewbox Stretch="None" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Foreground="LightGray" FontSize="23" FontWeight="SemiBold" Width="auto" HorizontalAlignment="Left" Margin="0,4,0,0">Attempting to launch:</TextBlock>
+                                    <TextBlock Name="tbLaunchGameName" Foreground="white" FontSize="30" MaxHeight="128" FontWeight="SemiBold" Width="340" HorizontalAlignment="Left" Margin="0,9,0,0" TextWrapping="Wrap" >Assassin's Creed Orgins</TextBlock>
+                                </StackPanel>
+                            </Viewbox>
+
+                            <Viewbox Stretch="None" HorizontalAlignment="Center" Margin="12,0,0,0">
+                                <StackPanel VerticalAlignment="Center">
+                                    <mah:ProgressRing Foreground="LightGray" Width="48" Height="48" Margin="0,0,0,4"></mah:ProgressRing>
+                                </StackPanel>
+                            </Viewbox>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </Viewbox>
+        </DockPanel>
         <DockPanel Panel.ZIndex="1" Name="mainBody">
             <DockPanel DockPanel.Dock="Top" LastChildFill="False">
                 <Viewbox Stretch="None" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,12,12,0">
-                <Grid>
-                    <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
-                        <Border Opacity="0.2">
-                            <Border.Effect>
-                                <BlurEffect Radius="50"/>
-                            </Border.Effect>
-                            <Border.Background>
-                                <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
-                            </Border.Background>
+                    <Grid>
+                        <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
+                            <Border Opacity="0.2">
+                                <Border.Effect>
+                                    <BlurEffect Radius="50"/>
+                                </Border.Effect>
+                                <Border.Background>
+                                    <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
+                                </Border.Background>
+                            </Border>
                         </Border>
-                    </Border>
-                    <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                        <Image Height="32" Width="30" Name="imgWiFi" Margin="0,0,5,0"></Image>
-                        <Image Height="32" Width="30" Name="imgTime" Margin="4,0,5,0"></Image>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTime" FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">10:00</TextBlock>
-                        <Image Height="32" Width="30" Name="imgBat" Margin="12,0,5,0"></Image>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
-                    </StackPanel>
-                </Grid>
+                        <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
+                            <Image Height="32" Width="30" Name="imgWiFi" Margin="0,0,5,0"></Image>
+                            <Image Height="32" Width="30" Name="imgTime" Margin="4,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblTime" FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">10:00</TextBlock>
+                            <Image Height="32" Width="30" Name="imgBat" Margin="12,0,5,0"></Image>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="lblBat" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0">100%</TextBlock>
+                        </StackPanel>
+                    </Grid>
                 </Viewbox>
                 <Viewbox DockPanel.Dock="Right"  HorizontalAlignment="Left" Margin="11.5,12,12,0"  Stretch="None">
-                <Grid Name="bottomBarStore">
-                    <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
-                        <Border Opacity="0.2">
-                            <Border.Effect>
-                                <BlurEffect Radius="50"/>
-                            </Border.Effect>
-                            <Border.Background>
-                                <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
-                            </Border.Background>
+                    <Grid Name="bottomBarStore">
+                        <Border Padding="20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
+                            <Border Opacity="0.2">
+                                <Border.Effect>
+                                    <BlurEffect Radius="50"/>
+                                </Border.Effect>
+                                <Border.Background>
+                                    <VisualBrush  Visual="{Binding ElementName=GameBG}" Stretch="UniformToFill" />
+                                </Border.Background>
+                            </Border>
                         </Border>
-                    </Border>
-                    <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,12,0">
-                        <Image Height="32" Width="30" Name="imgLB"/>
-                        <TextBlock Name="lblAll" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="DemiBold"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="18,-3,0,0">All Games</TextBlock>
-                        <TextBlock Name="lblSteam" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="DemiBold"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="14,-3,0,0">Steam</TextBlock>
-                        <TextBlock Name="lblEpic" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Epic</TextBlock>
-                        <TextBlock Visibility="Collapsed" Name="lblBattle" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Battle.net</TextBlock>
-                        <TextBlock Name="lblgog" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">GOG</TextBlock>
-                        <TextBlock Visibility="Collapsed" Name="lblea" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">EA</TextBlock>
-                        <TextBlock Name="lblUbi" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Ubisoft</TextBlock>
-                        <TextBlock Visibility="Collapsed" Name="lblRock" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Rockstar</TextBlock>
-                        <Image Height="32" Width="30" Name="imgRB"  Margin="18,0,0,0"></Image>
-                    </StackPanel>
-                </Grid>
+                        <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,12,0">
+                            <Image Height="32" Width="30" Name="imgLB"/>
+                            <TextBlock Name="lblAll" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="DemiBold"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="18,-3,0,0">All Games</TextBlock>
+                            <TextBlock Name="lblSteam" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="DemiBold"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="14,-3,0,0">Steam</TextBlock>
+                            <TextBlock Name="lblEpic" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Epic</TextBlock>
+                            <TextBlock Visibility="Collapsed" Name="lblBattle" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Battle.net</TextBlock>
+                            <TextBlock Name="lblgog" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">GOG</TextBlock>
+                            <TextBlock Visibility="Collapsed" Name="lblea" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">EA</TextBlock>
+                            <TextBlock Name="lblUbi" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Ubisoft</TextBlock>
+                            <TextBlock Visibility="Collapsed" Name="lblRock" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="Gray" TextAlignment="Center" Margin="14,-3,0,0">Rockstar</TextBlock>
+                            <Image Height="32" Width="30" Name="imgRB"  Margin="18,0,0,0"></Image>
+                        </StackPanel>
+                    </Grid>
                 </Viewbox>
                 <Viewbox Stretch="None" DockPanel.Dock="Right" Margin="12,12,0,0">
-                <Button  x:Name="btnSettings" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" VerticalContentAlignment="Center" Background="#f2151515" FontSize="24" Foreground="White" Height="50" Width="50" Click="btnSettings_Click">
-                    <StackPanel>
-                        <Image Height="32" Width="30" Name="imgSettingsBtn"/>
-                    </StackPanel>
-                </Button>
+                    <Button  x:Name="btnSettings" Style="{DynamicResource RoundedButtonStyle}" FontWeight="SemiBold" VerticalContentAlignment="Center" Background="#f2151515" FontSize="24" Foreground="White" Height="50" Width="50" Click="btnSettings_Click">
+                        <StackPanel>
+                            <Image Height="32" Width="30" Name="imgSettingsBtn"/>
+                        </StackPanel>
+                    </Button>
                 </Viewbox>
             </DockPanel>
 
@@ -186,7 +229,7 @@
                         </Button>
                     </Viewbox>
                 </StackPanel>
-                <ListBox x:FieldModifier="public" MinHeight="260" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="0,-15,0,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel"  Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True" ScrollViewer.ScrollChanged="lbGames_ScrollChanged">
+                <ListBox x:FieldModifier="public" MinHeight="260" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Name="lbGames" SelectionChanged="lbGames_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" Margin="0,-15,0,0" ScrollViewer.PanningMode="HorizontalOnly" PreviewMouseWheel="lbGames_PreviewMouseWheel" ScrollViewer.IsDeferredScrollingEnabled="False" Stylus.IsFlicksEnabled="False" Stylus.IsTouchFeedbackEnabled="True" ScrollViewer.ScrollChanged="lbGames_ScrollChanged" ScrollViewer.ManipulationBoundaryFeedback="ScrollViewerCanvas_ManipulationBoundaryFeedback">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel IsItemsHost="True" ScrollViewer.PanningMode="HorizontalFirst" />
@@ -232,7 +275,7 @@
                                         <TextBlock VerticalAlignment="Center" Text="{Binding steamID}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
                                         <TextBlock VerticalAlignment="Center" Text="{Binding gameName}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
                                         <TextBlock VerticalAlignment="Center" Text="{Binding filePath}" Margin="8,0,0,0" Visibility="Collapsed"></TextBlock>
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding message}" Margin="8" TextAlignment="Center" HorizontalAlignment="Center" FontSize="32" Foreground="White" TextWrapping="WrapWithOverflow" Visibility="Visible"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding message}" Margin="8" TextAlignment="Center" HorizontalAlignment="Center" FontSize="30" Foreground="White" TextWrapping="WrapWithOverflow" Visibility="Visible"></TextBlock>
                                     </DockPanel>
                                 </Border>
                             </Viewbox>

@@ -218,6 +218,11 @@ namespace Game_Launcher_V2.Pages
             image.Source = imageSource;
         }
 
+        private void ScrollViewerCanvas_ManipulationBoundaryFeedback(object sender, ManipulationBoundaryFeedbackEventArgs e)
+        {
+            e.Handled = true;
+        }
+
         private async void setUpGUI()
         {
             try
@@ -235,6 +240,10 @@ namespace Game_Launcher_V2.Pages
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "Left Bumper.png"), imgLB);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "Xbox", "Right Bumper.png"), imgRB);
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "settings-4-line.png"), imgSettingsBtn);
+
+                Animate._imageBlurState.Add(GameBG, false);
+                Animate._dockPanelOpacityState.Add(mainBody, true);
+                Animate._dockPanelOpacityState.Add(gameLaunch, false);
 
                 string wifiURL = "";
                 double wifi = Global.wifi;
@@ -315,6 +324,21 @@ namespace Game_Launcher_V2.Pages
                 playAudio(model.musicPath);
                 lastAudio = model.musicPath;
                 lastBG = model.bgImagePath;
+
+                tbLaunchGameName.Text = model.gameName;
+                tbGameLaunchGameMessage.Text = model.message;
+
+                var bitmapImage = new BitmapImage(new Uri(model.imagePath));
+
+                // Create an ImageBrush with a uniform-to-fill mode and set its ImageSource to the loaded image
+                var brush = new ImageBrush()
+                {
+                    Stretch = Stretch.UniformToFill,
+                    ImageSource = bitmapImage
+                };
+
+                // Set the existing Border's Background to the ImageBrush
+                tbGameLaunchGameImg.Background = brush;
             }
 
             ListBox listBox = sender as ListBox;
@@ -449,8 +473,8 @@ namespace Game_Launcher_V2.Pages
 
 
         private static Controller controller;
-
-        private void ControllerInput(UserIndex controllerNo)
+        bool hasLaunched = false;
+        private async void ControllerInput(UserIndex controllerNo)
         {
             try
             {
@@ -463,6 +487,23 @@ namespace Game_Launcher_V2.Pages
                 {
                     mediaPlayer.Pause();
                     wasNotFocused = true;
+
+                    if (mainBody.Opacity != 1 && hasLaunched == true)
+                    {
+                        hasLaunched = false;
+
+                        Animate.AnimateDockPanelOpacity(gameLaunch);
+
+                        while (gameLaunch.Opacity != 0)
+                        {
+                            await Task.Delay(10);
+                        }
+
+                        gameLaunch.Visibility = Visibility.Collapsed;
+
+                        Animate.AnimateBlur(GameBG);
+                        Animate.AnimateDockPanelOpacity(mainBody);
+                    }
                 }
 
                 //If window is now focused resume music
@@ -489,7 +530,7 @@ namespace Game_Launcher_V2.Pages
                     var state = controller.GetState();
 
                     //detect if keyboard or controller combo is being activated
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && !Global.isAccessMenuOpen)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) && !Global.isAccessMenuOpen && !hasLaunched)
                     {
                         //Increase selected item by 1
                         int current = lbGames.SelectedIndex;
@@ -501,7 +542,7 @@ namespace Game_Launcher_V2.Pages
                         if (current == lbGames.Items.Count - 1) scrollViewer.ScrollToHorizontalOffset(scrollViewer.ScrollableWidth);
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && !Global.isAccessMenuOpen)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && !Global.isAccessMenuOpen && !hasLaunched)
                     {
                         //Decrease selected item by 1
                         int current = lbGames.SelectedIndex;
@@ -516,11 +557,47 @@ namespace Game_Launcher_V2.Pages
 
                     }
 
+                    //if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.Y) && !Global.isAccessMenuOpen)
+                    //{
+                    //    if (mainBody.Opacity == 1)
+                    //    {
+                    //        hasLaunched = true;
+
+                    //        Animate.AnimateBlur(GameBG);
+                    //        Animate.AnimateDockPanelOpacity(mainBody);
+
+                    //        while (mainBody.Opacity != 0)
+                    //        {
+                    //            await Task.Delay(10);
+                    //        }
+
+                    //        gameLaunch.Visibility = Visibility.Visible;
+
+                    //        Animate.AnimateDockPanelOpacity(gameLaunch);
+                    //    }
+                    //    else
+                    //    {
+                    //        hasLaunched = false;
+
+                    //        Animate.AnimateDockPanelOpacity(gameLaunch);
+
+                    //        while (gameLaunch.Opacity != 0)
+                    //        {
+                    //            await Task.Delay(10);
+                    //        }
+
+                    //        gameLaunch.Visibility = Visibility.Collapsed;
+
+                    //        Animate.AnimateBlur(GameBG);
+                    //        Animate.AnimateDockPanelOpacity(mainBody);
+                    //    }
+                    //}
+
                     SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
                     float tx = gamepad.LeftThumbX;
 
 
-                    if (tx < -18000 && !Global.isAccessMenuOpen)
+                    if (tx < -18000 && !Global.isAccessMenuOpen && !Global.isAccessMenuOpen && !hasLaunched)
                     {
                         //Decrease selected item by 1
                         int current = lbGames.SelectedIndex;
@@ -535,7 +612,7 @@ namespace Game_Launcher_V2.Pages
                     }
 
                     
-                    if (tx > 18000 && !Global.isAccessMenuOpen)
+                    if (tx > 18000 && !Global.isAccessMenuOpen && !Global.isAccessMenuOpen && !hasLaunched)
                     {
                         //Increase selected item by 1
                         int current = lbGames.SelectedIndex;
@@ -547,24 +624,43 @@ namespace Game_Launcher_V2.Pages
                         if (current == lbGames.Items.Count - 1) scrollViewer.ScrollToHorizontalOffset(scrollViewer.ScrollableWidth);
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && !Global.isAccessMenuOpen)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A) && !Global.isAccessMenuOpen && !hasLaunched)
                     {
                         loadApp();
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.B) && !Global.isAccessMenuOpen)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.B) && !Global.isAccessMenuOpen && !hasLaunched)
                     {
                         Global.desktop = 1;
                     }
+                    else if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.B) && hasLaunched)
+                    {
+                        if (mainBody.Opacity != 1 && hasLaunched == true)
+                        {
+                            Animate.AnimateDockPanelOpacity(gameLaunch);
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.X) && !Global.isAccessMenuOpen)
+                            while (gameLaunch.Opacity != 0)
+                            {
+                                await Task.Delay(10);
+                            }
+
+                            gameLaunch.Visibility = Visibility.Collapsed;
+
+                            Animate.AnimateBlur(GameBG);
+                            Animate.AnimateDockPanelOpacity(mainBody);
+
+                            hasLaunched = false;
+                        }
+                    }
+
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.X) && !Global.isAccessMenuOpen && !hasLaunched)
                     {
                         Global.reload = 1;
                     }
 
                     bool combo = false;
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder) && !Global.isAccessMenuOpen)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder) && !Global.isAccessMenuOpen && !hasLaunched)
                     {
                         combo = true;
                         return;
@@ -574,7 +670,7 @@ namespace Game_Launcher_V2.Pages
                     int max = 4;
 
                     int gameStore = Global.GameStore;
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && !Global.isAccessMenuOpen && !combo)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder) && !Global.isAccessMenuOpen && !hasLaunched && !combo)
                     {
                         gameStore--;
 
@@ -585,7 +681,7 @@ namespace Game_Launcher_V2.Pages
                         checkKeyInput.Stop();
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder) && !Global.isAccessMenuOpen && !combo)
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder) && !Global.isAccessMenuOpen && !hasLaunched && !combo)
                     {
                         gameStore++;
 
@@ -601,8 +697,25 @@ namespace Game_Launcher_V2.Pages
         }
 
 
-        public void loadApp()
+        public async void loadApp()
         {
+            if (mainBody.Opacity == 1)
+            {
+                hasLaunched = true;
+
+                Animate.AnimateBlur(GameBG);
+                Animate.AnimateDockPanelOpacity(mainBody);
+
+                while (mainBody.Opacity != 0)
+                {
+                    await Task.Delay(10);
+                }
+
+                gameLaunch.Visibility = Visibility.Visible;
+
+                Animate.AnimateDockPanelOpacity(gameLaunch);
+            }
+
             LoadSteamGames.openSteamGame(lbGames);
         }
 
