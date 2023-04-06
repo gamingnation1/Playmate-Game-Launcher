@@ -2,6 +2,7 @@
 using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
 using LibreHardwareMonitor.Hardware;
+using Microsoft.Win32;
 using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,16 @@ using System.Windows.Controls;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Window = System.Windows.Window;
+using Page = System.Windows.Controls.Page;
 
 namespace Game_Launcher_V2.Windows
 {
@@ -33,7 +39,6 @@ namespace Game_Launcher_V2.Windows
         //Get current working directory
         public static string path = new Uri(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
         public static string mbo = "";
-
 
         public OptionsWindow()
         {
@@ -69,6 +74,7 @@ namespace Game_Launcher_V2.Windows
 
             Global.shortCut = true;
         }
+
 
         public static bool hidden = true;
 
@@ -330,6 +336,16 @@ namespace Game_Launcher_V2.Windows
         private void Window_Activated(object sender, EventArgs e)
         {
             Global.isAccessMenuActive = true;
+        }
+
+        public void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.ResizeMode = ResizeMode.CanMinimize;
+                this.WindowState = WindowState.Maximized;
+                this.ResizeMode = ResizeMode.NoResize;
+            }
         }
 
         private void Window_Deactivated(object sender, EventArgs e)

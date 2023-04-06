@@ -62,6 +62,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             sdVol.Value = vol;
             sdBright.Value = bright;
 
+            tsMouse.IsOn = Settings.Default.isMouse;
             tsBootOnStart.IsOn = Settings.Default.bootOnStart;
             tsMini.IsOn = Settings.Default.startMinimised;
             tsPerf.IsOn = Settings.Default.isPerfOpen;
@@ -121,6 +122,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 SetWifiEnabled();
                 SetBluetoothEnabled();
 
+                if (tsMouse.IsOn == true) Settings.Default.isMouse = true; else Settings.Default.isMouse = false;
                 if (tsMini.IsOn == true) Settings.Default.startMinimised = true; else Settings.Default.startMinimised = false;
                 if (tsBootOnStart.IsOn == true) Settings.Default.bootOnStart = true; else Settings.Default.bootOnStart = false;
                 if (tsPerf.IsOn == true) Settings.Default.isPerfOpen = true; else Settings.Default.isPerfOpen = false;
@@ -143,7 +145,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         private async void getBluetooth()
         {
-             // Check if Bluetooth is enabled
+            // Check if Bluetooth is enabled
             var bluetoothRadios = await Radio.GetRadiosAsync();
             var bluetoothRadio = bluetoothRadios.FirstOrDefault(r => r.Kind == RadioKind.Bluetooth);
             bool isBluetoothEnabled = (bluetoothRadio != null && bluetoothRadio.State == RadioState.On);
@@ -174,7 +176,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             var wifiRadios = await Radio.GetRadiosAsync();
             var wifiRadio = wifiRadios.FirstOrDefault(r => r.Kind == RadioKind.WiFi);
             await wifiRadio.SetStateAsync(tsWifi.IsOn ? RadioState.On : RadioState.Off);
-            
+
         }
 
         private async Task SetBluetoothEnabled()
@@ -259,11 +261,12 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                 getWifi();
                 getBluetooth();
+                wasClosed = false;
             }
 
             if (Global.AccessMenuSelected == 0 && Global.isAccessMenuOpen == true)
             {
-                borders = new Border[] { Section01, Section02, Section1, Section2, Section3, Section4, Section51 };
+                borders = new Border[] { Section01, Section02, Section1, Section2, Section03, Section3, Section4, Section51 };
 
                 try
                 {
@@ -306,8 +309,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                                 if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
                                 {
-                                    if (optionSelected < 6) optionSelected++;
-                                    else optionSelected = 6;
+                                    if (optionSelected < 7) optionSelected++;
+                                    else optionSelected = 7;
                                 }
 
                                 if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true || tx < -18000 && Global.shortCut == false && isActive == true)
@@ -367,14 +370,17 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                     if (borders[optionSelected] == Section1 && isActive == false || borders[optionSelected] == Section2 && isActive == false) isActive = true;
                                     else isActive = false;
 
-                                    if (optionSelected == 4 && tsBootOnStart.IsOn == false) tsBootOnStart.IsOn = true;
-                                    else if (optionSelected == 4 && tsBootOnStart.IsOn == true) tsBootOnStart.IsOn = false;
+                                    if (optionSelected == 4 && tsMouse.IsOn == false) tsMouse.IsOn = true;
+                                    else if (optionSelected == 4 && tsMouse.IsOn == true) tsMouse.IsOn = false;
 
-                                    if (optionSelected == 5 && tsMini.IsOn == false) tsMini.IsOn = true;
-                                    else if (optionSelected == 5 && tsMini.IsOn == true) tsMini.IsOn = false;
+                                    if (optionSelected == 5 && tsBootOnStart.IsOn == false) tsBootOnStart.IsOn = true;
+                                    else if (optionSelected == 5 && tsBootOnStart.IsOn == true) tsBootOnStart.IsOn = false;
 
-                                    if (optionSelected == 6 && tsPerf.IsOn == false) tsPerf.IsOn = true;
-                                    else if (optionSelected == 6 && tsPerf.IsOn == true) tsPerf.IsOn = false;
+                                    if (optionSelected == 6 && tsMini.IsOn == false) tsMini.IsOn = true;
+                                    else if (optionSelected == 6 && tsMini.IsOn == true) tsMini.IsOn = false;
+
+                                    if (optionSelected == 7 && tsPerf.IsOn == false) tsPerf.IsOn = true;
+                                    else if (optionSelected == 7 && tsPerf.IsOn == true) tsPerf.IsOn = false;
                                 }
                             }
                         }
@@ -403,6 +409,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             Section1.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
             Section2.Background = new SolidColorBrush(Colors.Transparent);
             Section2.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
+            Section03.Background = new SolidColorBrush(Colors.Transparent);
             Section3.Background = new SolidColorBrush(Colors.Transparent);
             Section4.Background = new SolidColorBrush(Colors.Transparent);
             Section51.Background = new SolidColorBrush(Colors.Transparent);
@@ -411,7 +418,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             {
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#F2252525");
 
-                if (isActive == true && optionSelected >= 2 && optionSelected <=3)
+                if (isActive == true && optionSelected >= 2 && optionSelected <= 3)
                 {
                     borders[optionSelected].BorderThickness = new Thickness(2.5);
                 }

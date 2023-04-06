@@ -3,8 +3,11 @@ using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
 using Game_Launcher_V2.Scripts.ADLX;
 using Game_Launcher_V2.Scripts.Epic_Games;
+using Game_Launcher_V2.Scripts.OptionsWindow.PowerControl;
 using Game_Launcher_V2.Windows;
+using Microsoft.VisualBasic;
 using Microsoft.Win32;
+using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,6 +31,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Windows.Devices.Sensors;
+using WindowsInput;
 using static Game_Launcher_V2.Scripts.SystemDeviceControl;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.Forms.MessageBox;
@@ -118,7 +122,7 @@ namespace Game_Launcher_V2
 
                 //set up timer for sensor update
                 DispatcherTimer sensor = new DispatcherTimer();
-                sensor.Interval = TimeSpan.FromSeconds(0.16);
+                sensor.Interval = TimeSpan.FromSeconds(0.14);
                 sensor.Tick += Update_Tick;
                 sensor.Start();
 
@@ -161,6 +165,13 @@ namespace Game_Launcher_V2
                         this.Activate();
                         this.Focus();
                     }
+
+                    _mouseSimulator = new InputSimulator().Mouse;
+
+                    DispatcherTimer _timer = new DispatcherTimer();
+                    _timer.Tick += Controller_Tick;
+                    _timer.Interval = TimeSpan.FromMilliseconds(1000 / RefreshRate);
+                    _timer.Start();
 
                     BasicExeBackend.Garbage_Collect();
 
@@ -224,6 +235,77 @@ namespace Game_Launcher_V2
             catch { }
         }
 
+        private Controller _controller;
+        private IMouseSimulator _mouseSimulator;
+
+        private const int RefreshRate = 61;
+        private const int MovementDivider = 2_000;
+        private const int ScrollDivider = 10_000;
+
+        private bool _wasLCDown;
+        private bool _wasRCDown;
+
+        private void RightButton(State state)
+        {
+            var isBDown = state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.B);
+            if (isBDown && !_wasRCDown) _mouseSimulator.RightButtonDown();
+            if (!isBDown && _wasRCDown) _mouseSimulator.RightButtonUp();
+            _wasRCDown = isBDown;
+        }
+
+        private void LeftButton(State state)
+        {
+            var isADown = state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.A);
+            if (isADown && !_wasLCDown) _mouseSimulator.LeftButtonDown();
+            if (!isADown && _wasLCDown) _mouseSimulator.LeftButtonUp();
+            _wasLCDown = isADown;
+        }
+
+        private void Scroll(State state)
+        {
+            if(state.Gamepad.RightThumbX > 8000 || state.Gamepad.RightThumbX < -8000 || state.Gamepad.RightThumbY > 8000 || state.Gamepad.RightThumbY < -8000)
+            {
+                var x = state.Gamepad.RightThumbX / ScrollDivider;
+                var y = state.Gamepad.RightThumbY / ScrollDivider;
+                _mouseSimulator.HorizontalScroll(x);
+                _mouseSimulator.VerticalScroll(y);
+            }
+
+        }
+
+        private void Movement(State state)
+        {
+            if (state.Gamepad.LeftThumbX > 8000 || state.Gamepad.LeftThumbX < -8000 || state.Gamepad.LeftThumbY > 8000 || state.Gamepad.LeftThumbY < -8000)
+            {
+                var x = state.Gamepad.LeftThumbX / MovementDivider;
+                var y = state.Gamepad.LeftThumbY / MovementDivider;
+                _mouseSimulator.MoveMouseBy(x, -y);
+            }
+        }
+
+        async void Controller_Tick(object sender, EventArgs e)
+        {
+            _controller = new Controller(UserIndex.One);
+            if (_controller.IsConnected && Global.isAccessMenuActive == false && Global.isMainActive == false && Settings.Default.isMouse == true)
+            {
+                _controller.GetState(out var state);
+                Movement(state);
+                Scroll(state);
+                LeftButton(state);
+                RightButton(state);
+            }
+
+            _controller = new Controller(UserIndex.Two);
+            if (_controller.IsConnected && Global.isAccessMenuActive == false && Global.isMainActive == false && Settings.Default.isMouse == true)
+            {
+                _controller.GetState(out var state);
+                Movement(state);
+                Scroll(state);
+                LeftButton(state);
+                RightButton(state);
+            }
+        }
+
         public async void getData()
         {
             Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalStrengthAsync());
@@ -264,6 +346,45 @@ namespace Game_Launcher_V2
 
                             processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
                             RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+
+                            // Set the desired frequencies in MHz
+                            uint freqMax = (uint)Settings.Default.CpuClk;
+                            uint freqMax1 = (uint)Settings.Default.CpuClk;
+
+                            if (Settings.Default.isCPUClk == true)
+                            {
+                                // Hide the PROCFREQMAX and PROCFREQMAX1 attributes
+                                CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX");
+                                CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX1");
+
+                                // Set the AC and DC values for PROCFREQMAX
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", freqMax, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", freqMax, false);
+
+                                // Set the AC and DC values for PROCFREQMAX1
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", freqMax1, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", freqMax1, false);
+
+                                // Activate the current power scheme
+                                CPUboost.SetActiveScheme("scheme_current");
+                            }
+                            else
+                            {
+                                // Hide the PROCFREQMAX and PROCFREQMAX1 attributes
+                                CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX");
+                                CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX1");
+
+                                // Set the AC and DC values for PROCFREQMAX
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", 0, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", 0, false);
+
+                                // Set the AC and DC values for PROCFREQMAX1
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", 0, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", 0, false);
+
+                                // Activate the current power scheme
+                                CPUboost.SetActiveScheme("scheme_current");
+                            }
                         }
 
                         ryzen = 0;

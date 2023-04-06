@@ -25,11 +25,14 @@ namespace Game_Launcher_V2.Scripts
                 {
                     From = ((BlurEffect)image.Effect).Radius,
                     To = 0,
-                    Duration = new Duration(TimeSpan.FromSeconds(0.35))
+                    Duration = new Duration(TimeSpan.FromSeconds(0.3)),
                 };
 
                 // Set the target property to the Radius property of the BlurEffect
                 Storyboard.SetTargetProperty(animation, new PropertyPath("(UIElement.Effect).(BlurEffect.Radius)"));
+
+                // Set the frame rate of the animation to 60 frames per second
+                Timeline.SetDesiredFrameRate(animation, 60);
 
                 // Create a Storyboard and add the animation to it
                 var storyboard = new Storyboard();
@@ -58,8 +61,11 @@ namespace Game_Launcher_V2.Scripts
                 {
                     From = 0,
                     To = 60,
-                    Duration = new Duration(TimeSpan.FromSeconds(0.45))
+                    Duration = new Duration(TimeSpan.FromSeconds(0.4))
                 };
+
+                // Set the frame rate of the animation to 60 frames per second
+                Timeline.SetDesiredFrameRate(animation, 60);
 
                 // Set the target property to the Radius property of the BlurEffect
                 Storyboard.SetTargetProperty(animation, new PropertyPath("(UIElement.Effect).(BlurEffect.Radius)"));
@@ -86,11 +92,14 @@ namespace Game_Launcher_V2.Scripts
                 {
                     From = dockPanel.Opacity,
                     To = 0,
-                    Duration = new Duration(TimeSpan.FromSeconds(0.35))
+                    Duration = new Duration(TimeSpan.FromSeconds(0.3))
                 };
 
                 // Set the target property to the Opacity property of the DockPanel
                 Storyboard.SetTargetProperty(animation, new PropertyPath("Opacity"));
+
+                // Set the frame rate of the animation to 60 frames per second
+                Timeline.SetDesiredFrameRate(animation, 60);
 
                 // Create a Storyboard and add the animation to it
                 var storyboard = new Storyboard();
@@ -109,8 +118,11 @@ namespace Game_Launcher_V2.Scripts
                 {
                     From = 0,
                     To = 1,
-                    Duration = new Duration(TimeSpan.FromSeconds(0.45))
+                    Duration = new Duration(TimeSpan.FromSeconds(0.4))
                 };
+
+                // Set the frame rate of the animation to 60 frames per second
+                Timeline.SetDesiredFrameRate(animation, 60);
 
                 // Set the target property to the Opacity property of the DockPanel
                 Storyboard.SetTargetProperty(animation, new PropertyPath("Opacity"));

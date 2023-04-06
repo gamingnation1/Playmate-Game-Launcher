@@ -238,5 +238,41 @@ namespace Game_Launcher_V2.Properties {
                 this["RyzenAdj"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4000")]
+        public uint CpuClk {
+            get {
+                return ((uint)(this["CpuClk"]));
+            }
+            set {
+                this["CpuClk"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isCPUClk {
+            get {
+                return ((bool)(this["isCPUClk"]));
+            }
+            set {
+                this["isCPUClk"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isMouse {
+            get {
+                return ((bool)(this["isMouse"]));
+            }
+            set {
+                this["isMouse"] = value;
+            }
+        }
     }
 }

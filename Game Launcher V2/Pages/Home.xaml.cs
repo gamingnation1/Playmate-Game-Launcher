@@ -62,6 +62,7 @@ namespace Game_Launcher_V2.Pages
 
         int currentGameStore;
         bool thisWorking = true;
+        int lastSelection = 0;
 
         public Home()
         {
@@ -316,50 +317,60 @@ namespace Game_Launcher_V2.Pages
 
         private void lbGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (thisWorking)
+            if (!hasLaunched)
             {
-                SteamGame model = lbGames.SelectedItem as SteamGame;
-                LoadSteamGames.changeSteamGame(lbGames, lblGameName, lblControl);
-                updateBGImage(model.bgImagePath);
-                playAudio(model.musicPath);
-                lastAudio = model.musicPath;
-                lastBG = model.bgImagePath;
-
-                tbLaunchGameName.Text = model.gameName;
-                tbGameLaunchGameMessage.Text = model.message;
-
-                var bitmapImage = new BitmapImage(new Uri(model.imagePath));
-
-                // Create an ImageBrush with a uniform-to-fill mode and set its ImageSource to the loaded image
-                var brush = new ImageBrush()
+                if (thisWorking)
                 {
-                    Stretch = Stretch.UniformToFill,
-                    ImageSource = bitmapImage
-                };
+                    lastSelection = lbGames.SelectedIndex;
 
-                // Set the existing Border's Background to the ImageBrush
-                tbGameLaunchGameImg.Background = brush;
+                    SteamGame model = lbGames.SelectedItem as SteamGame;
+                    LoadSteamGames.changeSteamGame(lbGames, lblGameName, lblControl);
+                    updateBGImage(model.bgImagePath);
+                    playAudio(model.musicPath);
+                    lastAudio = model.musicPath;
+                    lastBG = model.bgImagePath;
+
+                    tbLaunchGameName.Text = model.gameName;
+                    tbGameLaunchGameMessage.Text = model.message;
+
+                    var bitmapImage = new BitmapImage(new Uri(model.imagePath));
+
+                    // Create an ImageBrush with a uniform-to-fill mode and set its ImageSource to the loaded image
+                    var brush = new ImageBrush()
+                    {
+                        Stretch = Stretch.UniformToFill,
+                        ImageSource = bitmapImage
+                    };
+
+                    // Set the existing Border's Background to the ImageBrush
+                    tbGameLaunchGameImg.Background = brush;
+
+                    lbGames.ScrollIntoView(lbGames.SelectedItem);
+                }
+
+                ListBox listBox = sender as ListBox;
+                ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
+                if (scrollviewer != null)
+                {
+                    if (scrollviewer.HorizontalOffset <= 50)
+                    {
+                        lbGames.Margin = new Thickness(10, -15, 0, 0);
+                    }
+                    else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 125)
+                    {
+                        lbGames.Margin = new Thickness(0, -15, 15, 0);
+                    }
+                    else
+                    {
+                        lbGames.Margin = new Thickness(0, -15, 0, 0);
+                    }
+                }
             }
-
-            ListBox listBox = sender as ListBox;
-            ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
-            if (scrollviewer != null)
+            else
             {
-                if (scrollviewer.HorizontalOffset <= 50)
-                {
-                    lbGames.Margin = new Thickness(10, -15, 0, 0);
-                }
-                else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 125)
-                {
-                    lbGames.Margin = new Thickness(0, -15, 15, 0);
-                }
-                else
-                {
-                    lbGames.Margin = new Thickness(0, -15, 0, 0);
-                }
+                lbGames.SelectedIndex = lastSelection;
+                lbGames.ScrollIntoView(lbGames.SelectedItem);
             }
-
-            lbGames.ScrollIntoView(lbGames.SelectedItem);
         }
 
         string lastBG = "";
@@ -398,7 +409,7 @@ namespace Game_Launcher_V2.Pages
         {
             From = 1,
             To = 0,
-            Duration = new Duration(TimeSpan.FromSeconds(0.50)),
+            Duration = new Duration(TimeSpan.FromSeconds(0.3)),
         };
 
         //Fade in animation
@@ -406,21 +417,29 @@ namespace Game_Launcher_V2.Pages
         {
             From = 0,
             To = 1,
-            Duration = new Duration(TimeSpan.FromSeconds(0.60)),
+            Duration = new Duration(TimeSpan.FromSeconds(0.4)),
         };
 
         //background fade out animation
         private async Task StartAnimationBGFadeOut()
         {
-            GameBG.BeginAnimation(OpacityProperty, fadeOut);
-            await Task.Delay(950);
+            // Set the frame rate of the fadeIn animation to 60 frames per second
+            Timeline.SetDesiredFrameRate(fadeOut, 60);
+
+            // Begin the animation with the DoubleAnimation instance
+            GameBG.BeginAnimation(OpacityProperty, fadeOut, HandoffBehavior.Compose);
+            await Task.Delay(750);
         }
 
         //background fade in animation
         private async Task StartAnimationBGFadeIn()
         {
-            GameBG.BeginAnimation(OpacityProperty, fadeIn);
-            await Task.Delay(950);
+            // Set the frame rate of the fadeIn animation to 60 frames per second
+            Timeline.SetDesiredFrameRate(fadeIn, 60);
+
+            // Begin the animation with the DoubleAnimation instance
+            GameBG.BeginAnimation(OpacityProperty, fadeIn, HandoffBehavior.Compose);
+            await Task.Delay(750);
         }
 
         string lastAudio;
@@ -493,7 +512,7 @@ namespace Game_Launcher_V2.Pages
                         hasLaunched = false;
 
                         Animate.AnimateDockPanelOpacity(gameLaunch);
-
+                        lbGames.Visibility = Visibility.Visible;
                         while (gameLaunch.Opacity != 0)
                         {
                             await Task.Delay(10);
@@ -570,26 +589,10 @@ namespace Game_Launcher_V2.Pages
                     //        {
                     //            await Task.Delay(10);
                     //        }
-
+                    //        lbGames.Visibility = Visibility.Collapsed;
                     //        gameLaunch.Visibility = Visibility.Visible;
 
                     //        Animate.AnimateDockPanelOpacity(gameLaunch);
-                    //    }
-                    //    else
-                    //    {
-                    //        hasLaunched = false;
-
-                    //        Animate.AnimateDockPanelOpacity(gameLaunch);
-
-                    //        while (gameLaunch.Opacity != 0)
-                    //        {
-                    //            await Task.Delay(10);
-                    //        }
-
-                    //        gameLaunch.Visibility = Visibility.Collapsed;
-
-                    //        Animate.AnimateBlur(GameBG);
-                    //        Animate.AnimateDockPanelOpacity(mainBody);
                     //    }
                     //}
 
@@ -637,8 +640,10 @@ namespace Game_Launcher_V2.Pages
                     {
                         if (mainBody.Opacity != 1 && hasLaunched == true)
                         {
-                            Animate.AnimateDockPanelOpacity(gameLaunch);
+                            hasLaunched = false;
 
+                            Animate.AnimateDockPanelOpacity(gameLaunch);
+                            lbGames.Visibility = Visibility.Visible;
                             while (gameLaunch.Opacity != 0)
                             {
                                 await Task.Delay(10);
@@ -648,8 +653,6 @@ namespace Game_Launcher_V2.Pages
 
                             Animate.AnimateBlur(GameBG);
                             Animate.AnimateDockPanelOpacity(mainBody);
-
-                            hasLaunched = false;
                         }
                     }
 
@@ -721,34 +724,40 @@ namespace Game_Launcher_V2.Pages
 
         private void lbGames_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            ListBox listBox = sender as ListBox;
-            ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
-            if (e.Delta > 0)
-                scrollviewer.LineLeft();
-            else
-                scrollviewer.LineRight();
-            e.Handled = true;
-
-            if (scrollviewer != null)
+            if (!hasLaunched)
             {
-                if (scrollviewer.HorizontalOffset <= 50)
-                {
-                    lbGames.Margin = new Thickness(10, -15, 0, 0);
-                }
-                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
-                {
-                    lbGames.Margin = new Thickness(0, -15, 15, 0);
-                }
+                ListBox listBox = sender as ListBox;
+                ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
+                if (e.Delta > 0)
+                    scrollviewer.LineLeft();
                 else
+                    scrollviewer.LineRight();
+                e.Handled = true;
+
+                if (scrollviewer != null)
                 {
-                    lbGames.Margin = new Thickness(0, -15, 0, 0);
+                    if (scrollviewer.HorizontalOffset <= 50)
+                    {
+                        lbGames.Margin = new Thickness(10, -15, 0, 0);
+                    }
+                    else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
+                    {
+                        lbGames.Margin = new Thickness(0, -15, 15, 0);
+                    }
+                    else
+                    {
+                        lbGames.Margin = new Thickness(0, -15, 0, 0);
+                    }
                 }
             }
         }
 
         private void btnControl_Click(object sender, RoutedEventArgs e)
         {
-            loadApp();
+            if (!hasLaunched)
+            {
+                loadApp();
+            }
         }
 
         static string lastWifi;
@@ -757,25 +766,31 @@ namespace Game_Launcher_V2.Pages
 
         private void btnSettings_Click(object sender, RoutedEventArgs e)
         {
-            Global.settings = 1;
+            if (!hasLaunched)
+            {
+                Global.settings = 1;
+            }
         }
 
         private void lbGames_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(lbGames).FirstOrDefault();
-            if (scrollviewer != null)
+            if (!hasLaunched)
             {
-                if (scrollviewer.HorizontalOffset <= 50)
+                ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(lbGames).FirstOrDefault();
+                if (scrollviewer != null)
                 {
-                    lbGames.Margin = new Thickness(10, -15, 0, 0);
-                }
-                else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
-                {
-                    lbGames.Margin = new Thickness(0, -15, 15, 0);
-                }
-                else
-                {
-                    lbGames.Margin = new Thickness(0, -15, 0, 0);
+                    if (scrollviewer.HorizontalOffset <= 50)
+                    {
+                        lbGames.Margin = new Thickness(10, -15, 0, 0);
+                    }
+                    else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
+                    {
+                        lbGames.Margin = new Thickness(0, -15, 15, 0);
+                    }
+                    else
+                    {
+                        lbGames.Margin = new Thickness(0, -15, 0, 0);
+                    }
                 }
             }
         }

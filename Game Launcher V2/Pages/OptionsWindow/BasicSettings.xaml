@@ -44,7 +44,12 @@
                         <Slider Name="sdVol" Style="{StaticResource Horizontal_Slider}" Maximum="100" Minimum="0" Value="8" Width="350" Margin="0,10,0,0" TickFrequency="1" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
                     </StackPanel>
                 </Border>
-
+                <Border Name="Section03"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsMouse" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Controller as Mouse" OnContent="Controller as Mouse" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">Controls controller input mouse simulation</TextBlock>
+                    </StackPanel>
+                </Border>
                 <Border Name="Section3"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
                         <mah:ToggleSwitch Name="tsBootOnStart" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Boot on Start Up" OnContent="Boot on Start Up" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>

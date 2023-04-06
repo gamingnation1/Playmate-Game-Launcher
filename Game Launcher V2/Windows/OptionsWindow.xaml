@@ -6,20 +6,21 @@
         xmlns:local="clr-namespace:Game_Launcher_V2.Windows"
         mc:Ignorable="d"
         Title="OptionsWindow" 
-        Width="{x:Static SystemParameters.PrimaryScreenWidth}"  
-        Height="{x:Static SystemParameters.PrimaryScreenHeight}" 
-        AllowsTransparency="True"
+        ResizeMode="CanResize" 
+        WindowStyle="None"
         Left="0"
         Top="0"
+        MaxWidth="{Binding Source={x:Static SystemParameters.FullPrimaryScreenWidth}, Path=Width}"
+        MaxHeight="{Binding Source={x:Static SystemParameters.FullPrimaryScreenHeight}, Path=Height}"
+        AllowsTransparency="True"
         Background="Transparent"
-        WindowStyle="None"
-        WindowState="Maximized"
         Topmost="True"
         Activated="Window_Activated"
         Deactivated="Window_Deactivated"
-        Visibility="Hidden" ShowInTaskbar="False">
-    
-    <Grid VerticalAlignment="Stretch" Width="{x:Static SystemParameters.PrimaryScreenWidth}"  Height="{x:Static SystemParameters.PrimaryScreenHeight}">
+        Visibility="Hidden" ShowInTaskbar="False" SizeChanged="Window_SizeChanged">
+
+
+    <Grid>
         <DockPanel Name="MainDock"  Visibility="Hidden" LastChildFill="False">
             <DockPanel DockPanel.Dock="Right" Width="462">
                 <Border Name="bTop" DockPanel.Dock="Top" Panel.ZIndex="3" Height="50" Background="#101010">
@@ -41,7 +42,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="6,0,0,0">
-                            
+
                         </StackPanel>
                     </DockPanel>
                 </Border>

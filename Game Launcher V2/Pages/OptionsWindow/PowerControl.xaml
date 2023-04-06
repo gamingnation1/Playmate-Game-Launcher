@@ -65,6 +65,23 @@
                     </StackPanel>
                 </Border>
 
+                <Border Name="Section061"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
+                <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                    <mah:ToggleSwitch Name="tsCPU" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="CPU Clock Speed (MHz)" OnContent="CPU Clock Speed (MHz)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                    <TextBlock Foreground="White" FontSize="15">Allows you to set a CPU clock speed limit</TextBlock>
+                </StackPanel>
+                </Border>
+
+                <Border Name="Section062"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="86" Padding="5" Visibility="Collapsed">
+                    <StackPanel>
+                        <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
+                            <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">CPU Clock</TextBlock>
+                            <TextBlock Name="lblCPUClock"  Foreground="White" FontSize="22" DockPanel.Dock="Right" Margin="0,0,10,0" Text="{Binding ElementName=sdCPUClock, Path=Value}"/>
+                        </DockPanel>
+                        <Slider Name="sdCPUClock" Style="{StaticResource Horizontal_Slider}" Maximum="6000" Minimum="1000" Value="5000" Width="350" Margin="0,10,0,0" TickFrequency="50" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
+                    </StackPanel>
+                </Border>
+
                 <Border Name="Section7"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
                         <mah:ToggleSwitch Name="tsGPU" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="iGPU Clock Speed (MHz)" OnContent="iGPU Clock Speed (MHz)" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
