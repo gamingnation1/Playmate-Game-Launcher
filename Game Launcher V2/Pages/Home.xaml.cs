@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Management;
 using System.Numerics;
 using System.Runtime.Intrinsics.X86;
@@ -29,6 +30,7 @@ using Windows.Devices.Sensors;
 using Windows.Gaming.Input;
 using Windows.Gaming.Preview.GamesEnumeration;
 using ListBox = System.Windows.Controls.ListBox;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Game_Launcher_V2.Pages
 {
@@ -314,62 +316,162 @@ namespace Game_Launcher_V2.Pages
             }
         }
 
-
-        private void lbGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        string audio = "";
+        string image = "";
+        bool held = false;
+        bool waiting = false;
+        private async void lbGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!hasLaunched)
+            try
             {
-                if (thisWorking)
+                if (!hasLaunched)
                 {
-                    lastSelection = lbGames.SelectedIndex;
-
-                    SteamGame model = lbGames.SelectedItem as SteamGame;
-                    LoadSteamGames.changeSteamGame(lbGames, lblGameName, lblControl);
-                    updateBGImage(model.bgImagePath);
-                    playAudio(model.musicPath);
-                    lastAudio = model.musicPath;
-                    lastBG = model.bgImagePath;
-
-                    tbLaunchGameName.Text = model.gameName;
-                    tbGameLaunchGameMessage.Text = model.message;
-
-                    var bitmapImage = new BitmapImage(new Uri(model.imagePath));
-
-                    // Create an ImageBrush with a uniform-to-fill mode and set its ImageSource to the loaded image
-                    var brush = new ImageBrush()
+                    if (thisWorking)
                     {
-                        Stretch = Stretch.UniformToFill,
-                        ImageSource = bitmapImage
-                    };
+                        lastSelection = lbGames.SelectedIndex;
+                        SteamGame model = lbGames.SelectedItem as SteamGame;
+                        LoadSteamGames.changeSteamGame(lbGames, lblGameName, lblControl);
 
-                    // Set the existing Border's Background to the ImageBrush
-                    tbGameLaunchGameImg.Background = brush;
+                        var controller = new Controller(UserIndex.One);
+                        var controller2 = new Controller(UserIndex.Two);
 
+                        tbLaunchGameName.Text = model.gameName;
+                        tbGameLaunchGameMessage.Text = model.message;
+
+                        var bitmapImage = new BitmapImage(new Uri(model.imagePath));
+
+                        // Create an ImageBrush with a uniform-to-fill mode and set its ImageSource to the loaded image
+                        var brush = new ImageBrush()
+                        {
+                            Stretch = Stretch.UniformToFill,
+                            ImageSource = bitmapImage
+                        };
+
+                        // Set the existing Border's Background to the ImageBrush
+                        tbGameLaunchGameImg.Background = brush;
+
+                        lbGames.ScrollIntoView(lbGames.SelectedItem);
+
+                        mediaPlayer.Pause();
+                        if(GameBG.Opacity == 1) await StartAnimationBGFadeOut();
+                        image = model.bgImagePath;
+                        audio = model.musicPath;
+
+                        if (controller2.IsConnected)
+                        {
+                            SharpDX.XInput.Gamepad gamepad = controller2.GetState().Gamepad;
+                            float tx = gamepad.LeftThumbX;
+
+                            // Check if the D-Pad left button is being held down
+                            if (controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) || controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) || tx > 18000 || tx < -18000)
+                            {
+                                held = true;
+                            }
+                            else
+                            {
+                                held = false;
+                            }
+                        }
+                        else if (controller.IsConnected)
+                        {
+                            SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
+                            float tx = gamepad.LeftThumbX;
+
+                            // Check if the D-Pad left button is being held down
+                            if (controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) || controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) || tx > 18000 || tx < -18000)
+                            {
+                                held = true;
+                            }
+                            else
+                            {
+                                held = false;
+                            }
+                        }
+
+                        if (waiting) return;
+
+                        if (held)
+                        {
+                            waiting = true;
+
+                            while (held != false)
+                            {
+                                await Task.Delay(10);
+
+                                if (controller2.IsConnected)
+                                {
+                                    SharpDX.XInput.Gamepad gamepad = controller2.GetState().Gamepad;
+                                    float tx = gamepad.LeftThumbX;
+
+                                    // Check if the D-Pad left button is being held down
+                                    if (controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) || controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) || tx > 18000 || tx < -18000)
+                                    {
+                                        held = true;
+                                    }
+                                    else
+                                    {
+                                        held = false;
+                                    }
+                                }
+                                else if (controller.IsConnected)
+                                {
+                                    SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
+                                    float tx = gamepad.LeftThumbX;
+
+                                    // Check if the D-Pad left button is being held down
+                                    if (controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) || controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) || tx > 18000 || tx < -18000)
+                                    {
+                                        held = true;
+                                    }
+                                    else
+                                    {
+                                        held = false;
+                                    }
+                                }
+                            }
+
+                            waiting = false;
+                            updateBGImage(image);
+                            playAudio(audio);
+                            lastAudio = audio;
+                            lastBG = image;
+                        }
+                        else
+                        {
+                            updateBGImage(image);
+                            playAudio(audio);
+                            lastAudio = audio;
+                            lastBG = image;
+                        }
+                    }
+
+
+                    ListBox listBox = sender as ListBox;
+                    ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
+                    if (scrollviewer != null)
+                    {
+                        if (scrollviewer.HorizontalOffset <= 50)
+                        {
+                            lbGames.Margin = new Thickness(10, -15, 0, 0);
+                        }
+                        else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 125)
+                        {
+                            lbGames.Margin = new Thickness(0, -15, 15, 0);
+                        }
+                        else
+                        {
+                            lbGames.Margin = new Thickness(0, -15, 0, 0);
+                        }
+                    }
+                }
+                else
+                {
+                    lbGames.SelectedIndex = lastSelection;
                     lbGames.ScrollIntoView(lbGames.SelectedItem);
                 }
-
-                ListBox listBox = sender as ListBox;
-                ScrollViewer scrollviewer = Global.FindVisualChildren<ScrollViewer>(listBox).FirstOrDefault();
-                if (scrollviewer != null)
-                {
-                    if (scrollviewer.HorizontalOffset <= 50)
-                    {
-                        lbGames.Margin = new Thickness(10, -15, 0, 0);
-                    }
-                    else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 125)
-                    {
-                        lbGames.Margin = new Thickness(0, -15, 15, 0);
-                    }
-                    else
-                    {
-                        lbGames.Margin = new Thickness(0, -15, 0, 0);
-                    }
-                }
-            }
-            else
+            } catch (Exception ex)
             {
-                lbGames.SelectedIndex = lastSelection;
-                lbGames.ScrollIntoView(lbGames.SelectedItem);
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -380,7 +482,6 @@ namespace Game_Launcher_V2.Pages
             {
                 if (url != lastBG && thisWorking)
                 {
-                    await StartAnimationBGFadeOut();
                     //Save new image and load it
                     var bi = new BitmapImage();
 
@@ -693,7 +794,7 @@ namespace Game_Launcher_V2.Pages
                         Global.GameStore = gameStore;
 
                         checkKeyInput.Stop();
-                    }
+                    }                    
                 }
             }
             catch { }

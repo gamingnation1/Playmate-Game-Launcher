@@ -263,7 +263,7 @@ namespace Game_Launcher_V2
 
         private void Scroll(State state)
         {
-            if(state.Gamepad.RightThumbX > 8000 || state.Gamepad.RightThumbX < -8000 || state.Gamepad.RightThumbY > 8000 || state.Gamepad.RightThumbY < -8000)
+            if (state.Gamepad.RightThumbX > 8000 || state.Gamepad.RightThumbX < -8000 || state.Gamepad.RightThumbY > 8000 || state.Gamepad.RightThumbY < -8000)
             {
                 var x = state.Gamepad.RightThumbX / ScrollDivider;
                 var y = state.Gamepad.RightThumbY / ScrollDivider;
