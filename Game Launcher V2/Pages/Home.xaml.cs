@@ -119,11 +119,11 @@ namespace Game_Launcher_V2.Pages
             {
                 if (scrollviewer.HorizontalOffset <= 50)
                 {
-                    lbGames.Margin = new Thickness(9, -15, 0, 0);
+                    lbGames.Margin = new Thickness(5, -15, 0, 0);
                 }
                 else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                 {
-                    lbGames.Margin = new Thickness(0, -15, 14, 0);
+                    lbGames.Margin = new Thickness(0, -15, 10, 0);
                 }
                 else
                 {
@@ -453,11 +453,11 @@ namespace Game_Launcher_V2.Pages
                     {
                         if (scrollviewer.HorizontalOffset <= 50)
                         {
-                            lbGames.Margin = new Thickness(9, -15, 0, 0);
+                            lbGames.Margin = new Thickness(5, -15, 0, 0);
                         }
-                        else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 125)
+                        else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                         {
-                            lbGames.Margin = new Thickness(0, -15, 14, 0);
+                            lbGames.Margin = new Thickness(0, -15, 10, 0);
                         }
                         else
                         {
@@ -856,11 +856,11 @@ namespace Game_Launcher_V2.Pages
                 {
                     if (scrollviewer.HorizontalOffset <= 50)
                     {
-                        lbGames.Margin = new Thickness(9, -15, 0, 0);
+                        lbGames.Margin = new Thickness(5, -15, 0, 0);
                     }
                     else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                     {
-                        lbGames.Margin = new Thickness(0, -15, 14, 0);
+                        lbGames.Margin = new Thickness(0, -15, 10, 0);
                     }
                     else
                     {
@@ -899,11 +899,11 @@ namespace Game_Launcher_V2.Pages
                 {
                     if (scrollviewer.HorizontalOffset <= 50)
                     {
-                        lbGames.Margin = new Thickness(9, -15, 0, 0);
+                        lbGames.Margin = new Thickness(5, -15, 0, 0);
                     }
                     else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                     {
-                        lbGames.Margin = new Thickness(0, -15, 14, 0);
+                        lbGames.Margin = new Thickness(0, -15, 10, 0);
                     }
                     else
                     {

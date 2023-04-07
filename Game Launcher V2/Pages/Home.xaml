@@ -204,7 +204,7 @@
             <StackPanel VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <Grid HorizontalAlignment="Left" Margin="16,20,0,30" MaxWidth="720">
+                        <Grid HorizontalAlignment="Left" Margin="12,20,0,30" MaxWidth="720">
                             <Border Padding="20,20,20,20" CornerRadius="15" Background="#0f0f0f" Opacity="0.88">
                                 <Border Opacity="0.2">
                                     <Border.Effect>
@@ -237,7 +237,7 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
-                            <Setter Property="Margin" Value="4,0,0,4"></Setter>
+                            <Setter Property="Margin" Value="5,0,0,0"></Setter>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">

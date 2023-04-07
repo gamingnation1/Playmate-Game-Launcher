@@ -175,6 +175,14 @@ namespace Game_Launcher_V2
 
                     BasicExeBackend.Garbage_Collect();
 
+                    // Hide the EPP attributes
+                    CPUboost.HideAttribute("SUB_PROCESSOR", "PERFEPP");
+                    CPUboost.HideAttribute("SUB_PROCESSOR", "PERFEPP1");
+
+                    // Hide the PROCFREQMAX and PROCFREQMAX1 attributes
+                    CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX");
+                    CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX1");
+
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }
@@ -354,10 +362,6 @@ namespace Game_Launcher_V2
 
                             if (Settings.Default.isCPUClk == true)
                             {
-                                // Hide the PROCFREQMAX and PROCFREQMAX1 attributes
-                                CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX");
-                                CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX1");
-
                                 // Set the AC and DC values for PROCFREQMAX
                                 CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", freqMax, true);
                                 CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", freqMax, false);
@@ -371,10 +375,7 @@ namespace Game_Launcher_V2
                             }
                             else
                             {
-                                // Hide the PROCFREQMAX and PROCFREQMAX1 attributes
-                                CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX");
-                                CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX1");
-
+     
                                 // Set the AC and DC values for PROCFREQMAX
                                 CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", 0, true);
                                 CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", 0, false);
@@ -389,24 +390,24 @@ namespace Game_Launcher_V2
 
                             if (Settings.Default.isEPP == true)
                             {
-                                // Hide the EPP attributes
-                                CPUboost.HideAttribute("SUB_PROCESSOR", "PERFEPP");
-
+                               
                                 // Set the AC and DC values for PROCFREQMAX
                                 CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, false);;
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, false);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", EPP, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", EPP, false);
 
                                 // Activate the current power scheme
                                 CPUboost.SetActiveScheme("scheme_current");
                             }
                             else
                             {
-                                // Hide the EPP attributes
-                                CPUboost.HideAttribute("SUB_PROCESSOR", "PERFEPP ");
 
                                 // Set the AC and DC values for EPP
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 5, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 50, true);
                                 CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 50, false);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", 50, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", 50, false);
 
                                 // Activate the current power scheme
                                 CPUboost.SetActiveScheme("scheme_current");
