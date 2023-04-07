@@ -9,12 +9,12 @@
         Background="Transparent"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        Title="SplashScreen" Height="250" Width="500">
+        Title="SplashScreen" Height="120" Width="120"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
     <Grid>
-        <Border Background="#E6181818" CornerRadius="60" Padding="20">
+        <Border Background="#E6181818" CornerRadius="40" Padding="20">
             <StackPanel VerticalAlignment="Center">
-                <TextBlock TextAlignment="Center" Foreground="White" FontSize="40">Setting Up Launcher</TextBlock>
-                <TextBlock TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="18" Margin="0,20,0,0">Please wait a little while we detect your installed games. This should only take a few moments.</TextBlock>
+                <mah:ProgressRing Foreground="LightGray"></mah:ProgressRing>
             </StackPanel>
         </Border>
     </Grid>

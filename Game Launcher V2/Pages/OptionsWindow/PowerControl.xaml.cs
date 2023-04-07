@@ -328,7 +328,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 {
                     if (Settings.Default.CPUName.ToLower().Contains("intel"))
                     {
-                        borders = new Border[] { Section4, Section5, Section6 };
+                        borders = new Border[] { Section4, Section5, Section6, Section061, Section062, Section081, Section082 };
                     }
                     else
                     {
@@ -376,7 +376,11 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
                             {
                                 int max = 0;
-                                if (Settings.Default.CPUName.ToLower().Contains("intel")) max = 2;
+                                if (Settings.Default.CPUName.ToLower().Contains("intel"))
+                                {
+                                    max = 6;
+                                    if (tsEPP.IsOn == false) max = 5;
+                                }
                                 else if (tsFPS.IsOn == false) max = 11;
                                 else max = 12;
 
