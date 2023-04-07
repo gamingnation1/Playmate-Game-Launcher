@@ -316,8 +316,6 @@ namespace Game_Launcher_V2.Pages
             }
         }
 
-        string audio = "";
-        string image = "";
         bool held = false;
         bool waiting = false;
         private async void lbGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -354,14 +352,11 @@ namespace Game_Launcher_V2.Pages
 
                         mediaPlayer.Pause();
                         if(GameBG.Opacity == 1) await StartAnimationBGFadeOut();
-                        image = model.bgImagePath;
-                        audio = model.musicPath;
 
                         if (controller2.IsConnected)
                         {
                             SharpDX.XInput.Gamepad gamepad = controller2.GetState().Gamepad;
                             float tx = gamepad.LeftThumbX;
-
                             // Check if the D-Pad left button is being held down
                             if (controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) || controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) || tx > 18000 || tx < -18000)
                             {
@@ -376,7 +371,6 @@ namespace Game_Launcher_V2.Pages
                         {
                             SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
                             float tx = gamepad.LeftThumbX;
-
                             // Check if the D-Pad left button is being held down
                             if (controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) || controller.GetState().Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadRight) || tx > 18000 || tx < -18000)
                             {
@@ -394,7 +388,7 @@ namespace Game_Launcher_V2.Pages
                         {
                             waiting = true;
 
-                            while (held != false)
+                            while (held)
                             {
                                 await Task.Delay(10);
 
@@ -430,18 +424,21 @@ namespace Game_Launcher_V2.Pages
                                 }
                             }
 
+                            model = lbGames.SelectedItem as SteamGame;
                             waiting = false;
-                            updateBGImage(image);
-                            playAudio(audio);
-                            lastAudio = audio;
-                            lastBG = image;
+                            updateBGImage(model.bgImagePath);
+                            playAudio(model.musicPath);
+                            lastAudio = model.musicPath;
+                            lastBG = model.bgImagePath;
                         }
                         else
                         {
-                            updateBGImage(image);
-                            playAudio(audio);
-                            lastAudio = audio;
-                            lastBG = image;
+                            model = lbGames.SelectedItem as SteamGame;
+                            waiting = false;
+                            updateBGImage(model.bgImagePath);
+                            playAudio(model.musicPath);
+                            lastAudio = model.musicPath;
+                            lastBG = model.bgImagePath;
                         }
                     }
 
