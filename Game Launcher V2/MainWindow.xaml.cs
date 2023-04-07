@@ -350,6 +350,7 @@ namespace Game_Launcher_V2
                             // Set the desired frequencies in MHz
                             uint freqMax = (uint)Settings.Default.CpuClk;
                             uint freqMax1 = (uint)Settings.Default.CpuClk;
+                            uint EPP = (uint)Settings.Default.EPP;
 
                             if (Settings.Default.isCPUClk == true)
                             {
@@ -381,6 +382,31 @@ namespace Game_Launcher_V2
                                 // Set the AC and DC values for PROCFREQMAX1
                                 CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", 0, true);
                                 CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", 0, false);
+
+                                // Activate the current power scheme
+                                CPUboost.SetActiveScheme("scheme_current");
+                            }
+
+                            if (Settings.Default.isEPP == true)
+                            {
+                                // Hide the EPP attributes
+                                CPUboost.HideAttribute("SUB_PROCESSOR", "PERFEPP");
+
+                                // Set the AC and DC values for PROCFREQMAX
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, false);;
+
+                                // Activate the current power scheme
+                                CPUboost.SetActiveScheme("scheme_current");
+                            }
+                            else
+                            {
+                                // Hide the EPP attributes
+                                CPUboost.HideAttribute("SUB_PROCESSOR", "PERFEPP ");
+
+                                // Set the AC and DC values for EPP
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 5, true);
+                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 50, false);
 
                                 // Activate the current power scheme
                                 CPUboost.SetActiveScheme("scheme_current");

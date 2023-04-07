@@ -50,6 +50,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             sdGFXClock.Value = Settings.Default.iGFXClk;
             sdFPSLimit.Value = Settings.Default.fpsLimit;
             sdCPUClock.Value = Settings.Default.CpuClk;
+            sdEPP.Value = Settings.Default.EPP;
 
             if (Settings.Default.isTemp == true) tsTemp.IsOn = true;
             if (Settings.Default.isPower == true) tsPower.IsOn = true;
@@ -57,6 +58,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             if (Settings.Default.isiGFX == true) tsGPU.IsOn = true;
             if (Settings.Default.isFPSLimit == true) tsFPS.IsOn = true;
             if (Settings.Default.isCPUClk == true) tsCPU.IsOn = true;
+            if (Settings.Default.isEPP == true) tsEPP.IsOn = true;
 
             if (Settings.Default.CPUName.ToLower().Contains("intel"))
             {
@@ -128,6 +130,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             if (tsPower.IsOn == true) Section5.Visibility = Visibility.Visible; else Section5.Visibility = Visibility.Collapsed;
             if (tsCPU.IsOn == true) Section062.Visibility = Visibility.Visible; else Section062.Visibility = Visibility.Collapsed;
             if (tsGPU.IsOn == true) Section8.Visibility = Visibility.Visible; else Section8.Visibility = Visibility.Collapsed;
+            if (tsEPP.IsOn == true) Section082.Visibility = Visibility.Visible; else Section082.Visibility = Visibility.Collapsed;
             if (tsFPS.IsOn == true) Section10.Visibility = Visibility.Visible; else Section10.Visibility = Visibility.Collapsed;
 
             if (isFirstBoot == false)
@@ -137,12 +140,14 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 Settings.Default.isBoost = tsCPUClk.IsOn;
                 Settings.Default.isCPUClk = tsCPU.IsOn;
                 Settings.Default.isiGFX = tsGPU.IsOn;
+                Settings.Default.isEPP = tsEPP.IsOn;
                 Settings.Default.isFPSLimit = tsFPS.IsOn;
                 Settings.Default.TempLimit = (int)sdTemp.Value;
                 Settings.Default.PowerLimit = (int)sdPower.Value;
                 Settings.Default.iGFXClk = (int)sdGFXClock.Value;
                 Settings.Default.fpsLimit = (int)sdFPSLimit.Value;
                 Settings.Default.CpuClk = (uint)sdCPUClock.Value;
+                Settings.Default.EPP = (uint)sdEPP.Value;
                 Settings.Default.Save();
                 applySettings();
             }
@@ -175,12 +180,14 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         Settings.Default.isBoost = tsCPUClk.IsOn;
                         Settings.Default.isCPUClk = tsCPU.IsOn;
                         Settings.Default.isiGFX = tsGPU.IsOn;
+                        Settings.Default.isEPP = tsEPP.IsOn;
                         Settings.Default.isFPSLimit = tsFPS.IsOn;
                         Settings.Default.TempLimit = (int)sdTemp.Value;
                         Settings.Default.PowerLimit = (int)sdPower.Value;
                         Settings.Default.iGFXClk = (int)sdGFXClock.Value;
                         Settings.Default.fpsLimit = (int)sdFPSLimit.Value;
                         Settings.Default.CpuClk = (uint)sdCPUClock.Value;
+                        Settings.Default.EPP = (uint)sdEPP.Value;
                         Settings.Default.RyzenAdj = commandArguments;
                         Settings.Default.Save();
                     }
@@ -325,7 +332,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     }
                     else
                     {
-                        borders = new Border[] { Section2, Section3, Section4, Section5, Section6, Section061, Section062, Section7, Section8, Section9, Section10 };
+                        borders = new Border[] { Section2, Section3, Section4, Section5, Section6, Section061, Section062, Section7, Section8, Section081, Section082, Section9, Section10 };
                     }
 
                     lblBat.Text = Time_and_Bat.batPercent;
@@ -370,8 +377,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                             {
                                 int max = 0;
                                 if (Settings.Default.CPUName.ToLower().Contains("intel")) max = 2;
-                                else if (tsFPS.IsOn == false) max = 9;
-                                else max = 10;
+                                else if (tsFPS.IsOn == false) max = 11;
+                                else max = 12;
 
                                 if (optionSelected < max) optionSelected++;
                                 else optionSelected = max;
@@ -392,6 +399,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (borders[optionSelected] == Section5) selectedSlider = sdPower;
                                 if (borders[optionSelected] == Section062) selectedSlider = sdCPUClock;
                                 if (borders[optionSelected] == Section8) selectedSlider = sdGFXClock;
+                                if (borders[optionSelected] == Section082) selectedSlider = sdEPP;
                                 if (borders[optionSelected] == Section10) selectedSlider = sdFPSLimit;
 
                                 value = (int)selectedSlider.Value;
@@ -421,6 +429,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (borders[optionSelected] == Section5) selectedSlider = sdPower;
                                 if (borders[optionSelected] == Section062) selectedSlider = sdCPUClock;
                                 if (borders[optionSelected] == Section8) selectedSlider = sdGFXClock;
+                                if (borders[optionSelected] == Section082) selectedSlider = sdEPP;
                                 if (borders[optionSelected] == Section10) selectedSlider = sdFPSLimit;
 
                                 value = (int)selectedSlider.Value;
@@ -458,6 +467,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section7 && tsGPU.IsOn == false) tsGPU.IsOn = true;
                                 else if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section7 && tsGPU.IsOn == true) tsGPU.IsOn = false;
 
+                                if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section081 && tsEPP.IsOn == false) tsEPP.IsOn = true;
+                                else if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section081 && tsEPP.IsOn == true) tsEPP.IsOn = false;
+
                                 if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section9 && tsFPS.IsOn == false) tsFPS.IsOn = true;
                                 else if (borders[optionSelected].Visibility == Visibility.Visible && borders[optionSelected] == Section9 && tsFPS.IsOn == true) tsFPS.IsOn = false;
 
@@ -472,6 +484,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                                 if (borders[optionSelected] == Section8 && isActive == false) isActive = true;
                                 else if (borders[optionSelected] == Section8 && isActive == true) isActive = false;
+
+                                if (borders[optionSelected] == Section082 && isActive == false) isActive = true;
+                                else if (borders[optionSelected] == Section082 && isActive == true) isActive = false;
 
                                 if (borders[optionSelected] == Section10 && isActive == false) isActive = true;
                                 else if (borders[optionSelected] == Section10 && isActive == true) isActive = false;
@@ -520,6 +535,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             Section7.Background = new SolidColorBrush(Colors.Transparent);
             Section8.Background = new SolidColorBrush(Colors.Transparent);
             Section8.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
+            Section081.Background = new SolidColorBrush(Colors.Transparent);
+            Section082.Background = new SolidColorBrush(Colors.Transparent);
+            Section082.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
             Section9.Background = new SolidColorBrush(Colors.Transparent);
             Section10.Background = new SolidColorBrush(Colors.Transparent);
             Section10.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
@@ -542,7 +560,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 if (borders[optionSelected] == Section10 && Section10.Visibility == Visibility.Collapsed) { optionSelected = 7; }
                 if (borders[optionSelected] == Section10 && tsFPS.IsOn == false && lastBorder == Section10) { isActive = false; }
 
-                borders[optionSelected].Background = (Brush)bc.ConvertFrom("#FF3F3F3F");
+                borders[optionSelected].Background = (Brush)bc.ConvertFrom("#FF393939");
                 lastBorder = borders[optionSelected];
 
                 if (isActive == true)

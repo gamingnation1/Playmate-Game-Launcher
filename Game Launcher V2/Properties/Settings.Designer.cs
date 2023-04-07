@@ -274,5 +274,29 @@ namespace Game_Launcher_V2.Properties {
                 this["isMouse"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isEPP {
+            get {
+                return ((bool)(this["isEPP"]));
+            }
+            set {
+                this["isEPP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public uint EPP {
+            get {
+                return ((uint)(this["EPP"]));
+            }
+            set {
+                this["EPP"] = value;
+            }
+        }
     }
 }

@@ -416,7 +416,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             if (connected)
             {
-                borders[optionSelected].Background = (Brush)bc.ConvertFrom("#FF3F3F3F");
+                borders[optionSelected].Background = (Brush)bc.ConvertFrom("#FF393939");
 
                 if (isActive == true && optionSelected >= 2 && optionSelected <= 3)
                 {

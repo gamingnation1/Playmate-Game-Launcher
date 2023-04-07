@@ -98,7 +98,24 @@
                         <Slider Name="sdGFXClock" Style="{StaticResource Horizontal_Slider}" Maximum="2600" Minimum="200" Value="1500" Width="350" Margin="0,10,0,0" TickFrequency="50" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
                     </StackPanel>
                 </Border>
-                
+
+                <Border Name="Section081"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsEPP" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="EPP Policy" OnContent="EPP Policy" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">Allows you to set a custom EPP policy</TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <Border Name="Section082"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="86" Padding="5" Visibility="Collapsed">
+                    <StackPanel>
+                        <DockPanel VerticalAlignment="top" HorizontalAlignment="Stretch" LastChildFill="False">
+                            <TextBlock Foreground="White" FontSize="22" DockPanel.Dock="Left">EPP Policy</TextBlock>
+                            <TextBlock Name="lblEPP"  Foreground="White" FontSize="22" DockPanel.Dock="Right" Margin="0,0,10,0" Text="{Binding ElementName=sdEPP, Path=Value}"/>
+                        </DockPanel>
+                        <Slider Name="sdEPP" Style="{StaticResource Horizontal_Slider}" Maximum="100" Minimum="0" Value="50" Width="350" Margin="0,10,0,0" TickFrequency="50" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
+                    </StackPanel>
+                </Border>
+
                 <Border Name="Section9"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5" Visibility="Visible">
                     <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
                         <mah:ToggleSwitch Name="tsFPS" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="FPS Limit" OnContent="FPS Limit" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
