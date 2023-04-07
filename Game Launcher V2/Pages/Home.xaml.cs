@@ -521,8 +521,14 @@ namespace Game_Launcher_V2.Pages
         //background fade out animation
         private async Task StartAnimationBGFadeOut()
         {
-            // Set the frame rate of the fadeIn animation to 60 frames per second
+            // Get the current opacity value of GameBG
+            double currentOpacity = GameBG.Opacity;
+
+            // Set the frame rate of the fadeOut animation to 60 frames per second
             Timeline.SetDesiredFrameRate(fadeOut, 60);
+
+            // Set the From property of the fadeOut animation to the current opacity value
+            fadeOut.From = currentOpacity;
 
             // Begin the animation with the DoubleAnimation instance
             GameBG.BeginAnimation(OpacityProperty, fadeOut, HandoffBehavior.Compose);
@@ -532,8 +538,14 @@ namespace Game_Launcher_V2.Pages
         //background fade in animation
         private async Task StartAnimationBGFadeIn()
         {
-            // Set the frame rate of the fadeIn animation to 60 frames per second
-            Timeline.SetDesiredFrameRate(fadeIn, 60);
+            // Get the current opacity value of GameBG
+            double currentOpacity = GameBG.Opacity;
+
+            // Set the frame rate of the fadeOut animation to 60 frames per second
+            Timeline.SetDesiredFrameRate(fadeOut, 60);
+
+            // Set the From property of the fadeOut animation to the current opacity value
+            fadeIn.From = currentOpacity;
 
             // Begin the animation with the DoubleAnimation instance
             GameBG.BeginAnimation(OpacityProperty, fadeIn, HandoffBehavior.Compose);
