@@ -29,6 +29,7 @@ using System.Windows.Threading;
 using Windows.Devices.Sensors;
 using Windows.Gaming.Input;
 using Windows.Gaming.Preview.GamesEnumeration;
+using Cursors = System.Windows.Input.Cursors;
 using ListBox = System.Windows.Controls.ListBox;
 using MessageBox = System.Windows.MessageBox;
 
@@ -118,11 +119,11 @@ namespace Game_Launcher_V2.Pages
             {
                 if (scrollviewer.HorizontalOffset <= 50)
                 {
-                    lbGames.Margin = new Thickness(10, -15, 0, 0);
+                    lbGames.Margin = new Thickness(9, -15, 0, 0);
                 }
                 else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                 {
-                    lbGames.Margin = new Thickness(0, -15, 15, 0);
+                    lbGames.Margin = new Thickness(0, -15, 14, 0);
                 }
                 else
                 {
@@ -348,7 +349,10 @@ namespace Game_Launcher_V2.Pages
                         // Set the existing Border's Background to the ImageBrush
                         tbGameLaunchGameImg.Background = brush;
 
+                        lbGames.UpdateLayout();
                         lbGames.ScrollIntoView(lbGames.SelectedItem);
+                        FrameworkElement container = (FrameworkElement)lbGames.ItemContainerGenerator.ContainerFromItem(lbGames.SelectedItem);
+                        container?.BringIntoView();
 
                         mediaPlayer.Pause();
                         if(GameBG.Opacity == 1) await StartAnimationBGFadeOut();
@@ -449,11 +453,11 @@ namespace Game_Launcher_V2.Pages
                     {
                         if (scrollviewer.HorizontalOffset <= 50)
                         {
-                            lbGames.Margin = new Thickness(10, -15, 0, 0);
+                            lbGames.Margin = new Thickness(9, -15, 0, 0);
                         }
                         else if (scrollviewer.HorizontalOffset == scrollviewer.ScrollableWidth - 125)
                         {
-                            lbGames.Margin = new Thickness(0, -15, 15, 0);
+                            lbGames.Margin = new Thickness(0, -15, 14, 0);
                         }
                         else
                         {
@@ -651,10 +655,14 @@ namespace Game_Launcher_V2.Pages
                 {
                     if (connected && bottomBar.Visibility == Visibility.Hidden) bottomBar.Visibility = Visibility.Visible;
                     if (!connected && bottomBar.Visibility == Visibility.Visible) bottomBar.Visibility = Visibility.Hidden;
+
+                    if(this.Cursor != Cursors.None && connected) this.Cursor = Cursors.None;
+                    if (this.Cursor == Cursors.None && !connected) this.Cursor = Cursors.Arrow;
                 }
 
                 if (connected && isActive)
                 {
+
                     //get controller state
                     var state = controller.GetState();
 
@@ -803,7 +811,7 @@ namespace Game_Launcher_V2.Pages
                         Global.GameStore = gameStore;
 
                         checkKeyInput.Stop();
-                    }                    
+                    }
                 }
             }
             catch { }
@@ -848,11 +856,11 @@ namespace Game_Launcher_V2.Pages
                 {
                     if (scrollviewer.HorizontalOffset <= 50)
                     {
-                        lbGames.Margin = new Thickness(10, -15, 0, 0);
+                        lbGames.Margin = new Thickness(9, -15, 0, 0);
                     }
                     else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                     {
-                        lbGames.Margin = new Thickness(0, -15, 15, 0);
+                        lbGames.Margin = new Thickness(0, -15, 14, 0);
                     }
                     else
                     {
@@ -891,11 +899,11 @@ namespace Game_Launcher_V2.Pages
                 {
                     if (scrollviewer.HorizontalOffset <= 50)
                     {
-                        lbGames.Margin = new Thickness(10, -15, 0, 0);
+                        lbGames.Margin = new Thickness(9, -15, 0, 0);
                     }
                     else if (scrollviewer.HorizontalOffset >= scrollviewer.ScrollableWidth - 125)
                     {
-                        lbGames.Margin = new Thickness(0, -15, 15, 0);
+                        lbGames.Margin = new Thickness(0, -15, 14, 0);
                     }
                     else
                     {
