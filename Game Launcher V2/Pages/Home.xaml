@@ -216,7 +216,7 @@
                                 </Border>
                             </Border>
                             <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
-                                <TextBlock Name="lblGameName" Foreground="White" FontSize="28" FontWeight="SemiBold" Width="auto" VerticalAlignment="Center" Margin="0,-3,0,0">Game Name Menu Bar Top</TextBlock>
+                                <TextBlock Name="lblGameName" Foreground="White" FontSize="28" FontWeight="SemiBold" Width="auto" VerticalAlignment="Center" Margin="0,-3,0,0">Downloading Assets</TextBlock>
                             </StackPanel>
                         </Grid>
                     </Viewbox>

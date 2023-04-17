@@ -11,6 +11,7 @@ using GameLib.Core;
 using System.IO;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 using System.Drawing;
+using System.Net.NetworkInformation;
 
 namespace Game_Launcher_V2.Scripts
 {
@@ -18,7 +19,8 @@ namespace Game_Launcher_V2.Scripts
     {
         private static LauncherManager launcherManager = new LauncherManager(new LauncherOptions() { QueryOnlineData = true });
 
-        public static void LoadAllGameData(ListBox lbGames)
+        public static List<string> gameURLs = new List<string>(), gamePaths = new List<string>();
+        public static async void LoadAllGameData(ListBox lbGames)
         {
             List<SteamGame> games = new List<SteamGame>();
 
@@ -72,7 +74,11 @@ namespace Game_Launcher_V2.Scripts
                         }
                         else
                         {
-                            icon = path + $"\\GameAssets\\Default\\icon.png";
+                            if (IsInternetAvailable())
+                            {
+                                icon = await GetImages.GetGridImageUrl(gameName);
+                            }
+                            else icon = path + $"\\GameAssets\\Default\\icon.png";
                         }
 
                         if (File.Exists(path + $"\\GameAssets\\{gameName}\\background.jpg"))
@@ -89,7 +95,11 @@ namespace Game_Launcher_V2.Scripts
                         }
                         else
                         {
-                            background = path + $"\\GameAssets\\Default\\background.jpg";
+                            if (IsInternetAvailable())
+                            {
+                                 background = await GetImages.GetHeroImageUrl(gameName);
+                            }
+                            else icon = path + $"\\GameAssets\\Default\\background.png";
                         }
 
                         if (File.Exists(path + $"\\GameAssets\\{gameName}\\audio.m4a"))
@@ -133,7 +143,7 @@ namespace Game_Launcher_V2.Scripts
                     imagePath = path + $"\\GameAssets\\Default\\icon.png",
                     bgImagePath = path + $"\\GameAssets\\Default\\background.jpg",
                 musicPath = path + $"\\GameAssets\\Default\\audio.mp3",
-                    message = "no Games Found"
+                    message = "No Games Found"
                 });
             }
 
@@ -271,6 +281,22 @@ namespace Game_Launcher_V2.Scripts
                 }
             }
             return path;
+        }
+
+        public static bool IsInternetAvailable()
+        {
+            try
+            {
+                using (var ping = new Ping())
+                {
+                    var result = ping.Send("8.8.8.8", 2000); // ping Google DNS server
+                    return result.Status == IPStatus.Success;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

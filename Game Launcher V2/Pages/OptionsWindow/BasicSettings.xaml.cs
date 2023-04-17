@@ -189,31 +189,39 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
         public async void updateBrightness(int newBirghtness)
         {
-            await Task.Run(() =>
+            try
             {
-                var mclass = new ManagementClass("WmiMonitorBrightnessMethods")
+                await Task.Run(() =>
                 {
-                    Scope = new ManagementScope(@"\\.\root\wmi")
-                };
-                var instances = mclass.GetInstances();
-                var args = new object[] { 1, newBirghtness };
-                foreach (ManagementObject instance in instances)
-                {
-                    instance.InvokeMethod("WmiSetBrightness", args);
-                }
-            });
+                    var mclass = new ManagementClass("WmiMonitorBrightnessMethods")
+                    {
+                        Scope = new ManagementScope(@"\\.\root\wmi")
+                    };
+                    var instances = mclass.GetInstances();
+                    var args = new object[] { 1, newBirghtness };
+                    foreach (ManagementObject instance in instances)
+                    {
+                        instance.InvokeMethod("WmiSetBrightness", args);
+                    }
+                });
+            }
+            catch { }
         }
         public static void getBrightness()
         {
-            using var mclass = new ManagementClass("WmiMonitorBrightness")
+            try
             {
-                Scope = new ManagementScope(@"\\.\root\wmi")
-            };
-            using var instances = mclass.GetInstances();
-            foreach (ManagementObject instance in instances)
-            {
-                bright = (byte)instance.GetPropertyValue("CurrentBrightness");
+                using var mclass = new ManagementClass("WmiMonitorBrightness")
+                {
+                    Scope = new ManagementScope(@"\\.\root\wmi")
+                };
+                using var instances = mclass.GetInstances();
+                foreach (ManagementObject instance in instances)
+                {
+                    bright = (byte)instance.GetPropertyValue("CurrentBrightness");
+                }
             }
+            catch { }
         }
 
         public static async void getVol()
