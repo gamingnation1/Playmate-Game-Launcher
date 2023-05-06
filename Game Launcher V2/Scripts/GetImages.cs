@@ -20,7 +20,7 @@ namespace Game_Launcher_V2.Scripts
     {
         public static async Task<string> GetGridImageUrl(string gameName)
         {
-            var client = new SteamGridDb("2b1dd6701a770112a9bef38ee1652f3d");
+            var client = new SteamGridDb("e02e1643e9eda0f724375bd28e0f5ff9");
             SteamGridDbGame[]? games = await client.SearchForGamesAsync(gameName);
 
             // Instantiate the string distance algorithm
@@ -72,7 +72,7 @@ namespace Game_Launcher_V2.Scripts
 
         public static async Task<string> GetHeroImageUrl(string gameName)
         {
-            var client = new SteamGridDb("2b1dd6701a770112a9bef38ee1652f3d");
+            var client = new SteamGridDb("e02e1643e9eda0f724375bd28e0f5ff9");
             SteamGridDbGame[]? games = await client.SearchForGamesAsync(gameName);
 
             // Instantiate the string distance algorithm

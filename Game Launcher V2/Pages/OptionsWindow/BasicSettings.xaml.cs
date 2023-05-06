@@ -34,6 +34,7 @@ using NAudio.CoreAudioApi;
 using static System.Collections.Specialized.BitVector32;
 using Windows.Devices.Radios;
 using Windows.Networking.Connectivity;
+using Windows.Devices.Enumeration;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -62,6 +63,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             sdVol.Value = vol;
             sdBright.Value = bright;
 
+            tsMic.IsOn = Settings.Default.isMuted;
             tsMouse.IsOn = Settings.Default.isMouse;
             tsBootOnStart.IsOn = Settings.Default.bootOnStart;
             tsMini.IsOn = Settings.Default.startMinimised;
@@ -71,7 +73,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             isFirstBoot = false;
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.14);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.1);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -122,6 +124,10 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 SetWifiEnabled();
                 SetBluetoothEnabled();
 
+                if (tsMic.IsOn == true) SetRecordingDeviceState(true);
+                else SetRecordingDeviceState(false);
+
+                if (tsMic.IsOn == true) Settings.Default.isMuted = true; else Settings.Default.isMuted = false;
                 if (tsMouse.IsOn == true) Settings.Default.isMouse = true; else Settings.Default.isMouse = false;
                 if (tsMini.IsOn == true) Settings.Default.startMinimised = true; else Settings.Default.startMinimised = false;
                 if (tsBootOnStart.IsOn == true) Settings.Default.bootOnStart = true; else Settings.Default.bootOnStart = false;
@@ -132,6 +138,20 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             }
         }
 
+        static async void SetRecordingDeviceState(bool mute)
+        {
+            await Task.Run(() =>
+            {
+                using var enumerator = new MMDeviceEnumerator();
+                var devices = enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
+
+                foreach (var device in devices)
+                {
+                    device.AudioEndpointVolume.Mute = mute;
+                }
+            });
+        }
+
         private async void getWifi()
         {
             // Check if Wi-Fi is enabled
@@ -140,7 +160,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             bool isWifiEnabled = (wifiRadio != null && wifiRadio.State == RadioState.On);
 
             tsWifi.IsOn = isWifiEnabled;
-
         }
 
         private async void getBluetooth()
@@ -274,7 +293,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
             if (Global.AccessMenuSelected == 0 && Global.isAccessMenuOpen == true)
             {
-                borders = new Border[] { Section01, Section02, Section1, Section2, Section03, Section3, Section4, Section51 };
+                borders = new Border[] { Section01, Section02, Section1, Section2, Section0301, Section03, Section3, Section4, Section51 };
 
                 try
                 {
@@ -313,12 +332,33 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                     if (optionSelected > 0) optionSelected--;
                                     else optionSelected = 0;
 
+                                    GeneralTransform transform = borders[optionSelected].TransformToAncestor(svMain);
+                                    System.Windows.Point topPosition = transform.Transform(new System.Windows.Point(0, 0));
+                                    System.Windows.Point bottomPosition = transform.Transform(new System.Windows.Point(0, borders[optionSelected].ActualHeight));
+
+                                    // Check if the border is not fully visible in the current viewport
+                                    if (topPosition.Y < svMain.VerticalOffset || bottomPosition.Y > svMain.VerticalOffset + svMain.ViewportHeight)
+                                    {
+                                        // Scroll to the position of the top of the border
+                                        svMain.ScrollToVerticalOffset(topPosition.Y);
+                                    }
                                 }
 
                                 if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
                                 {
-                                    if (optionSelected < 7) optionSelected++;
-                                    else optionSelected = 7;
+                                    if (optionSelected < 8) optionSelected++;
+                                    else optionSelected = 8;
+
+                                    GeneralTransform transform = borders[optionSelected].TransformToAncestor(svMain);
+                                    System.Windows.Point topPosition = transform.Transform(new System.Windows.Point(0, 0));
+                                    System.Windows.Point bottomPosition = transform.Transform(new System.Windows.Point(0, borders[optionSelected].ActualHeight));
+
+                                    // Check if the border is not fully visible in the current viewport
+                                    if (topPosition.Y < svMain.VerticalOffset || bottomPosition.Y > svMain.VerticalOffset + svMain.ViewportHeight)
+                                    {
+                                        // Scroll to the position of the top of the border
+                                        svMain.ScrollToVerticalOffset(bottomPosition.Y);
+                                    }
                                 }
 
                                 if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true || tx < -18000 && Global.shortCut == false && isActive == true)
@@ -378,17 +418,20 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                     if (borders[optionSelected] == Section1 && isActive == false || borders[optionSelected] == Section2 && isActive == false) isActive = true;
                                     else isActive = false;
 
-                                    if (optionSelected == 4 && tsMouse.IsOn == false) tsMouse.IsOn = true;
-                                    else if (optionSelected == 4 && tsMouse.IsOn == true) tsMouse.IsOn = false;
+                                    if (optionSelected == 4 && tsMic.IsOn == false) tsMic.IsOn = true;
+                                    else if (optionSelected == 4 && tsMic.IsOn == true) tsMic.IsOn = false;
 
-                                    if (optionSelected == 5 && tsBootOnStart.IsOn == false) tsBootOnStart.IsOn = true;
-                                    else if (optionSelected == 5 && tsBootOnStart.IsOn == true) tsBootOnStart.IsOn = false;
+                                    if (optionSelected == 5 && tsMouse.IsOn == false) tsMouse.IsOn = true;
+                                    else if (optionSelected == 5 && tsMouse.IsOn == true) tsMouse.IsOn = false;
 
-                                    if (optionSelected == 6 && tsMini.IsOn == false) tsMini.IsOn = true;
-                                    else if (optionSelected == 6 && tsMini.IsOn == true) tsMini.IsOn = false;
+                                    if (optionSelected == 6 && tsBootOnStart.IsOn == false) tsBootOnStart.IsOn = true;
+                                    else if (optionSelected == 6 && tsBootOnStart.IsOn == true) tsBootOnStart.IsOn = false;
 
-                                    if (optionSelected == 7 && tsPerf.IsOn == false) tsPerf.IsOn = true;
-                                    else if (optionSelected == 7 && tsPerf.IsOn == true) tsPerf.IsOn = false;
+                                    if (optionSelected == 7 && tsMini.IsOn == false) tsMini.IsOn = true;
+                                    else if (optionSelected == 7 && tsMini.IsOn == true) tsMini.IsOn = false;
+
+                                    if (optionSelected == 8 && tsPerf.IsOn == false) tsPerf.IsOn = true;
+                                    else if (optionSelected == 8 && tsPerf.IsOn == true) tsPerf.IsOn = false;
                                 }
                             }
                         }
@@ -418,6 +461,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             Section2.Background = new SolidColorBrush(Colors.Transparent);
             Section2.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
             Section03.Background = new SolidColorBrush(Colors.Transparent);
+            Section0301.Background = new SolidColorBrush(Colors.Transparent);
             Section3.Background = new SolidColorBrush(Colors.Transparent);
             Section4.Background = new SolidColorBrush(Colors.Transparent);
             Section51.Background = new SolidColorBrush(Colors.Transparent);

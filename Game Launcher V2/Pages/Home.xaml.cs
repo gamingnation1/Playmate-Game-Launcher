@@ -197,7 +197,7 @@ namespace Game_Launcher_V2.Pages
 
             //set up timer for key combo system
             
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.16);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -285,7 +285,7 @@ namespace Game_Launcher_V2.Pages
                 {
                     batURL = path + "//Assets//Icons//battery-fill.png";
                 }
-                if (Convert.ToInt32(batPercentInt) < 45)
+                if (Convert.ToInt32(batPercentInt) < 50)
                 {
                     batURL = path + "//Assets//Icons//battery-low-line.png";
                 }
@@ -562,7 +562,7 @@ namespace Game_Launcher_V2.Pages
         {
             try
             {
-                if (lastAudio != audioPath && thisWorking)
+                if (thisWorking)
                 {
                     if (audioPath == null || audioPath == "N/A")
                     {
@@ -580,7 +580,7 @@ namespace Game_Launcher_V2.Pages
                         //Make sure music repeats on end
                         mediaPlayer.MediaEnded += new EventHandler(Media_Ended);
                         //Set volume to 90%
-                        mediaPlayer.Volume = 0.9;
+                        mediaPlayer.Volume = 0.75;
                         //Play music
                         mediaPlayer.Play();
                     }

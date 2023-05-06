@@ -298,5 +298,17 @@ namespace Game_Launcher_V2.Properties {
                 this["EPP"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isMuted {
+            get {
+                return ((bool)(this["isMuted"]));
+            }
+            set {
+                this["isMuted"] = value;
+            }
+        }
     }
 }

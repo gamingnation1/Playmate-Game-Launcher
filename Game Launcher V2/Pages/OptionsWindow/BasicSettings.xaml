@@ -11,7 +11,7 @@
       >
 
     <Grid>
-        <ScrollViewer CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst" Padding="0.5,0,0,0">
+        <ScrollViewer Name="svMain" CanContentScroll="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalFirst" Padding="0.5,0,0,0">
             <StackPanel>
                 <Border Name="Section01"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="stretch">
@@ -42,6 +42,12 @@
                             <TextBlock Name="lblVol"  Foreground="White" FontSize="22" DockPanel.Dock="Right" Margin="0,0,10,0" Text="{Binding ElementName=sdVol, Path=Value}"/>
                         </DockPanel>
                         <Slider Name="sdVol" Style="{StaticResource Horizontal_Slider}" Maximum="100" Minimum="0" Value="8" Width="350" Margin="0,10,0,0" TickFrequency="1" IsSnapToTickEnabled="True" Thumb.DragCompleted="Slider_DragCompleted" ValueChanged="Slider_ValueChanged"></Slider>
+                    </StackPanel>
+                </Border>
+                <Border Name="Section0301"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">
+                    <StackPanel VerticalAlignment="top" HorizontalAlignment="stretch">
+                        <mah:ToggleSwitch Name="tsMic" Margin="0,5,0,5" ContentDirection="RightToLeft" OffContent="Mute" OnContent="Mute" Foreground="White" FontSize="26" ContentPadding="10,0,0,0" Toggled="Toggle_Toggled"/>
+                        <TextBlock Foreground="White" FontSize="15">Controls whether microphones are enabled/disabled</TextBlock>
                     </StackPanel>
                 </Border>
                 <Border Name="Section03"  BorderBrush="DarkGray" BorderThickness="0,0.5,0.5,0.5" Height="76" Padding="5">

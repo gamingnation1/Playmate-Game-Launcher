@@ -28,6 +28,8 @@ using Brush = System.Windows.Media.Brush;
 using Game_Launcher_V2.Scripts.ADLX;
 using ControlzEx.Standard;
 using System.Xml;
+using System.DirectoryServices.ActiveDirectory;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -82,7 +84,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.14);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.1);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
 
@@ -368,9 +370,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (optionSelected > 0) optionSelected--;
                                 else optionSelected = 0;
                                 goingDown = false;
-
-                                if (optionSelected >= 5) mainView.ScrollToBottom();
-                                else mainView.ScrollToTop();
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
@@ -387,9 +386,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (optionSelected < max) optionSelected++;
                                 else optionSelected = max;
                                 goingDown = true;
-
-                                if (optionSelected >= 6) mainView.ScrollToBottom();
-                                else mainView.ScrollToTop();
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadLeft) && Global.shortCut == false && isActive == true || tx < -18000 && Global.shortCut == false && isActive == true)
@@ -554,11 +550,41 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 {
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected++;
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected++;
+
+                    if (optionSelected >= 7) mainView.ScrollToBottom();
+                    else
+                    {
+                        GeneralTransform transform = borders[optionSelected].TransformToAncestor(mainView);
+                        System.Windows.Point topPosition = transform.Transform(new System.Windows.Point(0, 0));
+                        System.Windows.Point bottomPosition = transform.Transform(new System.Windows.Point(0, borders[optionSelected].ActualHeight));
+
+                        // Check if the border is not fully visible in the current viewport
+                        if (topPosition.Y < mainView.VerticalOffset || bottomPosition.Y > mainView.VerticalOffset + mainView.ViewportHeight)
+                        {
+                            // Scroll to the position of the top of the border
+                            mainView.ScrollToVerticalOffset(bottomPosition.Y);
+                        }
+                    }
                 }
                 else
                 {
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
+
+                    if (optionSelected <= 1) mainView.ScrollToTop();
+                    else
+                    {
+                        GeneralTransform transform = borders[optionSelected].TransformToAncestor(mainView);
+                        System.Windows.Point topPosition = transform.Transform(new System.Windows.Point(0, 0));
+                        System.Windows.Point bottomPosition = transform.Transform(new System.Windows.Point(0, borders[optionSelected].ActualHeight));
+
+                        // Check if the border is not fully visible in the current viewport
+                        if (topPosition.Y < mainView.VerticalOffset || bottomPosition.Y > mainView.VerticalOffset + mainView.ViewportHeight)
+                        {
+                            // Scroll to the position of the top of the border
+                            mainView.ScrollToVerticalOffset(topPosition.Y);
+                        }
+                    }
                 }
 
                 if (borders[optionSelected] == Section10 && Section10.Visibility == Visibility.Collapsed) { optionSelected = 7; }
