@@ -35,6 +35,8 @@ using static System.Collections.Specialized.BitVector32;
 using Windows.Devices.Radios;
 using Windows.Networking.Connectivity;
 using Windows.Devices.Enumeration;
+using Microsoft.Win32.TaskScheduler;
+using Task = System.Threading.Tasks.Task;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -106,19 +108,41 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         {
             if (isFirstBoot == false)
             {
+                using (TaskService ts = new TaskService())
+                {
+                    if (ts.RootFolder.AllTasks.Any(t => t.Name == "Playmate"))
+                    {
+                        // Remove the task we just created
+                        ts.RootFolder.DeleteTask("Playmate");
+                    }
+                }
+
                 if (tsBootOnStart.IsOn == true)
                 {
-                    Settings.Default.bootOnStart = true;
-                    var path = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-                    RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
-                    key.SetValue("MyApplication", System.Reflection.Assembly.GetExecutingAssembly().Location.ToString());
-                }
-                else
-                {
-                    Settings.Default.bootOnStart = false;
-                    var path = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-                    RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
-                    key.DeleteValue("MyApplication", false);
+                    // Get the service on the local machine
+                    using (TaskService ts = new TaskService())
+                    {
+                        if (!ts.RootFolder.AllTasks.Any(t => t.Name == "Playmate"))
+                        {
+                            // Create a new task definition and assign properties
+                            TaskDefinition td = ts.NewTask();
+                            td.Principal.RunLevel = TaskRunLevel.Highest;
+                            td.RegistrationInfo.Description = "Start Playmate";
+                            td.Settings.DisallowStartIfOnBatteries = false;
+
+                            // Create a trigger that will fire the task at this time every other day
+                            td.Triggers.Add(new LogonTrigger());
+
+                            string path = System.Reflection.Assembly.GetEntryAssembly().Location;
+                            path = path.Replace("Playmate Game Launcher.dll", "Playmate Game Launcher.exe");
+
+                            // Create an action that will launch Notepad whenever the trigger fires
+                            td.Actions.Add(path);
+
+                            // Register the task in the root folder
+                            ts.RootFolder.RegisterTaskDefinition(@"Playmate", td);
+                        }
+                    }
                 }
 
                 SetWifiEnabled();

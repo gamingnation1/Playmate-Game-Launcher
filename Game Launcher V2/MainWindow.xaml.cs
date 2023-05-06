@@ -183,6 +183,9 @@ namespace Game_Launcher_V2
                     CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX");
                     CPUboost.HideAttribute("SUB_PROCESSOR", "PROCFREQMAX1");
 
+                    CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFAUTONOMOUS", 1, true);
+                    CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFAUTONOMOUS", 1, false);
+
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }
