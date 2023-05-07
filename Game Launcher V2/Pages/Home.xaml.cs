@@ -1,4 +1,5 @@
-﻿using Game_Launcher_V2.Properties;
+﻿using ABI.System;
+using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
 using Game_Launcher_V2.Scripts.Epic_Games;
 using Game_Launcher_V2.Windows;
@@ -30,8 +31,11 @@ using Windows.Devices.Sensors;
 using Windows.Gaming.Input;
 using Windows.Gaming.Preview.GamesEnumeration;
 using Cursors = System.Windows.Input.Cursors;
+using Exception = System.Exception;
 using ListBox = System.Windows.Controls.ListBox;
 using MessageBox = System.Windows.MessageBox;
+using TimeSpan = System.TimeSpan;
+using Uri = System.Uri;
 
 namespace Game_Launcher_V2.Pages
 {
@@ -246,6 +250,7 @@ namespace Game_Launcher_V2.Pages
                 SetImageSource(System.IO.Path.Combine(path, "Assets", "Icons", "settings-4-line.png"), imgSettingsBtn);
 
                 Animate._imageBlurState.Add(GameBG, false);
+                Animate._mediaElementBlurState.Add(GameBGVideo, false);
                 Animate._dockPanelOpacityState.Add(mainBody, true);
                 Animate._dockPanelOpacityState.Add(gameLaunch, false);
 
@@ -355,7 +360,20 @@ namespace Game_Launcher_V2.Pages
                         container?.BringIntoView();
 
                         mediaPlayer.Pause();
-                        if(GameBG.Opacity == 1) await StartAnimationBGFadeOut();
+                        if (GameBG.Opacity == 1 || GameBGVideo.Opacity == 1)
+                        {
+                            if (model.bgImagePath.Contains(".mp4"))
+                            {
+                                StartAnimationBGFadeOut();
+                                await StartAnimationBGFadeOutVideo();
+                            }
+                            else
+                            {
+                                StartAnimationBGFadeOutVideo();
+                                await StartAnimationBGFadeOut();
+                                GameBGVideo.Stop();
+                            }
+                        }
 
                         if (controller2.IsConnected)
                         {
@@ -483,25 +501,40 @@ namespace Game_Launcher_V2.Pages
             {
                 if (url != lastBG && thisWorking)
                 {
-                    //Save new image and load it
-                    var bi = new BitmapImage();
-
-                    using (var stream = new FileStream(url, FileMode.Open, FileAccess.Read))
+                    if (url.Contains(".mp4"))
                     {
-                        bi.BeginInit();
-                        bi.DecodePixelWidth = 3072;
-                        bi.CacheOption = BitmapCacheOption.OnLoad;
-                        bi.StreamSource = stream;
-                        bi.EndInit();
+                        GameBGVideo.Visibility = Visibility.Visible;
+                        await Task.Delay(145);
+                        GameBGVideo.Source = new Uri(url);
+                        GameBGVideo.Play();
+                        GameBGVideo.IsMuted = true;
+                        await Task.Delay(145);
+                        //Start fade in animation
+                        await StartAnimationBGFadeInVideo();
                     }
+                    else
+                    {
+                        GameBGVideo.Visibility = Visibility.Collapsed;
+                        //Save new image and load it
+                        var bi = new BitmapImage();
 
-                    bi.Freeze();
-                    //Set BG image
-                    await Task.Delay(145);
-                    GameBG.Source = bi;
-                    await Task.Delay(145);
-                    //Start fade in animation
-                    await StartAnimationBGFadeIn();
+                        using (var stream = new FileStream(url, FileMode.Open, FileAccess.Read))
+                        {
+                            bi.BeginInit();
+                            bi.DecodePixelWidth = 3072;
+                            bi.CacheOption = BitmapCacheOption.OnLoad;
+                            bi.StreamSource = stream;
+                            bi.EndInit();
+                        }
+
+                        bi.Freeze();
+                        //Set BG image
+                        await Task.Delay(145);
+                        GameBG.Source = bi;
+                        await Task.Delay(145);
+                        //Start fade in animation
+                        await StartAnimationBGFadeIn();
+                    }
                 }
             }
             catch { }
@@ -511,7 +544,7 @@ namespace Game_Launcher_V2.Pages
         {
             From = 1,
             To = 0,
-            Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+            Duration = new Duration(System.TimeSpan.FromSeconds(0.3)),
         };
 
         //Fade in animation
@@ -519,7 +552,7 @@ namespace Game_Launcher_V2.Pages
         {
             From = 0,
             To = 1,
-            Duration = new Duration(TimeSpan.FromSeconds(0.4)),
+            Duration = new Duration(System.TimeSpan.FromSeconds(0.4)),
         };
 
         //background fade out animation
@@ -538,6 +571,21 @@ namespace Game_Launcher_V2.Pages
             GameBG.BeginAnimation(OpacityProperty, fadeOut, HandoffBehavior.Compose);
             await Task.Delay(750);
         }
+        private async Task StartAnimationBGFadeOutVideo()
+        {
+            // Get the current opacity value of GameBG
+            double currentOpacity = GameBGVideo.Opacity;
+
+            // Set the frame rate of the fadeOut animation to 60 frames per second
+            Timeline.SetDesiredFrameRate(fadeOut, 60);
+
+            // Set the From property of the fadeOut animation to the current opacity value
+            fadeOut.From = currentOpacity;
+
+            // Begin the animation with the DoubleAnimation instance
+            GameBGVideo.BeginAnimation(OpacityProperty, fadeOut, HandoffBehavior.Compose);
+            await Task.Delay(750);
+        }
 
         //background fade in animation
         private async Task StartAnimationBGFadeIn()
@@ -553,6 +601,22 @@ namespace Game_Launcher_V2.Pages
 
             // Begin the animation with the DoubleAnimation instance
             GameBG.BeginAnimation(OpacityProperty, fadeIn, HandoffBehavior.Compose);
+            await Task.Delay(750);
+        }
+
+        private async Task StartAnimationBGFadeInVideo()
+        {
+            // Get the current opacity value of GameBG
+            double currentOpacity = GameBGVideo.Opacity;
+
+            // Set the frame rate of the fadeOut animation to 60 frames per second
+            Timeline.SetDesiredFrameRate(fadeOut, 60);
+
+            // Set the From property of the fadeOut animation to the current opacity value
+            fadeIn.From = currentOpacity;
+
+            // Begin the animation with the DoubleAnimation instance
+            GameBGVideo.BeginAnimation(OpacityProperty, fadeIn, HandoffBehavior.Compose);
             await Task.Delay(750);
         }
 
@@ -580,7 +644,7 @@ namespace Game_Launcher_V2.Pages
                         //Make sure music repeats on end
                         mediaPlayer.MediaEnded += new EventHandler(Media_Ended);
                         //Set volume to 90%
-                        mediaPlayer.Volume = 0.75;
+                        mediaPlayer.Volume = 0.6;
                         //Play music
                         mediaPlayer.Play();
                     }
@@ -619,6 +683,7 @@ namespace Game_Launcher_V2.Pages
                 if (isActive != true)
                 {
                     mediaPlayer.Pause();
+                    GameBGVideo.Pause();
                     wasNotFocused = true;
 
                     if (mainBody.Opacity != 1 && hasLaunched == true)
@@ -635,6 +700,7 @@ namespace Game_Launcher_V2.Pages
                         gameLaunch.Visibility = Visibility.Collapsed;
 
                         Animate.AnimateBlur(GameBG);
+                        Animate.AnimateBlurVideo(GameBGVideo);
                         Animate.AnimateDockPanelOpacity(mainBody);
                     }
                 }
@@ -643,6 +709,7 @@ namespace Game_Launcher_V2.Pages
                 else if (isActive == true && wasNotFocused == true)
                 {
                     if (lastAudio != "N/A") mediaPlayer.Play();
+                    if (lastBG.Contains(".mp4")) GameBGVideo.Play();
                     wasNotFocused = false;
                 }
 
@@ -694,25 +761,26 @@ namespace Game_Launcher_V2.Pages
 
                     }
 
-                    //if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.Y) && !Global.isAccessMenuOpen)
-                    //{
-                    //    if (mainBody.Opacity == 1)
-                    //    {
-                    //        hasLaunched = true;
+                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.Y) && !Global.isAccessMenuOpen)
+                    {
+                        if (mainBody.Opacity == 1)
+                        {
+                            hasLaunched = true;
 
-                    //        Animate.AnimateBlur(GameBG);
-                    //        Animate.AnimateDockPanelOpacity(mainBody);
+                            Animate.AnimateBlur(GameBG);
+                            Animate.AnimateBlurVideo(GameBGVideo);
+                            Animate.AnimateDockPanelOpacity(mainBody);
 
-                    //        while (mainBody.Opacity != 0)
-                    //        {
-                    //            await Task.Delay(10);
-                    //        }
-                    //        lbGames.Visibility = Visibility.Collapsed;
-                    //        gameLaunch.Visibility = Visibility.Visible;
+                            while (mainBody.Opacity != 0)
+                            {
+                                await Task.Delay(10);
+                            }
+                            lbGames.Visibility = Visibility.Collapsed;
+                            gameLaunch.Visibility = Visibility.Visible;
 
-                    //        Animate.AnimateDockPanelOpacity(gameLaunch);
-                    //    }
-                    //}
+                            Animate.AnimateDockPanelOpacity(gameLaunch);
+                        }
+                    }
 
                     SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
                     float tx = gamepad.LeftThumbX;
@@ -768,7 +836,7 @@ namespace Game_Launcher_V2.Pages
                             }
 
                             gameLaunch.Visibility = Visibility.Collapsed;
-
+                            Animate.AnimateBlurVideo(GameBGVideo);
                             Animate.AnimateBlur(GameBG);
                             Animate.AnimateDockPanelOpacity(mainBody);
                         }
@@ -823,7 +891,7 @@ namespace Game_Launcher_V2.Pages
             if (mainBody.Opacity == 1)
             {
                 hasLaunched = true;
-
+                Animate.AnimateBlurVideo(GameBGVideo);
                 Animate.AnimateBlur(GameBG);
                 Animate.AnimateDockPanelOpacity(mainBody);
 
@@ -911,6 +979,12 @@ namespace Game_Launcher_V2.Pages
                     }
                 }
             }
+        }
+
+        private void GameBGVideo_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            GameBGVideo.Position = new TimeSpan(0, 0, 1);
+            GameBGVideo.Play();
         }
     }
 

@@ -13,6 +13,7 @@ namespace Game_Launcher_V2.Scripts
     internal class Animate
     {
         public static Dictionary<Image, bool> _imageBlurState = new Dictionary<Image, bool>();
+        public static Dictionary<MediaElement, bool> _mediaElementBlurState = new Dictionary<MediaElement, bool>();
         public static Dictionary<DockPanel, bool> _dockPanelOpacityState = new Dictionary<DockPanel, bool>();
 
         public static void AnimateBlur(Image image)
@@ -81,6 +82,79 @@ namespace Game_Launcher_V2.Scripts
                 _imageBlurState[image] = true;
             }
         }
+        public static void AnimateBlurVideo(MediaElement mediaElement)
+        {
+            try
+            {
+                // Check if the media element is already blurred
+                if (_mediaElementBlurState[mediaElement])
+                {
+                    // Create a DoubleAnimation to animate the Radius property of the BlurEffect from its current value to 0
+                    var animation = new DoubleAnimation()
+                    {
+                        From = ((BlurEffect)mediaElement.Effect).Radius,
+                        To = 0,
+                        Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                    };
+
+                    // Set the target property to the Radius property of the BlurEffect
+                    Storyboard.SetTargetProperty(animation, new PropertyPath("(UIElement.Effect).(BlurEffect.Radius)"));
+
+                    // Set the frame rate of the animation to 60 frames per second
+                    Timeline.SetDesiredFrameRate(animation, 60);
+
+                    // Create a Storyboard and add the animation to it
+                    var storyboard = new Storyboard();
+                    storyboard.Children.Add(animation);
+
+                    // Start the animation
+                    storyboard.Begin(mediaElement);
+
+                    // Update the blur state for the current media element
+                    _mediaElementBlurState[mediaElement] = false;
+                }
+                else
+                {
+                    // Create a BlurEffect
+                    var blurEffect = new BlurEffect()
+                    {
+                        Radius = 0,
+                        KernelType = KernelType.Gaussian
+                    };
+
+                    // Apply the BlurEffect to the media element
+                    mediaElement.Effect = blurEffect;
+
+                    // Create a DoubleAnimation to animate the Radius property of the BlurEffect
+                    var animation = new DoubleAnimation()
+                    {
+                        From = 0,
+                        To = 60,
+                        Duration = new Duration(TimeSpan.FromSeconds(0.4))
+                    };
+
+                    // Set the frame rate of the animation to 60 frames per second
+                    Timeline.SetDesiredFrameRate(animation, 60);
+
+                    // Set the target property to the Radius property of the BlurEffect
+                    Storyboard.SetTargetProperty(animation, new PropertyPath("(UIElement.Effect).(BlurEffect.Radius)"));
+
+                    // Create a Storyboard and add the animation to it
+                    var storyboard = new Storyboard();
+                    storyboard.Children.Add(animation);
+
+                    // Start the animation
+                    storyboard.Begin(mediaElement);
+
+                    // Update the blur state for the current media element
+                    _mediaElementBlurState[mediaElement] = true;
+                }
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
 
         public static void AnimateDockPanelOpacity(DockPanel dockPanel)
         {

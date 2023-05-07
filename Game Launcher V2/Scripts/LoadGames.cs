@@ -81,7 +81,11 @@ namespace Game_Launcher_V2.Scripts
                             else icon = path + $"\\GameAssets\\Default\\icon.png";
                         }
 
-                        if (File.Exists(path + $"\\GameAssets\\{gameName}\\background.jpg"))
+                        if (File.Exists(path + $"\\GameAssets\\{gameName}\\background.mp4"))
+                        {
+                            background = path + $"\\GameAssets\\{gameName}\\background.mp4";
+                        }
+                        else if (File.Exists(path + $"\\GameAssets\\{gameName}\\background.jpg"))
                         {
                             background = path + $"\\GameAssets\\{gameName}\\background.jpg";
                         }
@@ -93,11 +97,16 @@ namespace Game_Launcher_V2.Scripts
                         {
                             background = path + $"\\GameAssets\\{gameName}\\background.png";
                         }
+                        
                         else
                         {
                             if (IsInternetAvailable())
                             {
                                  background = await GetImages.GetHeroImageUrl(gameName);
+                            }
+                            else if (File.Exists(path + $"\\GameAssets\\Default\\background.mp4"))
+                            {
+                                background = path + $"\\GameAssets\\Default\\background.mp4";
                             }
                             else icon = path + $"\\GameAssets\\Default\\background.png";
                         }
@@ -151,7 +160,7 @@ namespace Game_Launcher_V2.Scripts
             lbGames.SelectedIndex = 0;
         }
 
-        public static void LoadGameData(string selectLauncher, ListBox lbGames)
+        public async static void LoadGameData(string selectLauncher, ListBox lbGames)
         {
             List<SteamGame> games = new List<SteamGame>();
 
@@ -163,8 +172,8 @@ namespace Game_Launcher_V2.Scripts
                 gameName = "Open " + selectLauncher,
                 steamID = "0",
                 imagePath = path + $"\\GameAssets\\{selectLauncher}\\icon.png",
-                bgImagePath = path + $"\\GameAssets\\{selectLauncher}\\background.jpg",
-                musicPath = path + $"\\GameAssets\\{selectLauncher}\\audio.mp3",
+                bgImagePath = path + $"\\GameAssets\\Default\\background.mp4",
+                musicPath = path + $"\\GameAssets\\Default\\audio.mp3",
                 message = ""
             });
             launcherManager.Refresh();
@@ -214,7 +223,11 @@ namespace Game_Launcher_V2.Scripts
                                 icon = path + $"\\GameAssets\\Default\\icon.png";
                             }
 
-                            if (File.Exists(path + $"\\GameAssets\\{gameName}\\background.jpg"))
+                            if (File.Exists(path + $"\\GameAssets\\{gameName}\\background.mp4"))
+                            {
+                                background = path + $"\\GameAssets\\{gameName}\\background.mp4";
+                            }
+                            else if (File.Exists(path + $"\\GameAssets\\{gameName}\\background.jpg"))
                             {
                                 background = path + $"\\GameAssets\\{gameName}\\background.jpg";
                             }
@@ -228,7 +241,15 @@ namespace Game_Launcher_V2.Scripts
                             }
                             else
                             {
-                                background = path + $"\\GameAssets\\Default\\background.jpg";
+                                if (IsInternetAvailable())
+                                {
+                                    background = await GetImages.GetHeroImageUrl(gameName);
+                                }
+                                else if (File.Exists(path + $"\\GameAssets\\Default\\background.mp4"))
+                                {
+                                    background = path + $"\\GameAssets\\Default\\background.mp4";
+                                }
+                                else icon = path + $"\\GameAssets\\Default\\background.png";
                             }
 
                             if (File.Exists(path + $"\\GameAssets\\{gameName}\\audio.m4a"))

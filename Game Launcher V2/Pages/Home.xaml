@@ -71,6 +71,11 @@
                 <Image Name="GameBG" Stretch="UniformToFill"></Image>
             </Viewbox>
         </DockPanel>
+        <DockPanel ZIndex="1" LastChildFill="True">
+            <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-12" Name="bgVideoCon">
+                <MediaElement Name="GameBGVideo" Stretch="UniformToFill" LoadedBehavior="Manual" Visibility="Collapsed" MediaEnded="GameBGVideo_MediaEnded"></MediaElement>
+            </Viewbox>
+        </DockPanel>
         <DockPanel ZIndex="2" LastChildFill="True" Opacity="0" Name="gameLaunch" Visibility="Collapsed">
             <Viewbox Stretch="None" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
