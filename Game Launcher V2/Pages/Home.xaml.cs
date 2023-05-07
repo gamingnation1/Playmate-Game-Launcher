@@ -775,26 +775,26 @@ namespace Game_Launcher_V2.Pages
 
                     }
 
-                    if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.Y) && !Global.isAccessMenuOpen)
-                    {
-                        if (mainBody.Opacity == 1)
-                        {
-                            hasLaunched = true;
+                    //if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.Y) && !Global.isAccessMenuOpen)
+                    //{
+                    //    if (mainBody.Opacity == 1)
+                    //    {
+                    //        hasLaunched = true;
 
-                            Animate.AnimateBlur(GameBG);
-                            Animate.AnimateBlurVideo(GameBGVideo);
-                            Animate.AnimateDockPanelOpacity(mainBody);
+                    //        Animate.AnimateBlur(GameBG);
+                    //        Animate.AnimateBlurVideo(GameBGVideo);
+                    //        Animate.AnimateDockPanelOpacity(mainBody);
 
-                            while (mainBody.Opacity != 0)
-                            {
-                                await Task.Delay(10);
-                            }
-                            lbGames.Visibility = Visibility.Collapsed;
-                            gameLaunch.Visibility = Visibility.Visible;
+                    //        while (mainBody.Opacity != 0)
+                    //        {
+                    //            await Task.Delay(10);
+                    //        }
+                    //        lbGames.Visibility = Visibility.Collapsed;
+                    //        gameLaunch.Visibility = Visibility.Visible;
 
-                            Animate.AnimateDockPanelOpacity(gameLaunch);
-                        }
-                    }
+                    //        Animate.AnimateDockPanelOpacity(gameLaunch);
+                    //    }
+                    //}
 
                     SharpDX.XInput.Gamepad gamepad = controller.GetState().Gamepad;
                     float tx = gamepad.LeftThumbX;

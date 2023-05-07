@@ -378,7 +378,9 @@ namespace Game_Launcher_V2
                     int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
                     int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
 
-                    if (Settings.Default.fanCurve == 0) Fan_Control.disableFanControl();
+                    if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
+                    else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
+
                     if (Settings.Default.fanCurve == 1)
                     {
                         int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
@@ -386,7 +388,7 @@ namespace Game_Launcher_V2
                     }
                     if (Settings.Default.fanCurve == 2)
                     {
-                        int[] bal = { 0, 5, 15, 25, 40, 55, 70, 100 };
+                        int[] bal = { 0, 5, 15, 25, 40, 50, 65, 85 };
                         speeds = bal;
                     }
                     if (Settings.Default.fanCurve == 3)
@@ -394,15 +396,15 @@ namespace Game_Launcher_V2
                         int[] turbo = { 0, 18, 28, 35, 60, 70, 85, 100 };
                         speeds = turbo;
                     }
-                    if (Settings.Default.fanCurve != 0)
+                    
+                    
+                    if (Settings.Default.fanCurve != 0 && Fan_Control.fanControlEnabled)
                     {
                         int cpuTemperature = GetCpuTemperature();
 
                         var fanSpeed = Interpolate(speeds, temps, cpuTemperature);
 
                         Fan_Control.setFanSpeed(fanSpeed);
-
-                        Fan_Control.enableFanControl();
                     }
                 }
                 else
@@ -424,7 +426,7 @@ namespace Game_Launcher_V2
                     string commandArguments = Settings.Default.RyzenAdj;
 
 
-                    if (ryzen >= 2)
+                    if (ryzen >= 1)
                     {
                         if (Settings.Default.isiGFX == true)
                         {

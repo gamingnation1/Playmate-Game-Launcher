@@ -95,8 +95,6 @@ namespace Universal_x86_Tuning_Utility.Scripts.Misc
 
         public static void readFanSpeed()
         {
-            int fanSpeed = 0;
-
             byte returnvalue = WinRingEC_Management.ECRamRead(FanChangeAddress);
 
             double fanPercentage = Math.Round(100 * (Convert.ToDouble(returnvalue) / MaxFanSpeed), 0);
