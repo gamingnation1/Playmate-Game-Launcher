@@ -100,11 +100,12 @@ namespace Game_Launcher_V2.Scripts
                         
                         else
                         {
-                            if (IsInternetAvailable())
-                            {
-                                 background = await GetImages.GetHeroImageUrl(gameName);
-                            }
-                            else if (File.Exists(path + $"\\GameAssets\\Default\\background.mp4"))
+                            //if (IsInternetAvailable())
+                            //{
+                            //     background = await GetImages.GetHeroImageUrl(gameName);
+                            //}
+                            //else
+                            if (File.Exists(path + $"\\GameAssets\\Default\\background.mp4"))
                             {
                                 background = path + $"\\GameAssets\\Default\\background.mp4";
                             }
@@ -241,11 +242,13 @@ namespace Game_Launcher_V2.Scripts
                             }
                             else
                             {
-                                if (IsInternetAvailable())
-                                {
-                                    background = await GetImages.GetHeroImageUrl(gameName);
-                                }
-                                else if (File.Exists(path + $"\\GameAssets\\Default\\background.mp4"))
+                                //if (IsInternetAvailable())
+                                //{
+                                //    background = await GetImages.GetHeroImageUrl(gameName);
+                                //}
+                                //else 
+                                
+                                if (File.Exists(path + $"\\GameAssets\\Default\\background.mp4"))
                                 {
                                     background = path + $"\\GameAssets\\Default\\background.mp4";
                                 }

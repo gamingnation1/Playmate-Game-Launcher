@@ -13,6 +13,7 @@ using System.Drawing;
 using System.IO;
 using System.Security.Policy;
 using System.Windows.Shapes;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Game_Launcher_V2.Scripts
 {
@@ -118,7 +119,16 @@ namespace Game_Launcher_V2.Scripts
                 }
             }
 
-            return Global.path + $"\\GameAssets\\Default\\background.png";
+            string imgPath = "";
+            string path = Global.path;
+
+            if (File.Exists(path + $"\\GameAssets\\Default\\background.mp4"))
+            {
+                imgPath = path + $"\\GameAssets\\Default\\background.mp4";
+            }
+            else imgPath = path + $"\\GameAssets\\Default\\background.png";
+
+            return imgPath;
         }
 
         public static async Task DownloadImage(string url, string filePath)

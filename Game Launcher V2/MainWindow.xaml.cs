@@ -420,7 +420,7 @@ namespace Game_Launcher_V2
                         ryzen = 0;
                     }
 
-                    if (GC >= 5)
+                    if (GC >= 8)
                     {
                         BasicExeBackend.Garbage_Collect();
                         GC = 0;

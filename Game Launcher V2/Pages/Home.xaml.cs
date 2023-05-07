@@ -11,6 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Management;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Policy;
 using System.Text;
@@ -668,6 +669,14 @@ namespace Game_Launcher_V2.Pages
             ControllerInput(UserIndex.Two);
         }
 
+        private MediaState GetMediaState(MediaElement myMedia)
+        {
+            FieldInfo hlp = typeof(MediaElement).GetField("_helper", BindingFlags.NonPublic | BindingFlags.Instance);
+            object helperObject = hlp.GetValue(myMedia);
+            FieldInfo stateField = helperObject.GetType().GetField("_currentState", BindingFlags.NonPublic | BindingFlags.Instance);
+            MediaState state = (MediaState)stateField.GetValue(helperObject);
+            return state;
+        }
 
         private static Controller controller;
         bool hasLaunched = false;
@@ -703,6 +712,11 @@ namespace Game_Launcher_V2.Pages
                         Animate.AnimateBlurVideo(GameBGVideo);
                         Animate.AnimateDockPanelOpacity(mainBody);
                     }
+                }
+
+                if(GameBGVideo.Visibility == Visibility.Visible && GetMediaState(GameBGVideo) != MediaState.Play && isActive == true && wasNotFocused == false)
+                {
+                    GameBGVideo.Play();
                 }
 
                 //If window is now focused resume music
