@@ -52,6 +52,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         public static int vol = 0;
         public DispatcherTimer checkKeyInput = new DispatcherTimer();
 
+        public static int fanCurve = 0;
+
         public BasicSettings()
         {
             InitializeComponent();
@@ -65,7 +67,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             sdVol.Value = vol;
             sdBright.Value = bright;
 
-            tsMic.IsOn = Settings.Default.isMuted;
             tsMouse.IsOn = Settings.Default.isMouse;
             tsBootOnStart.IsOn = Settings.Default.bootOnStart;
             tsMini.IsOn = Settings.Default.startMinimised;
@@ -74,8 +75,16 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
             isFirstBoot = false;
 
+            tsMic.IsOn = Settings.Default.isMuted;
+            sdFan.Value = Settings.Default.fanCurve;
+
+            if (sdFan.Value == 0) lblFan.Text = "Default";
+            if (sdFan.Value == 1) lblFan.Text = "Silent";
+            if (sdFan.Value == 2) lblFan.Text = "Balanced";
+            if (sdFan.Value == 3) lblFan.Text = "Turbo";
+
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.1);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.11);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -156,7 +165,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 if (tsMini.IsOn == true) Settings.Default.startMinimised = true; else Settings.Default.startMinimised = false;
                 if (tsBootOnStart.IsOn == true) Settings.Default.bootOnStart = true; else Settings.Default.bootOnStart = false;
                 if (tsPerf.IsOn == true) Settings.Default.isPerfOpen = true; else Settings.Default.isPerfOpen = false;
-
 
                 Settings.Default.Save();
             }
@@ -315,9 +323,17 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 wasClosed = false;
             }
 
+            if (sdFan.Value == 0) lblFan.Text = "Default";
+            if (sdFan.Value == 1) lblFan.Text = "Silent";
+            if (sdFan.Value == 2) lblFan.Text = "Balanced";
+            if (sdFan.Value == 3) lblFan.Text = "Turbo";
+
+            Settings.Default.fanCurve = (int)sdFan.Value;
+            Settings.Default.Save();
+
             if (Global.AccessMenuSelected == 0 && Global.isAccessMenuOpen == true)
             {
-                borders = new Border[] { Section01, Section02, Section1, Section2, Section0301, Section03, Section3, Section4, Section51 };
+                borders = new Border[] { Section01, Section02, Section1, Section2, Section201, Section0301, Section03, Section3, Section4, Section51 };
 
                 try
                 {
@@ -370,8 +386,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                                 if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
                                 {
-                                    if (optionSelected < 8) optionSelected++;
-                                    else optionSelected = 8;
+                                    if (optionSelected < 9) optionSelected++;
+                                    else optionSelected = 9;
 
                                     GeneralTransform transform = borders[optionSelected].TransformToAncestor(svMain);
                                     System.Windows.Point topPosition = transform.Transform(new System.Windows.Point(0, 0));
@@ -394,13 +410,18 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                                     if (borders[optionSelected] == Section1) selectedSlider = sdBright;
                                     if (borders[optionSelected] == Section2) selectedSlider = sdVol;
+                                    if (borders[optionSelected] == Section201) selectedSlider = sdFan;
 
                                     value = (int)selectedSlider.Value;
                                     maxValue = (int)selectedSlider.Maximum;
                                     minValue = (int)selectedSlider.Minimum;
 
-                                    value--;
-                                    value--;
+                                    if (selectedSlider == sdFan) value--;
+                                    else
+                                    {
+                                        value--;
+                                        value--;
+                                    }
 
                                     if (value > maxValue) value = maxValue;
                                     if (value < minValue) value = minValue;
@@ -416,13 +437,18 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                                     if (borders[optionSelected] == Section1) selectedSlider = sdBright;
                                     if (borders[optionSelected] == Section2) selectedSlider = sdVol;
+                                    if (borders[optionSelected] == Section201) selectedSlider = sdFan;
 
                                     value = (int)selectedSlider.Value;
                                     maxValue = (int)selectedSlider.Maximum;
                                     minValue = (int)selectedSlider.Minimum;
 
-                                    value++;
-                                    value++;
+                                    if (selectedSlider == sdFan) value++;
+                                    else
+                                    {
+                                        value++;
+                                        value++;
+                                    }
 
                                     if (value > maxValue) value = maxValue;
                                     if (value < minValue) value = minValue;
@@ -439,23 +465,23 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                     if (optionSelected == 1 && tsBlue.IsOn == false) tsBlue.IsOn = true;
                                     else if (optionSelected == 1 && tsBlue.IsOn == true) tsBlue.IsOn = false;
 
-                                    if (borders[optionSelected] == Section1 && isActive == false || borders[optionSelected] == Section2 && isActive == false) isActive = true;
+                                    if (borders[optionSelected] == Section1 && isActive == false || borders[optionSelected] == Section2 && isActive == false || borders[optionSelected] == Section201 && isActive == false) isActive = true;
                                     else isActive = false;
 
-                                    if (optionSelected == 4 && tsMic.IsOn == false) tsMic.IsOn = true;
-                                    else if (optionSelected == 4 && tsMic.IsOn == true) tsMic.IsOn = false;
+                                    if (optionSelected == 5 && tsMic.IsOn == false) tsMic.IsOn = true;
+                                    else if (optionSelected == 5 && tsMic.IsOn == true) tsMic.IsOn = false;
 
-                                    if (optionSelected == 5 && tsMouse.IsOn == false) tsMouse.IsOn = true;
-                                    else if (optionSelected == 5 && tsMouse.IsOn == true) tsMouse.IsOn = false;
+                                    if (optionSelected == 6 && tsMouse.IsOn == false) tsMouse.IsOn = true;
+                                    else if (optionSelected == 6 && tsMouse.IsOn == true) tsMouse.IsOn = false;
 
-                                    if (optionSelected == 6 && tsBootOnStart.IsOn == false) tsBootOnStart.IsOn = true;
-                                    else if (optionSelected == 6 && tsBootOnStart.IsOn == true) tsBootOnStart.IsOn = false;
+                                    if (optionSelected == 7 && tsBootOnStart.IsOn == false) tsBootOnStart.IsOn = true;
+                                    else if (optionSelected == 7 && tsBootOnStart.IsOn == true) tsBootOnStart.IsOn = false;
 
-                                    if (optionSelected == 7 && tsMini.IsOn == false) tsMini.IsOn = true;
-                                    else if (optionSelected == 7 && tsMini.IsOn == true) tsMini.IsOn = false;
+                                    if (optionSelected == 8 && tsMini.IsOn == false) tsMini.IsOn = true;
+                                    else if (optionSelected == 8 && tsMini.IsOn == true) tsMini.IsOn = false;
 
-                                    if (optionSelected == 8 && tsPerf.IsOn == false) tsPerf.IsOn = true;
-                                    else if (optionSelected == 8 && tsPerf.IsOn == true) tsPerf.IsOn = false;
+                                    if (optionSelected == 9 && tsPerf.IsOn == false) tsPerf.IsOn = true;
+                                    else if (optionSelected == 9 && tsPerf.IsOn == true) tsPerf.IsOn = false;
                                 }
                             }
                         }
@@ -484,6 +510,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             Section1.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
             Section2.Background = new SolidColorBrush(Colors.Transparent);
             Section2.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
+            Section201.Background = new SolidColorBrush(Colors.Transparent);
+            Section201.BorderThickness = new Thickness(0, 0.5, 0.5, 0.5);
             Section03.Background = new SolidColorBrush(Colors.Transparent);
             Section0301.Background = new SolidColorBrush(Colors.Transparent);
             Section3.Background = new SolidColorBrush(Colors.Transparent);
@@ -494,7 +522,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             {
                 borders[optionSelected].Background = (Brush)bc.ConvertFrom("#FF393939");
 
-                if (isActive == true && optionSelected >= 2 && optionSelected <= 3)
+                if (isActive == true && optionSelected >= 2 && optionSelected <= 4)
                 {
                     borders[optionSelected].BorderThickness = new Thickness(2.5);
                 }

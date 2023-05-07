@@ -310,5 +310,17 @@ namespace Game_Launcher_V2.Properties {
                 this["isMuted"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int fanCurve {
+            get {
+                return ((int)(this["fanCurve"]));
+            }
+            set {
+                this["fanCurve"] = value;
+            }
+        }
     }
 }

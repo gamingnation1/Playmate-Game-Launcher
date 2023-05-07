@@ -37,7 +37,7 @@ namespace Universal_x86_Tuning_Utility.Scripts.Misc
             string path = Global.path;
             
 
-            path = "Fan Configs\\" + fanConfig;
+            path = path + "\\Fan Configs\\" + fanConfig;
 
             if (File.Exists(path))
             {

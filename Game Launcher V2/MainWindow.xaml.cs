@@ -5,6 +5,7 @@ using Game_Launcher_V2.Scripts.ADLX;
 using Game_Launcher_V2.Scripts.Epic_Games;
 using Game_Launcher_V2.Scripts.OptionsWindow.PowerControl;
 using Game_Launcher_V2.Windows;
+using LibreHardwareMonitor.Hardware;
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using SharpDX.XInput;
@@ -30,6 +31,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Universal_x86_Tuning_Utility.Scripts.Misc;
 using Windows.Devices.Sensors;
 using WindowsInput;
 using static Game_Launcher_V2.Scripts.SystemDeviceControl;
@@ -62,7 +64,7 @@ namespace Game_Launcher_V2
 
         public static Frame navFrame;
 
-
+        public static string FanConfig = ""; 
 
         public MainWindow()
         {
@@ -132,6 +134,15 @@ namespace Game_Launcher_V2
                 battime.Tick += UpdateBatTime_Tick;
                 battime.Start();
 
+                string fanConfig = "";
+                fanConfig = $"{GetSystemInfo.Manufacturer.ToUpper()}_{GetSystemInfo.Product.ToUpper()}.json";
+                string path = Global.path;
+                path = path + "\\Fan Configs\\" + fanConfig;
+
+                FanConfig = path;
+
+                Fan_Control.UpdateAddresses();
+
                 try
                 {
                     RegistryKey myKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\CI\\Config", true);
@@ -185,7 +196,6 @@ namespace Game_Launcher_V2
 
                     CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFAUTONOMOUS", 1, true);
                     CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFAUTONOMOUS", 1, false);
-
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }
@@ -204,6 +214,8 @@ namespace Game_Launcher_V2
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (File.Exists(FanConfig)) if (Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
+
             Application.Current.Shutdown();
         }
 
@@ -324,6 +336,34 @@ namespace Game_Launcher_V2
             Time_and_Bat.getTime();
             GetSensor.ReadSensors();
         }
+
+        private static int Interpolate(int[] yValues, int[] xValues, int x)
+        {
+            int i = Array.FindIndex(xValues, t => t >= x);
+
+            if (i == -1) // temperature is lower than the first input point
+            {
+                return yValues[0];
+            }
+            else if (i == 0) // temperature is equal to or higher than the first input point
+            {
+                return yValues[0];
+            }
+            else if (i == xValues.Length) // temperature is higher than the last input point
+            {
+                return yValues[xValues.Length - 1];
+            }
+            else // interpolate between two closest input points
+            {
+                return Interpolate(yValues[i - 1], xValues[i - 1], yValues[i], xValues[i], x);
+            }
+        }
+
+        private static int Interpolate(int y1, int x1, int y2, int x2, int x)
+        {
+            return (y1 * (x2 - x) + y2 * (x - x1)) / (x2 - x1);
+        }
+
         int lastiGPU = 0;
         int ryzen = -1;
         int GC = -1;
@@ -332,11 +372,58 @@ namespace Game_Launcher_V2
             try
             {
                 getData();
+
+                if (File.Exists(FanConfig))
+                {
+                    int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
+                    int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
+
+                    if (Settings.Default.fanCurve == 0) Fan_Control.disableFanControl();
+                    if (Settings.Default.fanCurve == 1)
+                    {
+                        int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
+                        speeds = silent;
+                    }
+                    if (Settings.Default.fanCurve == 2)
+                    {
+                        int[] bal = { 0, 5, 15, 25, 40, 55, 70, 100 };
+                        speeds = bal;
+                    }
+                    if (Settings.Default.fanCurve == 3)
+                    {
+                        int[] turbo = { 0, 18, 28, 35, 60, 70, 85, 100 };
+                        speeds = turbo;
+                    }
+                    if (Settings.Default.fanCurve != 0)
+                    {
+                        int cpuTemperature = GetCpuTemperature();
+
+                        var fanSpeed = Interpolate(speeds, temps, cpuTemperature);
+
+                        Fan_Control.setFanSpeed(fanSpeed);
+
+                        Fan_Control.enableFanControl();
+                    }
+                }
+                else
+                {
+                    string fanConfig = "";
+                    fanConfig = $"{GetSystemInfo.Manufacturer.ToUpper()}_{GetSystemInfo.Product.ToUpper()}.json";
+                    string path = Global.path;
+                    path = path + "\\Fan Configs\\" + fanConfig;
+
+                    FanConfig = path;
+
+                    Fan_Control.UpdateAddresses();
+                }
+
                 ryzen++;
                 if (Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")
                 {
                     string processRyzenAdj = "";
                     string commandArguments = Settings.Default.RyzenAdj;
+
+
                     if (ryzen >= 2)
                     {
                         if (Settings.Default.isiGFX == true)
@@ -428,7 +515,39 @@ namespace Game_Launcher_V2
                     GC++;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private int GetCpuTemperature()
+        {
+            try
+            {
+                Computer computer = new Computer
+                {
+                    IsCpuEnabled = true,
+                };
+                computer.Open();
+                var cpu = computer.Hardware.FirstOrDefault(h => h.HardwareType == HardwareType.Cpu);
+                cpu.Update();
+                var temperature = cpu.Sensors.FirstOrDefault(s => s.SensorType == LibreHardwareMonitor.Hardware.SensorType.Temperature);
+                if (temperature != null)
+                {
+                    return (int)temperature.Value;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                // Log exception
+                return 0;
+            }
         }
     }
 }
