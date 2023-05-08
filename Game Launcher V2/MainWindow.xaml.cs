@@ -134,15 +134,6 @@ namespace Game_Launcher_V2
                 battime.Tick += UpdateBatTime_Tick;
                 battime.Start();
 
-                string fanConfig = "";
-                fanConfig = $"{GetSystemInfo.Manufacturer.ToUpper()}_{GetSystemInfo.Product.ToUpper()}.json";
-                string path = Global.path;
-                path = path + "\\Fan Configs\\" + fanConfig;
-
-                FanConfig = path;
-
-                Fan_Control.UpdateAddresses();
-
                 try
                 {
                     RegistryKey myKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\CI\\Config", true);
@@ -196,6 +187,16 @@ namespace Game_Launcher_V2
 
                     CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFAUTONOMOUS", 1, true);
                     CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFAUTONOMOUS", 1, false);
+
+
+                    string fanConfig = "";
+                    fanConfig = $"{GetSystemInfo.Manufacturer.ToUpper()}_{GetSystemInfo.Product.ToUpper()}.json";
+                    string path = Global.path;
+                    path = path + "\\Fan Configs\\" + fanConfig;
+
+                    FanConfig = path;
+
+                    Fan_Control.UpdateAddresses();
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString()); }
             }
@@ -378,9 +379,6 @@ namespace Game_Launcher_V2
                     int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
                     int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
 
-                    if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
-                    else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
-
                     if (Settings.Default.fanCurve == 1)
                     {
                         int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
@@ -406,17 +404,9 @@ namespace Game_Launcher_V2
 
                         Fan_Control.setFanSpeed(fanSpeed);
                     }
-                }
-                else
-                {
-                    string fanConfig = "";
-                    fanConfig = $"{GetSystemInfo.Manufacturer.ToUpper()}_{GetSystemInfo.Product.ToUpper()}.json";
-                    string path = Global.path;
-                    path = path + "\\Fan Configs\\" + fanConfig;
 
-                    FanConfig = path;
-
-                    Fan_Control.UpdateAddresses();
+                    if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
+                    else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
                 }
 
                 ryzen++;

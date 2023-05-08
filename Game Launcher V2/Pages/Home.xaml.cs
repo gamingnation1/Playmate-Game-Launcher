@@ -360,19 +360,22 @@ namespace Game_Launcher_V2.Pages
                         FrameworkElement container = (FrameworkElement)lbGames.ItemContainerGenerator.ContainerFromItem(lbGames.SelectedItem);
                         container?.BringIntoView();
 
-                        mediaPlayer.Pause();
-                        if (GameBG.Opacity == 1 || GameBGVideo.Opacity == 1)
+                        if (model.bgImagePath != lastBG)
                         {
-                            if (model.bgImagePath.Contains(".mp4"))
+                            mediaPlayer.Pause();
+                            if (GameBG.Opacity == 1 || GameBGVideo.Opacity == 1)
                             {
-                                StartAnimationBGFadeOut();
-                                await StartAnimationBGFadeOutVideo();
-                            }
-                            else
-                            {
-                                StartAnimationBGFadeOutVideo();
-                                await StartAnimationBGFadeOut();
-                                GameBGVideo.Stop();
+                                if (model.bgImagePath.Contains(".mp4"))
+                                {
+                                    StartAnimationBGFadeOut();
+                                    await StartAnimationBGFadeOutVideo();
+                                }
+                                else
+                                {
+                                    StartAnimationBGFadeOutVideo();
+                                    await StartAnimationBGFadeOut();
+                                    GameBGVideo.Stop();
+                                }
                             }
                         }
 
@@ -627,7 +630,7 @@ namespace Game_Launcher_V2.Pages
         {
             try
             {
-                if (thisWorking)
+                if (thisWorking && lastAudio != audioPath)
                 {
                     if (audioPath == null || audioPath == "N/A")
                     {
