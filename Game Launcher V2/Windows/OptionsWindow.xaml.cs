@@ -308,9 +308,6 @@ namespace Game_Launcher_V2.Windows
 
                 Time_and_Bat.GetWifi(imgWiFi);
                 Time_and_Bat.updateBatTime(lblBat, lblTime, imgBat);
-
-                string processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
-                if (Global.RyzenAdj != "" || Global.RyzenAdj != null) RunCLI.ApplySettings(processRyzenAdj, Global.RyzenAdj, true);
             }
             catch { }
         }

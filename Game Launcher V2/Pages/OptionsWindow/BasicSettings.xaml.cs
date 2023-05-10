@@ -84,7 +84,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             if (sdFan.Value == 3) lblFan.Text = "Turbo";
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.11);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }

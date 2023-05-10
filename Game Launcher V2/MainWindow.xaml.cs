@@ -64,7 +64,7 @@ namespace Game_Launcher_V2
 
         public static Frame navFrame;
 
-        public static string FanConfig = ""; 
+        public static string FanConfig = "";
 
         public MainWindow()
         {
@@ -124,7 +124,7 @@ namespace Game_Launcher_V2
 
                 //set up timer for sensor update
                 DispatcherTimer sensor = new DispatcherTimer();
-                sensor.Interval = TimeSpan.FromSeconds(0.14);
+                sensor.Interval = TimeSpan.FromSeconds(0.12);
                 sensor.Tick += Update_Tick;
                 sensor.Start();
 
@@ -333,9 +333,12 @@ namespace Game_Launcher_V2
         public async void getData()
         {
             Global.wifi = await Task.Run(() => Time_and_Bat.RetrieveSignalStrengthAsync());
-            Time_and_Bat.getBattery();
-            Time_and_Bat.getTime();
-            GetSensor.ReadSensors();
+            await Task.Run(() =>
+            {
+                Time_and_Bat.getBattery();
+                Time_and_Bat.getTime();
+                GetSensor.ReadSensors();
+            });
         }
 
         private static int Interpolate(int[] yValues, int[] xValues, int x)
@@ -366,7 +369,7 @@ namespace Game_Launcher_V2
         }
 
         int lastiGPU = 0;
-        int ryzen = -1;
+        int ryzenAdj = -1;
         int GC = -1;
         async void UpdateBatTime_Tick(object sender, EventArgs e)
         {
@@ -374,138 +377,148 @@ namespace Game_Launcher_V2
             {
                 getData();
 
-                if (File.Exists(FanConfig))
-                {
-                    int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
-                    int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
-
-                    if (Settings.Default.fanCurve == 1)
-                    {
-                        int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
-                        speeds = silent;
-                    }
-                    if (Settings.Default.fanCurve == 2)
-                    {
-                        int[] bal = { 0, 5, 15, 25, 40, 50, 65, 85 };
-                        speeds = bal;
-                    }
-                    if (Settings.Default.fanCurve == 3)
-                    {
-                        int[] turbo = { 0, 18, 28, 35, 60, 70, 85, 100 };
-                        speeds = turbo;
-                    }
-                    
-                    
-                    if (Settings.Default.fanCurve != 0 && Fan_Control.fanControlEnabled)
-                    {
-                        int cpuTemperature = GetCpuTemperature();
-
-                        var fanSpeed = Interpolate(speeds, temps, cpuTemperature);
-
-                        Fan_Control.setFanSpeed(fanSpeed);
-                    }
-
-                    if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
-                    else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
-                }
-
-                ryzen++;
-                if (Settings.Default.RyzenAdj != null || Settings.Default.RyzenAdj != "")
+                await Task.Run(() =>
                 {
                     string processRyzenAdj = "";
-                    string commandArguments = Settings.Default.RyzenAdj;
+                string commandArguments = Settings.Default.RyzenAdj;
 
+                // Set the desired frequencies in MHz
+                uint freqMax = (uint)Settings.Default.CpuClk;
+                uint freqMax1 = (uint)Settings.Default.CpuClk;
+                uint EPP = (uint)Settings.Default.EPP;
+                ryzenAdj++;
 
-                    if (ryzen >= 1)
+                
+                    if (ryzenAdj >= 1)
                     {
-                        if (Settings.Default.isiGFX == true)
+                        if (commandArguments != null || commandArguments != "")
                         {
-                            if (!Settings.Default.CPUName.ToLower().Contains("intel"))
+                            if (Settings.Default.isiGFX == true)
                             {
-                                try
+                                if (!Settings.Default.CPUName.ToLower().Contains("intel"))
                                 {
-                                    if (lastiGPU != Settings.Default.iGFXClk)
+                                    try
                                     {
-                                        commandArguments = commandArguments + $" --gfx-clk={(int)Settings.Default.iGFXClk}";
-                                        lastiGPU = Settings.Default.iGFXClk;
+                                        if (lastiGPU != Settings.Default.iGFXClk)
+                                        {
+                                            commandArguments = commandArguments + $" --gfx-clk={(int)Settings.Default.iGFXClk}";
+                                            lastiGPU = Settings.Default.iGFXClk;
+                                        }
+
                                     }
-
+                                    catch { }
                                 }
-                                catch { }
-                            }
 
-                            processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
-                            RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
-
-                            // Set the desired frequencies in MHz
-                            uint freqMax = (uint)Settings.Default.CpuClk;
-                            uint freqMax1 = (uint)Settings.Default.CpuClk;
-                            uint EPP = (uint)Settings.Default.EPP;
-
-                            if (Settings.Default.isCPUClk == true)
-                            {
-                                // Set the AC and DC values for PROCFREQMAX
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", freqMax, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", freqMax, false);
-
-                                // Set the AC and DC values for PROCFREQMAX1
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", freqMax1, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", freqMax1, false);
-
-                                // Activate the current power scheme
-                                CPUboost.SetActiveScheme("scheme_current");
-                            }
-                            else
-                            {
-     
-                                // Set the AC and DC values for PROCFREQMAX
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", 0, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", 0, false);
-
-                                // Set the AC and DC values for PROCFREQMAX1
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", 0, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", 0, false);
-
-                                // Activate the current power scheme
-                                CPUboost.SetActiveScheme("scheme_current");
-                            }
-
-                            if (Settings.Default.isEPP == true)
-                            {
-                               
-                                // Set the AC and DC values for PROCFREQMAX
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, false);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", EPP, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", EPP, false);
-
-                                // Activate the current power scheme
-                                CPUboost.SetActiveScheme("scheme_current");
-                            }
-                            else
-                            {
-
-                                // Set the AC and DC values for EPP
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 50, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 50, false);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", 50, true);
-                                CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", 50, false);
-
-                                // Activate the current power scheme
-                                CPUboost.SetActiveScheme("scheme_current");
+                                processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                                RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
                             }
                         }
 
-                        ryzen = 0;
-                    }
+                        if (Settings.Default.isCPUClk == true)
+                        {
+                            // Set the AC and DC values for PROCFREQMAX
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", freqMax, true);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", freqMax, false);
 
-                    if (GC >= 8)
-                    {
-                        BasicExeBackend.Garbage_Collect();
-                        GC = 0;
+                            // Set the AC and DC values for PROCFREQMAX1
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", freqMax1, true);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", freqMax1, false);
+
+                            // Activate the current power scheme
+                            CPUboost.SetActiveScheme("scheme_current");
+                        }
+                        else
+                        {
+
+                            // Set the AC and DC values for PROCFREQMAX
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", 0, true);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX", 0, false);
+
+                            // Set the AC and DC values for PROCFREQMAX1
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", 0, true);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PROCFREQMAX1", 0, false);
+
+                            // Activate the current power scheme
+                            CPUboost.SetActiveScheme("scheme_current");
+                        }
+
+                        if (Settings.Default.isEPP == true)
+                        {
+
+                            // Set the AC and DC values for PROCFREQMAX
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, true);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP", EPP, false);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", EPP, true);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", EPP, false);
+
+                            // Activate the current power scheme
+                            CPUboost.SetActiveScheme("scheme_current");
+                        }
+                        else
+                        {
+
+                            // Set the AC and DC values for EPP
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 50, true);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP ", 50, false);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", 50, true);
+                            CPUboost.SetPowerValue("scheme_current", "sub_processor", "PERFEPP1", 50, false);
+
+                            // Activate the current power scheme
+                            CPUboost.SetActiveScheme("scheme_current");
+                        }
+
+                        ryzenAdj = 0;
                     }
-                    GC++;
+                });
+
+                if (GC >= 8)
+                {
+                    BasicExeBackend.Garbage_Collect();
+                    GC = 0;
                 }
+                GC++;
+
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        if (File.Exists(FanConfig))
+                        {
+                            int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
+                            int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
+
+                            if (Settings.Default.fanCurve == 1)
+                            {
+                                int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
+                                speeds = silent;
+                            }
+                            if (Settings.Default.fanCurve == 2)
+                            {
+                                int[] bal = { 0, 5, 15, 25, 40, 50, 65, 85 };
+                                speeds = bal;
+                            }
+                            if (Settings.Default.fanCurve == 3)
+                            {
+                                int[] turbo = { 0, 18, 28, 35, 60, 70, 85, 100 };
+                                speeds = turbo;
+                            }
+
+
+                            if (Settings.Default.fanCurve != 0 && Fan_Control.fanControlEnabled)
+                            {
+                                int cpuTemperature = GetCpuTemperature();
+
+                                var fanSpeed = Interpolate(speeds, temps, cpuTemperature);
+
+                                Fan_Control.setFanSpeed(fanSpeed);
+                            }
+
+                            if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
+                            else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
+                        }
+                    });
+                }
+                catch { }
             }
             catch (Exception ex)
             {

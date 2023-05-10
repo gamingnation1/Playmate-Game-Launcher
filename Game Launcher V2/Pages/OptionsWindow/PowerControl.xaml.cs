@@ -84,7 +84,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.1);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
 
@@ -194,8 +194,11 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         Settings.Default.Save();
                     }
 
-                    processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
-                    RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+                    await Task.Run(() =>
+                    {
+                        processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                        RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
+                    });
 
                     bool isEnabled = false;
                     if (tsFPS.IsOn == true) isEnabled = true;
@@ -213,8 +216,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         ChangeTDP.changeTDP(TDP, TDP);
                     });
                 }
-            }
-            catch (Exception ex) { }
+            } catch (Exception ex) { }
         }
 
         private async void SetFPS(bool isEnabled, int fpsLimit)
@@ -311,6 +313,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 lblBatDisCharge.Text = $"-{dischargeRate.ToString("0.00")}W Charge Rate";
             }
             else lblBatDisCharge.Visibility = Visibility.Collapsed;
+
+
         }
 
         private static Controller controller;
@@ -320,8 +324,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
         bool connected;
         public static Border[] borders;
         public static Border lastBorder;
-        bool goingDown = true;
-
+        bool goingDown = false;
+        bool goingUp = false;
         private void ControllerInput(UserIndex controllerNo)
         {
             if (Global.AccessMenuSelected == 1 && Global.isAccessMenuOpen == true)
@@ -337,15 +341,10 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                         borders = new Border[] { Section2, Section3, Section4, Section5, Section6, Section061, Section062, Section7, Section8, Section081, Section082, Section9, Section10 };
                     }
 
-                    lblBat.Text = Time_and_Bat.batPercent;
-
-                    getBatteryTime();
-                    updateBatIcon();
-
                     //Get controller
                     controller = new Controller(controllerNo);
 
-                    if(controllerNo == UserIndex.One) connected = controller.IsConnected;
+                    if (controllerNo == UserIndex.One) connected = controller.IsConnected;
 
                     if (connected)
                     {
@@ -370,6 +369,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                                 if (optionSelected > 0) optionSelected--;
                                 else optionSelected = 0;
                                 goingDown = false;
+                                goingUp = true;
                             }
 
                             if (state.Gamepad.Buttons.HasFlag(GamepadButtonFlags.DPadDown) && Global.shortCut == false && isActive == false || ty < -18000 && Global.shortCut == false && isActive == false)
@@ -385,6 +385,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                                 if (optionSelected < max) optionSelected++;
                                 else optionSelected = max;
+                                goingUp = false;
                                 goingDown = true;
                             }
 
@@ -565,8 +566,11 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                             mainView.ScrollToVerticalOffset(bottomPosition.Y);
                         }
                     }
+
+                    goingUp = false;
+                    goingDown = false;
                 }
-                else
+                else if (goingUp)
                 {
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
                     if (borders[optionSelected].Visibility == Visibility.Collapsed) optionSelected--;
@@ -585,6 +589,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                             mainView.ScrollToVerticalOffset(topPosition.Y);
                         }
                     }
+
+                    goingUp = false;
+                    goingDown = false;
                 }
 
                 if (borders[optionSelected] == Section10 && Section10.Visibility == Visibility.Collapsed) { optionSelected = 7; }

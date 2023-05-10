@@ -14,12 +14,15 @@ namespace Game_Launcher_V2.Scripts
     internal class GetSensor
     {
         public static float? BatteryDischarge { get; private set; }
-        public static void ReadSensors()
+        public async static void ReadSensors()
         {
             try
             {
-                using (var cb = new PerformanceCounter("Power Meter", "Power", "Power Meter (0)", true))
-                    BatteryDischarge = cb.NextValue() / 1000;
+                await Task.Run(() =>
+                {
+                    using (var cb = new PerformanceCounter("Power Meter", "Power", "Power Meter (0)", true))
+                        BatteryDischarge = cb.NextValue() / 1000;
+                });
             }
             catch (Exception ex)
             {

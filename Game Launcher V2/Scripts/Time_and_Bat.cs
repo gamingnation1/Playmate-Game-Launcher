@@ -92,8 +92,8 @@ namespace Game_Launcher_V2.Scripts
             double wifi = Global.wifi;
 
             var wifiRadios = await Radio.GetRadiosAsync();
-            var wifiRadio = wifiRadios.FirstOrDefault(r => r.Kind == RadioKind.WiFi);
-            var internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+            var wifiRadio = await Task.Run(() => wifiRadios.FirstOrDefault(r => r.Kind == RadioKind.WiFi));
+            var internetConnectionProfile = await Task.Run(() => NetworkInformation.GetInternetConnectionProfile());
 
             if (wifiRadio != null && wifiRadio.State == RadioState.On)
             {
