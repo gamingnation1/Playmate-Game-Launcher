@@ -381,6 +381,62 @@ namespace Game_Launcher_V2
             {
                 getData();
 
+                try
+                {
+                    if (Global.isASUS == false)
+                    {
+                        await Task.Run(() =>
+                        {
+                            if (File.Exists(FanConfig))
+                            {
+                                int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
+                                int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
+
+                                if (Settings.Default.fanCurve == 1)
+                                {
+                                    int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
+                                    speeds = silent;
+                                }
+                                if (Settings.Default.fanCurve == 2)
+                                {
+                                    int[] bal = { 0, 5, 15, 25, 40, 50, 65, 85 };
+                                    speeds = bal;
+                                }
+                                if (Settings.Default.fanCurve == 3)
+                                {
+                                    int[] turbo = { 0, 18, 28, 35, 60, 70, 85, 100 };
+                                    speeds = turbo;
+                                }
+
+
+                                if (Settings.Default.fanCurve != 0 && Fan_Control.fanControlEnabled)
+                                {
+                                    int cpuTemperature = GetCpuTemperature();
+
+                                    var fanSpeed = Interpolate(speeds, temps, cpuTemperature);
+
+                                    Fan_Control.setFanSpeed(fanSpeed);
+                                }
+
+                                if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
+                                else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        ACProfile = Settings.Default.fanCurve;
+
+                        if (ACProfile != lastACProfile)
+                        {
+                            await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode, ACProfile));
+
+                            lastACProfile = ACProfile;
+                        }
+                    }
+                }
+                catch { }
+
                 await Task.Run(() =>
                 {
                     string processRyzenAdj = "";
@@ -481,64 +537,6 @@ namespace Game_Launcher_V2
                     GC = 0;
                 }
                 GC++;
-
-                try
-                {
-                    if (Global.isASUS == false)
-                    {
-                        await Task.Run(() =>
-                        {
-                            if (File.Exists(FanConfig))
-                            {
-                                int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
-                                int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
-
-                                if (Settings.Default.fanCurve == 1)
-                                {
-                                    int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
-                                    speeds = silent;
-                                }
-                                if (Settings.Default.fanCurve == 2)
-                                {
-                                    int[] bal = { 0, 5, 15, 25, 40, 50, 65, 85 };
-                                    speeds = bal;
-                                }
-                                if (Settings.Default.fanCurve == 3)
-                                {
-                                    int[] turbo = { 0, 18, 28, 35, 60, 70, 85, 100 };
-                                    speeds = turbo;
-                                }
-
-
-                                if (Settings.Default.fanCurve != 0 && Fan_Control.fanControlEnabled)
-                                {
-                                    int cpuTemperature = GetCpuTemperature();
-
-                                    var fanSpeed = Interpolate(speeds, temps, cpuTemperature);
-
-                                    Fan_Control.setFanSpeed(fanSpeed);
-                                }
-
-                                if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
-                                else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
-                            }
-                        });
-                    }
-                    else
-                    {
-                        ACProfile = Settings.Default.fanCurve;
-
-                        if (ACProfile != lastACProfile)
-                        {
-                            await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode, ACProfile));
-
-                            lastACProfile = ACProfile;
-                        }
-
-                        
-                    }
-                }
-                catch { }
             }
             catch (Exception ex)
             {

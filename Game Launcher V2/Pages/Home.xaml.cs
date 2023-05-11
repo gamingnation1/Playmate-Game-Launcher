@@ -648,7 +648,7 @@ namespace Game_Launcher_V2.Pages
                         //Make sure music repeats on end
                         mediaPlayer.MediaEnded += new EventHandler(Media_Ended);
                         //Set volume to 90%
-                        mediaPlayer.Volume = 0.6;
+                        mediaPlayer.Volume = 0.7;
                         //Play music
                         mediaPlayer.Play();
                     }
