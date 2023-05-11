@@ -56,15 +56,17 @@ namespace Game_Launcher_V2
             {
                 try
                 {
-                    if (GetSystemInfo.ProductName.ToLower().Contains("ally") || GetSystemInfo.ProductName.ToLower().Contains("flow"))
+                    if (GetSystemInfo.ProductName.ToLower().Contains("rog") || GetSystemInfo.ProductName.ToLower().Contains("tuf") || GetSystemInfo.ProductName.ToLower().Contains("ally") || GetSystemInfo.ProductName.ToLower().Contains("flow"))
                     {
                         wmi = new ASUSWmi();
                         Global.isASUS = true;
                         xgMobileConnectionService = new XgMobileConnectionService(wmi);
 
-                        if (Settings.Default.isFirstBoot)
+                        if (Settings.Default.isFirstBoot == true)
                         {
-                            Settings.Default.fanCurve = wmi.DeviceGet(ASUSWmi.PerformanceMode);
+                            if (wmi.DeviceGet(ASUSWmi.PerformanceMode) == 0) Settings.Default.fanCurve = ASUSWmi.PerformanceBalanced;
+                            if (wmi.DeviceGet(ASUSWmi.PerformanceMode) == 1) Settings.Default.fanCurve = ASUSWmi.PerformanceTurbo;
+                            if (wmi.DeviceGet(ASUSWmi.PerformanceMode) == 2) Settings.Default.fanCurve = ASUSWmi.PerformanceSilent;
                             Settings.Default.Save();
                         }
                     }

@@ -37,6 +37,7 @@ using Windows.Networking.Connectivity;
 using Windows.Devices.Enumeration;
 using Microsoft.Win32.TaskScheduler;
 using Task = System.Threading.Tasks.Task;
+using Game_Launcher_V2.Scripts.ASUS;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -342,17 +343,31 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 if (sdFan.Value == 1) lblFan.Text = "Silent";
                 if (sdFan.Value == 2) lblFan.Text = "Balanced";
                 if (sdFan.Value == 3) lblFan.Text = "Turbo";
+                Settings.Default.fanCurve = (int)sdFan.Value;
+                Settings.Default.Save();
             }
             else
             {
-                if (sdFan.Value == 0) lblFan.Text = "Silent";
-                if (sdFan.Value == 1) lblFan.Text = "Performance";
-                if (sdFan.Value == 2) lblFan.Text = "Turbo";
+                if (sdFan.Value == 0)
+                {
+                    lblFan.Text = "Silent";
+                    Settings.Default.fanCurve = ASUSWmi.PerformanceSilent;
+                }
+                if (sdFan.Value == 1)
+                {
+                    lblFan.Text = "Performance";
+                    Settings.Default.fanCurve = ASUSWmi.PerformanceBalanced;
+                }
+                if (sdFan.Value == 2)
+                {
+                    lblFan.Text = "Turbo";
+                    Settings.Default.fanCurve = ASUSWmi.PerformanceTurbo;
+                }
+                Settings.Default.Save();
+                await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode, Settings.Default.fanCurve));
             }
-            
 
-            Settings.Default.fanCurve = (int)sdFan.Value;
-            Settings.Default.Save();
+            
 
             if (Global.AccessMenuSelected == 0 && Global.isAccessMenuOpen == true)
             {

@@ -526,16 +526,11 @@ namespace Game_Launcher_V2
                     }
                     else
                     {
-                        if (Settings.Default.fanCurve == 0) ACProfile = ASUSWmi.PerformanceSilent;
-                        if (Settings.Default.fanCurve == 1) ACProfile = ASUSWmi.PerformanceBalanced;
-                        if (Settings.Default.fanCurve == 2) ACProfile = ASUSWmi.PerformanceTurbo;
+                        ACProfile = Settings.Default.fanCurve;
 
                         if (ACProfile != lastACProfile)
                         {
-                            await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode,
-                    ACProfile == 0 ? ASUSWmi.PerformanceSilent :
-                    ACProfile == 1 ? ASUSWmi.PerformanceBalanced :
-                    ACProfile == 2 ? ASUSWmi.PerformanceTurbo : ASUSWmi.PerformanceBalanced));
+                            await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode, ACProfile));
 
                             lastACProfile = ACProfile;
                         }
