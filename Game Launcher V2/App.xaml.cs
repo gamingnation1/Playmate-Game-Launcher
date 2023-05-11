@@ -11,10 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -58,10 +60,39 @@ namespace Game_Launcher_V2
                 services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
             }).Build();
 
+        public static bool IsRunningAsAdministrator()
+        {
+            // Get current Windows user
+            WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
+
+            // Get current Windows user principal
+            WindowsPrincipal windowsPrincipal = new WindowsPrincipal(windowsIdentity);
+
+            // Return TRUE if user is in role "Administrator"
+            return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             _ = Tablet.TabletDevices;
+
+            if (IsRunningAsAdministrator())
+            {
+                if (GetSystemInfo.Product.ToLower().Contains("ally") || GetSystemInfo.Product.ToLower().Contains("flow"))
+                {
+                    wmi = new ASUSWmi();
+                    Global.isASUS = true;
+                    xgMobileConnectionService = GetService<XgMobileConnectionService>();
+
+                    if (Settings.Default.isFirstBoot)
+                    {
+                        Settings.Default.fanCurve = wmi.DeviceGet(ASUSWmi.PerformanceMode);
+                        Settings.Default.Save();
+                    }
+                }
+
+                MessageBox.Show(GetSystemInfo.Product);
+            }
 
             if (Settings.Default.openGameList == false)
             {
@@ -70,21 +101,6 @@ namespace Game_Launcher_V2
             else
             {
                 StartupUri = new Uri("Windows/OptionsWindow.xaml", UriKind.Relative);
-            }
-
-            _ = Tablet.TabletDevices;
-
-            if (GetSystemInfo.Product.ToLower().Contains("ally") || GetSystemInfo.Product.ToLower().Contains("rog") || GetSystemInfo.Product.ToLower().Contains("tuf"))
-            {
-                wmi = new ASUSWmi();
-                Global.isASUS = true;
-                xgMobileConnectionService = GetService<XgMobileConnectionService>();
-
-                if (Settings.Default.isFirstBoot)
-                {
-                    Settings.Default.fanCurve = wmi.DeviceGet(ASUSWmi.PerformanceMode);
-                    Settings.Default.Save();
-                }
             }
         }
 

@@ -88,9 +88,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             else
             {
                 lblFanName.Text = "Power Profile";
-                if (sdFan.Value == 0) lblFan.Text = "Silent";
-                if (sdFan.Value == 1) lblFan.Text = "Performance";
-                if (sdFan.Value == 2) lblFan.Text = "Turbo";
+                if (sdFan.Value == 2) lblFan.Text = "Silent";
+                if (sdFan.Value == 0) lblFan.Text = "Performance";
+                if (sdFan.Value == 1) lblFan.Text = "Turbo";
 
                 sdFan.Maximum = 2;
                 sdFan.Minimum = 0;
@@ -345,9 +345,9 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             }
             else
             {
-                if (sdFan.Value == 0) lblFan.Text = "Silent";
-                if (sdFan.Value == 1) lblFan.Text = "Performance";
-                if (sdFan.Value == 2) lblFan.Text = "Turbo";
+                if (sdFan.Value == 2) lblFan.Text = "Silent";
+                if (sdFan.Value == 0) lblFan.Text = "Performance";
+                if (sdFan.Value == 1) lblFan.Text = "Turbo";
             }
             
 

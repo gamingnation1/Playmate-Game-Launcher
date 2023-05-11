@@ -90,6 +90,7 @@ namespace Game_Launcher_V2
 
                 GetSensor.openSensor();
 
+
                 //Detect if an AYA Neo is being used
 
                 ManagementObjectSearcher baseboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
