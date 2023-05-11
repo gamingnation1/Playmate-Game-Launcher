@@ -191,12 +191,12 @@
                         </Border>
                         <StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
                             <Image Height="37" Width="35" Name="imgSettings"  Margin="0,0,9,0" Visibility="Collapsed"></Image>
-                            <TextBlock Name="lblSettings" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0" Visibility="Collapsed">Settings</TextBlock>
+                            <TextBlock Name="lblSettings" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,18,0" Visibility="Collapsed">Settings</TextBlock>
                             <Image Visibility="Collapsed" Height="32" Width="30" Name="imgDPadLeft"  Margin="18,0,4,0"></Image>
                             <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Prev</TextBlock>
                             <Image Visibility="Collapsed" Height="32" Width="30" Name="imgDPadRight"  Margin="18,0,4,0"></Image>
                             <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="20" Foreground="White" TextAlignment="Center" Margin="0,-3,0,0">Next</TextBlock>
-                            <Image Height="32" Width="30" Name="imgB"  Margin="18,0,5,0"></Image>
+                            <Image Height="32" Width="30" Name="imgB"  Margin="0,0,5,0"></Image>
                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Desktop"/>
                             <Image Height="32" Width="30" Name="imgX"  Margin="18,0,5,0"></Image>
                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,-3,0,0" Text="Reload"/>

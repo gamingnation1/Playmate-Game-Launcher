@@ -98,7 +98,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             }
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.11);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -226,6 +226,8 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                 await SetWifiEnabled();
                 await SetBluetoothEnabled();
+
+                await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode, Settings.Default.fanCurve));
 
                 await Task.Run(() =>
                 {
@@ -364,7 +366,6 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     Settings.Default.fanCurve = ASUSWmi.PerformanceTurbo;
                 }
                 Settings.Default.Save();
-                await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode, Settings.Default.fanCurve));
             }
 
             
