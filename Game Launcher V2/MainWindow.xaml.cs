@@ -2,6 +2,7 @@
 using Game_Launcher_V2.Properties;
 using Game_Launcher_V2.Scripts;
 using Game_Launcher_V2.Scripts.ADLX;
+using Game_Launcher_V2.Scripts.ASUS;
 using Game_Launcher_V2.Scripts.Epic_Games;
 using Game_Launcher_V2.Scripts.OptionsWindow.PowerControl;
 using Game_Launcher_V2.Windows;
@@ -371,6 +372,8 @@ namespace Game_Launcher_V2
         int lastiGPU = 0;
         int ryzenAdj = -1;
         int GC = -1;
+        int ACProfile = 0;
+        int lastACProfile = -1;
         async void UpdateBatTime_Tick(object sender, EventArgs e)
         {
             try
@@ -471,7 +474,7 @@ namespace Game_Launcher_V2
                     }
                 });
 
-                if (GC >= 8)
+                if (GC >= 12)
                 {
                     BasicExeBackend.Garbage_Collect();
                     GC = 0;
@@ -480,43 +483,61 @@ namespace Game_Launcher_V2
 
                 try
                 {
-                    await Task.Run(() =>
+                    if (Global.isASUS == false)
                     {
-                        if (File.Exists(FanConfig))
+                        await Task.Run(() =>
                         {
-                            int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
-                            int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
-
-                            if (Settings.Default.fanCurve == 1)
+                            if (File.Exists(FanConfig))
                             {
-                                int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
-                                speeds = silent;
+                                int[] temps = { 25, 35, 45, 55, 65, 75, 85, 95 };
+                                int[] speeds = { 0, 5, 15, 25, 40, 55, 70, 100 };
+
+                                if (Settings.Default.fanCurve == 1)
+                                {
+                                    int[] silent = { 0, 5, 15, 18, 30, 45, 55, 65 };
+                                    speeds = silent;
+                                }
+                                if (Settings.Default.fanCurve == 2)
+                                {
+                                    int[] bal = { 0, 5, 15, 25, 40, 50, 65, 85 };
+                                    speeds = bal;
+                                }
+                                if (Settings.Default.fanCurve == 3)
+                                {
+                                    int[] turbo = { 0, 18, 28, 35, 60, 70, 85, 100 };
+                                    speeds = turbo;
+                                }
+
+
+                                if (Settings.Default.fanCurve != 0 && Fan_Control.fanControlEnabled)
+                                {
+                                    int cpuTemperature = GetCpuTemperature();
+
+                                    var fanSpeed = Interpolate(speeds, temps, cpuTemperature);
+
+                                    Fan_Control.setFanSpeed(fanSpeed);
+                                }
+
+                                if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
+                                else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
                             }
-                            if (Settings.Default.fanCurve == 2)
-                            {
-                                int[] bal = { 0, 5, 15, 25, 40, 50, 65, 85 };
-                                speeds = bal;
-                            }
-                            if (Settings.Default.fanCurve == 3)
-                            {
-                                int[] turbo = { 0, 18, 28, 35, 60, 70, 85, 100 };
-                                speeds = turbo;
-                            }
+                        });
+                    }
+                    else
+                    {
+                        ACProfile = Settings.Default.fanCurve;
+                        if (ACProfile != lastACProfile)
+                        {
+                            await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode,
+                    ACProfile == 0 ? ASUSWmi.PerformanceSilent :
+                    ACProfile == 1 ? ASUSWmi.PerformanceBalanced :
+                    ACProfile == 2 ? ASUSWmi.PerformanceTurbo : ASUSWmi.PerformanceBalanced));
 
-
-                            if (Settings.Default.fanCurve != 0 && Fan_Control.fanControlEnabled)
-                            {
-                                int cpuTemperature = GetCpuTemperature();
-
-                                var fanSpeed = Interpolate(speeds, temps, cpuTemperature);
-
-                                Fan_Control.setFanSpeed(fanSpeed);
-                            }
-
-                            if (Settings.Default.fanCurve == 0 && Fan_Control.fanControlEnabled) Fan_Control.disableFanControl();
-                            else if (Settings.Default.fanCurve != 0 && !Fan_Control.fanControlEnabled) Fan_Control.enableFanControl();
+                            lastACProfile = ACProfile;
                         }
-                    });
+
+                        
+                    }
                 }
                 catch { }
             }

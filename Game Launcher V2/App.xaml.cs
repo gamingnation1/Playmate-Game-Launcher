@@ -1,5 +1,6 @@
 ﻿using Game_Launcher_V2.Models;
 using Game_Launcher_V2.Properties;
+using Game_Launcher_V2.Scripts;
 using Game_Launcher_V2.Scripts.ASUS;
 using Game_Launcher_V2.Services;
 using Microsoft.Extensions.Configuration;
@@ -76,7 +77,14 @@ namespace Game_Launcher_V2
             if (GetSystemInfo.Product.ToLower().Contains("ally") || GetSystemInfo.Product.ToLower().Contains("rog") || GetSystemInfo.Product.ToLower().Contains("tuf"))
             {
                 wmi = new ASUSWmi();
+                Global.isASUS = true;
                 xgMobileConnectionService = GetService<XgMobileConnectionService>();
+
+                if (Settings.Default.isFirstBoot)
+                {
+                    Settings.Default.fanCurve = wmi.DeviceGet(ASUSWmi.PerformanceMode);
+                    Settings.Default.Save();
+                }
             }
         }
 

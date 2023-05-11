@@ -84,7 +84,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             ThemeManager.Current.ChangeTheme(this, "Dark.Teal");
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.11);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
 

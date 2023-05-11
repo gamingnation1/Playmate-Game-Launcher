@@ -40,6 +40,8 @@ namespace Game_Launcher_V2.Scripts
 
         public static int reload = 0;
 
+        public static bool isASUS = false;
+
         //Get current working directory
         public static string path;
         public static Visual GetDescendantByType(Visual element, Type type)

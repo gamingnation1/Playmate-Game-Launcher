@@ -78,13 +78,26 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
             tsMic.IsOn = Settings.Default.isMuted;
             sdFan.Value = Settings.Default.fanCurve;
 
-            if (sdFan.Value == 0) lblFan.Text = "Default";
-            if (sdFan.Value == 1) lblFan.Text = "Silent";
-            if (sdFan.Value == 2) lblFan.Text = "Balanced";
-            if (sdFan.Value == 3) lblFan.Text = "Turbo";
+            if (Global.isASUS != true)
+            {
+                if (sdFan.Value == 0) lblFan.Text = "Default";
+                if (sdFan.Value == 1) lblFan.Text = "Silent";
+                if (sdFan.Value == 2) lblFan.Text = "Balanced";
+                if (sdFan.Value == 3) lblFan.Text = "Turbo";
+            }
+            else
+            {
+                lblFanName.Text = "Power Profile";
+                if (sdFan.Value == 0) lblFan.Text = "Silent";
+                if (sdFan.Value == 1) lblFan.Text = "Performance";
+                if (sdFan.Value == 2) lblFan.Text = "Turbo";
+
+                sdFan.Maximum = 2;
+                sdFan.Minimum = 0;
+            }
 
             //set up timer for key combo system
-            checkKeyInput.Interval = TimeSpan.FromSeconds(0.12);
+            checkKeyInput.Interval = TimeSpan.FromSeconds(0.11);
             checkKeyInput.Tick += KeyShortCuts_Tick;
             checkKeyInput.Start();
         }
@@ -323,10 +336,20 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 wasClosed = false;
             }
 
-            if (sdFan.Value == 0) lblFan.Text = "Default";
-            if (sdFan.Value == 1) lblFan.Text = "Silent";
-            if (sdFan.Value == 2) lblFan.Text = "Balanced";
-            if (sdFan.Value == 3) lblFan.Text = "Turbo";
+            if(Global.isASUS != true)
+            {
+                if (sdFan.Value == 0) lblFan.Text = "Default";
+                if (sdFan.Value == 1) lblFan.Text = "Silent";
+                if (sdFan.Value == 2) lblFan.Text = "Balanced";
+                if (sdFan.Value == 3) lblFan.Text = "Turbo";
+            }
+            else
+            {
+                if (sdFan.Value == 0) lblFan.Text = "Silent";
+                if (sdFan.Value == 1) lblFan.Text = "Performance";
+                if (sdFan.Value == 2) lblFan.Text = "Turbo";
+            }
+            
 
             Settings.Default.fanCurve = (int)sdFan.Value;
             Settings.Default.Save();
