@@ -11,7 +11,7 @@ namespace Universal_x86_Tuning_Utility.Scripts.Misc
     {
         private static ManagementObjectSearcher baseboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
         private static ManagementObjectSearcher motherboardSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_MotherboardDevice");
-
+        private static ManagementObjectSearcher ComputerSystemInfo = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_ComputerSystemProduct");
 
 
         static public string Manufacturer
@@ -42,6 +42,25 @@ namespace Universal_x86_Tuning_Utility.Scripts.Misc
                     foreach (ManagementObject queryObj in baseboardSearcher.Get())
                     {
                         return queryObj["Product"].ToString();
+                    }
+                    return "";
+                }
+                catch (Exception e)
+                {
+                    return "";
+                }
+            }
+        }
+
+        static public string ProductName
+        {
+            get
+            {
+                try
+                {
+                    foreach (ManagementObject queryObj in ComputerSystemInfo.Get())
+                    {
+                        return queryObj["Name"].ToString();
                     }
                     return "";
                 }

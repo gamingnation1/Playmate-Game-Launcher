@@ -19,9 +19,13 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Navigation;
 using Universal_x86_Tuning_Utility.Scripts.Misc;
 using Windows.UI.Notifications;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Game_Launcher_V2
 {
@@ -30,35 +34,7 @@ namespace Game_Launcher_V2
     /// </summary>
     public partial class App : Application
     {
-        public static ASUSWmi wmi;
-
-        /// <summary>
-        /// Gets registered service.
-        /// </summary>
-        /// <typeparam name="T">Type of the service to get.</typeparam>
-        /// <returns>Instance of the service or <see langword="null"/>.</returns>
-        public static T GetService<T>()
-            where T : class
-        {
-            return _host.Services.GetService(typeof(T)) as T;
-        }
-
-        // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
-        // https://docs.microsoft.com/dotnet/core/extensions/generic-host
-        // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
-        // https://docs.microsoft.com/dotnet/core/extensions/configuration
-        // https://docs.microsoft.com/dotnet/core/extensions/logging
-        private static readonly IHost _host = Host
-            .CreateDefaultBuilder()
-            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)); })
-            .ConfigureServices((context, services) =>
-            {
-                services.AddSingleton(wmi);
-                services.AddSingleton<XgMobileConnectionService>();
-
-                // Configuration
-                services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
-            }).Build();
+        public static ASUSWmi wmi;     
 
         public static bool IsRunningAsAdministrator()
         {
@@ -78,20 +54,24 @@ namespace Game_Launcher_V2
 
             if (IsRunningAsAdministrator())
             {
-                if (GetSystemInfo.Product.ToLower().Contains("ally") || GetSystemInfo.Product.ToLower().Contains("flow"))
+                try
                 {
-                    wmi = new ASUSWmi();
-                    Global.isASUS = true;
-                    xgMobileConnectionService = GetService<XgMobileConnectionService>();
-
-                    if (Settings.Default.isFirstBoot)
+                    if (GetSystemInfo.ProductName.ToLower().Contains("ally") || GetSystemInfo.ProductName.ToLower().Contains("flow"))
                     {
-                        Settings.Default.fanCurve = wmi.DeviceGet(ASUSWmi.PerformanceMode);
-                        Settings.Default.Save();
-                    }
-                }
+                        wmi = new ASUSWmi();
+                        Global.isASUS = true;
+                        xgMobileConnectionService = new XgMobileConnectionService(wmi);
 
-                MessageBox.Show(GetSystemInfo.Product);
+                        if (Settings.Default.isFirstBoot)
+                        {
+                            Settings.Default.fanCurve = wmi.DeviceGet(ASUSWmi.PerformanceMode);
+                            Settings.Default.Save();
+                        }
+                    }
+                } catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
 
             if (Settings.Default.openGameList == false)
@@ -104,7 +84,7 @@ namespace Game_Launcher_V2
             }
         }
 
-        private XgMobileConnectionService xgMobileConnectionService;
+        public static XgMobileConnectionService xgMobileConnectionService;
 
         private void SetUpXgMobileDetection()
         {
