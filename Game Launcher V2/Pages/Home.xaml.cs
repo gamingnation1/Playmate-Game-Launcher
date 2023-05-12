@@ -367,8 +367,7 @@ namespace Game_Launcher_V2.Pages
                             {
                                 if (model.bgImagePath.Contains(".mp4"))
                                 {
-                                    if (GameBGVideo.Opacity > 0) GameBG.Opacity = 0;
-                                    else StartAnimationBGFadeOut();
+                                    if (GameBG.Opacity > 0) StartAnimationBGFadeOut();
                                     await StartAnimationBGFadeOutVideo();
                                 }
                                 else
