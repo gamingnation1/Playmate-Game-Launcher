@@ -197,7 +197,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
 
                     await Task.Run(() =>
                     {
-                        processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                        processRyzenAdj = "\\Assets\\AMD\\ryzenadj.exe";
                         RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
                     });
 
@@ -263,7 +263,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                 {
                     bi.BeginInit();
                     bi.UriSource = new Uri(batURL, UriKind.RelativeOrAbsolute);
-                    bi.DecodePixelWidth = 128;
+                    bi.DecodePixelWidth = 256;
                     bi.CacheOption = BitmapCacheOption.OnLoad;
                     bi.EndInit();
 

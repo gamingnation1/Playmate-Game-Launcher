@@ -52,7 +52,7 @@ namespace UXTU.Scripts.Intel
         {
             try
             {
-                string processRW = BaseDir + "\\bin\\intel\\RW\\Rw.exe";
+                string processRW = BaseDir + "\\Assets\\intel\\RW\\Rw.exe";
                 string hexPL1 = convertTDPToHexMMIO(pl1TDP);
                 string hexPL2 = convertTDPToHexMMIO(pl2TDP);
                 if (hexPL1 != "Error" && hexPL2 != "Error" && MCHBAR != null)
@@ -173,7 +173,7 @@ namespace UXTU.Scripts.Intel
         {
             try
             {
-                string processRW = BaseDir + "\\bin\\intel\\RW\\Rw.exe";
+                string processRW = BaseDir + "\\Assets\\intel\\RW\\Rw.exe";
                 string hexPL1 = convertTDPToHexMSR(pl1TDP);
                 string hexPL2 = convertTDPToHexMSR(pl2TDP);
                 if (hexPL1 != "Error" && hexPL2 != "Error" && MCHBAR != null)
@@ -212,7 +212,7 @@ namespace UXTU.Scripts.Intel
         {
             try
             {
-                string processRW = BaseDir + "\\bin\\intel\\RW\\Rw.exe";
+                string processRW = BaseDir + "\\Assets\\intel\\RW\\Rw.exe";
                 string hexPL1 = convertTDPToHex(pl1TDP);
                 string hexPL2 = convertTDPToHex(pl2TDP);
                 if (hexPL1 != "Error" && hexPL2 != "Error" && MCHBAR != null)
@@ -265,7 +265,7 @@ namespace UXTU.Scripts.Intel
                             if (hexPL2.Length == 1) { hexPL2 = "00" + hexPL2; }
                             if (hexPL2.Length == 2) { hexPL2 = "0" + hexPL2; }
                         }
-                        string commandArguments = BaseDir + "\\bin\\intel\\MSR\\msr-cmd.exe -s write 0x610 0x00438" + hexPL2 + " 0x00dd8" + hexPL1;
+                        string commandArguments = BaseDir + "\\Assets\\intel\\MSR\\msr-cmd.exe -s write 0x610 0x00438" + hexPL2 + " 0x00dd8" + hexPL1;
 
                         RunCLI.RunCommand(commandArguments, false, processRW);
                         Thread.Sleep(100);

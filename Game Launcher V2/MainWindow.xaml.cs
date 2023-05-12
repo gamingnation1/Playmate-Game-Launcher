@@ -469,7 +469,7 @@ namespace Game_Launcher_V2
                                     catch { }
                                 }
 
-                                processRyzenAdj = "\\bin\\AMD\\ryzenadj.exe";
+                                processRyzenAdj = "\\Assets\\AMD\\ryzenadj.exe";
                                 RunCLI.ApplySettings(processRyzenAdj, commandArguments, true);
                             }
                         }
