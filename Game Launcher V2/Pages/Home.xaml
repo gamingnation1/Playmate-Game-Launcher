@@ -73,7 +73,7 @@
         </DockPanel>
         <DockPanel ZIndex="1" LastChildFill="True">
             <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-12" Name="bgVideoCon">
-                <MediaElement Name="GameBGVideo" Stretch="UniformToFill" LoadedBehavior="Manual" UnloadedBehavior="Manual" Visibility="Collapsed" MediaEnded="GameBGVideo_MediaEnded" IsMuted="True"></MediaElement>
+                <MediaElement Name="GameBGVideo" Stretch="UniformToFill" LoadedBehavior="Manual" UnloadedBehavior="Manual" Visibility="Collapsed" MediaEnded="GameBGVideo_MediaEnded" IsMuted="True" ></MediaElement>
             </Viewbox>
         </DockPanel>
         <DockPanel ZIndex="2" LastChildFill="True" Opacity="0" Name="gameLaunch" Visibility="Collapsed">

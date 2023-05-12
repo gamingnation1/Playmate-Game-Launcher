@@ -568,9 +568,6 @@ namespace Game_Launcher_V2.Pages
             // Set the frame rate of the fadeOut animation to 60 frames per second
             Timeline.SetDesiredFrameRate(fadeOut, 60);
 
-            // Set the From property of the fadeOut animation to the current opacity value
-            fadeOut.From = currentOpacity;
-
             // Begin the animation with the DoubleAnimation instance
             GameBG.BeginAnimation(OpacityProperty, fadeOut, HandoffBehavior.Compose);
             await Task.Delay(750);
@@ -582,9 +579,6 @@ namespace Game_Launcher_V2.Pages
 
             // Set the frame rate of the fadeOut animation to 60 frames per second
             Timeline.SetDesiredFrameRate(fadeOut, 60);
-
-            // Set the From property of the fadeOut animation to the current opacity value
-            fadeOut.From = currentOpacity;
 
             // Begin the animation with the DoubleAnimation instance
             GameBGVideo.BeginAnimation(OpacityProperty, fadeOut, HandoffBehavior.Compose);
@@ -600,9 +594,6 @@ namespace Game_Launcher_V2.Pages
             // Set the frame rate of the fadeOut animation to 60 frames per second
             Timeline.SetDesiredFrameRate(fadeOut, 60);
 
-            // Set the From property of the fadeOut animation to the current opacity value
-            fadeIn.From = currentOpacity;
-
             // Begin the animation with the DoubleAnimation instance
             GameBG.BeginAnimation(OpacityProperty, fadeIn, HandoffBehavior.Compose);
             await Task.Delay(750);
@@ -615,9 +606,6 @@ namespace Game_Launcher_V2.Pages
 
             // Set the frame rate of the fadeOut animation to 60 frames per second
             Timeline.SetDesiredFrameRate(fadeOut, 60);
-
-            // Set the From property of the fadeOut animation to the current opacity value
-            fadeIn.From = currentOpacity;
 
             // Begin the animation with the DoubleAnimation instance
             GameBGVideo.BeginAnimation(OpacityProperty, fadeIn, HandoffBehavior.Compose);
@@ -683,6 +671,7 @@ namespace Game_Launcher_V2.Pages
 
         private static Controller controller;
         bool hasLaunched = false;
+        bool hasPaused = false;
         private async void ControllerInput(UserIndex controllerNo)
         {
             try
@@ -694,8 +683,16 @@ namespace Game_Launcher_V2.Pages
                 //If window is not focused stop music
                 if (isActive != true)
                 {
-                    mediaPlayer.Pause();
+                    mediaPlayer.Stop();
                     GameBGVideo.Stop();
+
+                    if (hasPaused == false)
+                    {
+                        if (GameBG.Visibility == Visibility.Visible && GameBG.Opacity > 0) StartAnimationBGFadeOut();
+                        if (GameBGVideo.Visibility == Visibility.Visible && GameBGVideo.Opacity > 0) StartAnimationBGFadeOutVideo();
+                        hasPaused = true;
+                    }
+
                     wasNotFocused = true;
 
                     if (mainBody.Opacity != 1 && hasLaunched == true)
@@ -727,6 +724,10 @@ namespace Game_Launcher_V2.Pages
                 {
                     if (lastAudio != "N/A") mediaPlayer.Play();
                     if (lastBG.Contains(".mp4")) GameBGVideo.Play();
+
+                    if (GameBG.Visibility == Visibility.Visible && GameBG.Opacity < 1) StartAnimationBGFadeIn();
+                    if (GameBGVideo.Visibility == Visibility.Visible && GameBGVideo.Opacity < 1) StartAnimationBGFadeInVideo();
+
                     wasNotFocused = false;
                 }
 

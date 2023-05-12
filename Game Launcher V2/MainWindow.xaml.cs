@@ -531,7 +531,7 @@ namespace Game_Launcher_V2
                     }
                 });
 
-                if (GC >= 12)
+                if (GC >= 9)
                 {
                     BasicExeBackend.Garbage_Collect();
                     GC = 0;

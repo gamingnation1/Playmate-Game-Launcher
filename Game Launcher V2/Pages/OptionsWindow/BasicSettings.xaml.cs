@@ -244,7 +244,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     await SetWifiEnabled();
                     await SetBluetoothEnabled();
 
-                    await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode, Settings.Default.fanCurve));
+                    if(Global.isASUS) await Task.Run(() => App.wmi.DeviceSet(ASUSWmi.PerformanceMode, Settings.Default.fanCurve));
 
                     await Task.Run(() =>
                     {
