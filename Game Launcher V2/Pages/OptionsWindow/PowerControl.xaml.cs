@@ -30,6 +30,7 @@ using ControlzEx.Standard;
 using System.Xml;
 using System.DirectoryServices.ActiveDirectory;
 using System.Diagnostics.Eventing.Reader;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Game_Launcher_V2.Pages.OptionsWindow
 {
@@ -267,7 +268,7 @@ namespace Game_Launcher_V2.Pages.OptionsWindow
                     bi.EndInit();
 
                     bi.Freeze();
-                    imgBat.Source = bi;
+                    if (imgBat.Source != bi) imgBat.Source = bi;
                 }
                 catch
                 {

@@ -224,7 +224,7 @@ namespace Game_Launcher_V2.Pages
             }
             imageSource.Freeze();
 
-            image.Source = imageSource;
+            if(image.Source != imageSource) image.Source = imageSource;
         }
 
         private void ScrollViewerCanvas_ManipulationBoundaryFeedback(object sender, ManipulationBoundaryFeedbackEventArgs e)
@@ -695,7 +695,7 @@ namespace Game_Launcher_V2.Pages
                 if (isActive != true)
                 {
                     mediaPlayer.Pause();
-                    GameBGVideo.Pause();
+                    GameBGVideo.Stop();
                     wasNotFocused = true;
 
                     if (mainBody.Opacity != 1 && hasLaunched == true)

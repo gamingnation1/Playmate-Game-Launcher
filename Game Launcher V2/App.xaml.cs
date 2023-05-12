@@ -21,6 +21,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Navigation;
 using Universal_x86_Tuning_Utility.Scripts.Misc;
 using Windows.UI.Notifications;
@@ -70,6 +72,8 @@ namespace Game_Launcher_V2
                             Settings.Default.Save();
                         }
                     }
+
+                    RenderOptions.ProcessRenderMode = RenderMode.Default;
                 } catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);

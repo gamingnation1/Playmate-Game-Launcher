@@ -273,7 +273,7 @@ namespace Game_Launcher_V2.Windows
             }
             imageSource.Freeze();
 
-            image.Source = imageSource;
+            if (image.Source != imageSource) image.Source = imageSource;
         }
 
         private async void setUpGUI()

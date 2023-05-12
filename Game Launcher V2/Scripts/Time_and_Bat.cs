@@ -72,13 +72,14 @@ namespace Game_Launcher_V2.Scripts
                 foreach (var adapter in adapters)
                 {
                     foreach (var network in adapter.NetworkReport.AvailableNetworks)
-                    { 
+                    {
                         return network.SignalBars;
                     }
                     return 0;
                 }
                 return 0;
-            } catch
+            }
+            catch
             {
                 return 0;
             }
@@ -153,7 +154,7 @@ namespace Game_Launcher_V2.Scripts
                 bi.EndInit();
 
                 bi.Freeze();
-                imgWiFi.Source = bi;
+                if (imgWiFi.Source != bi) imgWiFi.Source = bi;
             }
             catch (Exception ex)
             {
@@ -208,7 +209,7 @@ namespace Game_Launcher_V2.Scripts
                     bi.EndInit();
 
                     bi.Freeze();
-                    imgBat.Source = bi;
+                    if (imgBat.Source != bi) imgBat.Source = bi;
                 }
                 catch
                 {
