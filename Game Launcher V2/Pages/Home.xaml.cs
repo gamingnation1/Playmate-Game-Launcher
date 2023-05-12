@@ -367,13 +367,14 @@ namespace Game_Launcher_V2.Pages
                             {
                                 if (model.bgImagePath.Contains(".mp4"))
                                 {
-                                    StartAnimationBGFadeOut();
+                                    if (GameBGVideo.Opacity > 0) GameBG.Opacity = 0;
+                                    else StartAnimationBGFadeOut();
                                     await StartAnimationBGFadeOutVideo();
                                 }
                                 else
                                 {
-                                    StartAnimationBGFadeOutVideo();
-                                    await StartAnimationBGFadeOut();
+                                    if (GameBG.Opacity > 0) await StartAnimationBGFadeOut();
+                                    else await StartAnimationBGFadeOutVideo();
                                     GameBGVideo.Stop();
                                 }
                             }
@@ -679,16 +680,16 @@ namespace Game_Launcher_V2.Pages
                 controller = new Controller(controllerNo);
 
                 bool isActive = Global.isMainActive;
+                bool isSideActive = Global.isAccessMenuOpen;
 
                 //If window is not focused stop music
-                if (isActive != true)
+                if (isActive != true && isSideActive != true)
                 {
-                    mediaPlayer.Stop();
-                    GameBGVideo.Stop();
-
                     if (hasPaused == false)
                     {
-                        if (GameBG.Visibility == Visibility.Visible && GameBG.Opacity > 0) StartAnimationBGFadeOut();
+                        mediaPlayer.Stop();
+                        GameBGVideo.Stop();
+                        if (GameBGVideo.Visibility == Visibility.Collapsed && GameBG.Opacity > 0) StartAnimationBGFadeOut();
                         if (GameBGVideo.Visibility == Visibility.Visible && GameBGVideo.Opacity > 0) StartAnimationBGFadeOutVideo();
                         hasPaused = true;
                     }
@@ -725,10 +726,11 @@ namespace Game_Launcher_V2.Pages
                     if (lastAudio != "N/A") mediaPlayer.Play();
                     if (lastBG.Contains(".mp4")) GameBGVideo.Play();
 
-                    if (GameBG.Visibility == Visibility.Visible && GameBG.Opacity < 1) StartAnimationBGFadeIn();
+                    if (GameBGVideo.Visibility == Visibility.Collapsed && GameBG.Opacity < 1) StartAnimationBGFadeIn();
                     if (GameBGVideo.Visibility == Visibility.Visible && GameBGVideo.Opacity < 1) StartAnimationBGFadeInVideo();
 
                     wasNotFocused = false;
+                    hasPaused = false;
                 }
 
                 //Get controller
