@@ -9,4 +9,4 @@ PLEASE READ THIS: THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY 
 If you would like to support the development of this project by donating, you can do so via [PayPal](https://www.paypal.me/JamesCJ60).
 
 ## Demo:
-[![Demo Video](https://img.youtube.com/vi/JWYWXzEWq8g/0.jpg)](https://youtu.be/JWYWXzEWq8g)
+[![Demo Video](https://img.youtube.com/vi/gdx1AShpPp8/0.jpg)](https://youtu.be/gdx1AShpPp8)
